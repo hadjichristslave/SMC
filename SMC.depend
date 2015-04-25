@@ -1,0 +1,44 @@
+# depslib dependency file v1.0
+1429973681 source:/home/panos/Desktop/codePcl/SMC/src/SMC.cpp
+	"SMC.h"
+
+1429973654 /home/panos/Desktop/codePcl/SMC/include/SMC.h
+	<eigen3/Eigen/Dense>
+	"Point.h"
+	"PointCloud.h"
+
+1429973739 source:/home/panos/Desktop/codePcl/SMC/main.cpp
+	<iostream>
+	<string>
+	<stdlib.h>
+	<stdio.h>
+	<libconfig.h>
+	<algorithm>
+	<vector>
+	"SMC.h"
+	"Utilities.h"
+
+1429874913 /home/panos/Desktop/codePcl/SMC/include/Utilities.h
+	<vector>
+	<string>
+	<iostream>
+	<fstream>
+
+1429875045 source:/home/panos/Desktop/codePcl/SMC/src/Utilities.cpp
+	"Utilities.h"
+
+1429706196 source:/home/panos/Desktop/codePcl/SMC/src/Point.cpp
+
+1429706230 source:/home/panos/Desktop/codePcl/SMC/src/PointCloud.cpp
+
+1429707019 /home/panos/Desktop/codePcl/SMC/include/Point.h
+	<iostream>
+	<vector>
+	<algorithm>
+
+1429706290 /home/panos/Desktop/codePcl/SMC/include/PointCloud.h
+	<iostream>
+	<vector>
+	<algorithm>
+	"Point.h"
+
