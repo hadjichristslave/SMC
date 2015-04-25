@@ -3,6 +3,7 @@
 SMC::SMC()
 {
     //ctor
+
 }
 
 SMC::~SMC()
@@ -66,9 +67,11 @@ const void SMC::smc_sample(SMC::State currState, \
 
 
         for( int j =0 ; j<sizes.size(); j++){
-
-
-
+             if(sizes(j)>0){
+                    clusterLogProb.push_back(log( ut.sampleMultivariateNormal( currState.clusterParams ) ));
+             }else{
+                    clusterLogProb.push_back( -INFINITY);
+             }
         }
 
 

@@ -1,6 +1,7 @@
 #ifndef SMC_H
 #define SMC_H
 #include <eigen3/Eigen/Dense>
+#include "Utilities.h"
 #include "Point.h"
 #include "PointCloud.h"
 
@@ -45,6 +46,8 @@ class SMC
 
             }
         };
+
+        Utilities ut;
 
         const void infer( vector< SMC::State > particles, \
                           vector < vector < vector<double> > > cloudData, \

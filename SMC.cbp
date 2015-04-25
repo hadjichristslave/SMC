@@ -17,9 +17,11 @@
 					<Add option="-g" />
 					<Add directory="include" />
 					<Add directory="/usr/bin/x86_64-linux-gnu/" />
+					<Add directory="/usr/lib" />
 				</Compiler>
 				<Linker>
 					<Add option="-lconfig++" />
+					<Add option="-lgsl" />
 				</Linker>
 			</Target>
 			<Target title="Release">

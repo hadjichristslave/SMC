@@ -1,5 +1,6 @@
 #include "Utilities.h"
 
+
 Utilities::Utilities()
 {
     //ctor
@@ -55,4 +56,35 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
 
 
     return clouds;
+}
+
+Eigen::MatrixXd Utilities::sampleMultivariateNormal(Eigen::VectorXd mean , Eigen::MatrixXd covar , int dimensionality ){
+  Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor
+  Eigen::internal::scalar_normal_dist_op<double>::rng.seed(1); // Seed the rng
+
+
+  Eigen::MatrixXd normTransform(dimensionality, dimensionality);
+  Eigen::LLT<Eigen::MatrixXd> cholSolver(covar);
+
+  // We can only use the cholesky decomposition if
+  // the covariance matrix is symmetric, pos-definite.
+  // But a covariance matrix might be pos-semi-definite.
+  // In that case, we'll go to an EigenSolver
+  if (cholSolver.info()==Eigen::Success) {
+    // Use cholesky solver
+    normTransform = cholSolver.matrixL();
+  } else {
+    // Use eigen solver
+    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(covar);
+    normTransform = eigenSolver.eigenvectors()
+                   * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
+  }
+
+  Eigen::MatrixXd samples = (normTransform
+                           * Eigen::MatrixXd::NullaryExpr(size,1,randN)).colwise()
+                           + mean;
+    std::cout << "Mean\n" << mean << std::endl;
+    std::cout << "Covar\n" << covar << std::endl;
+    std::cout << "Samples\n" << samples << std::endl;
+    return samples;
 }
