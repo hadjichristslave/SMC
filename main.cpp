@@ -50,7 +50,10 @@ int main(int argc, char* argv[])
     SMC::State state(dataPoints.size());
 
     vector< SMC::State > particles(numOfParticles);
+
     smc.infer(particles, dataPoints, params, numOfParticles , numOfSamples);
+
+
 
 //    vector<double> vec(10,100);
 //    for_each(vec.begin(), vec.end(), [] (int y) mutable {

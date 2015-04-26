@@ -54,37 +54,51 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
         cout << " could not read data file";
     }
 
-
     return clouds;
 }
 
-Eigen::MatrixXd Utilities::sampleMultivariateNormal(Eigen::VectorXd mean , Eigen::MatrixXd covar , int dimensionality ){
-  Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor
-  Eigen::internal::scalar_normal_dist_op<double>::rng.seed(1); // Seed the rng
+double Utilities::sampleMultivariateNormal( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
 
-
-  Eigen::MatrixXd normTransform(dimensionality, dimensionality);
-  Eigen::LLT<Eigen::MatrixXd> cholSolver(covar);
+  Eigen::Matrix3d normTransform(dimensionality, dimensionality);
+  Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
 
   // We can only use the cholesky decomposition if
   // the covariance matrix is symmetric, pos-definite.
   // But a covariance matrix might be pos-semi-definite.
   // In that case, we'll go to an EigenSolver
+
   if (cholSolver.info()==Eigen::Success) {
     // Use cholesky solver
     normTransform = cholSolver.matrixL();
   } else {
     // Use eigen solver
-    Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(covar);
+    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(covar);
     normTransform = eigenSolver.eigenvectors()
                    * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
   }
+    RowVector3d difference = instance - mu;
+    RowVector3d tempDif  = difference * normTransform.inverse();
+    double pdf = pow( (2*M_PI) , ((double)-dimensionality/2) ) * exp(tempDif.array().square().sum()/2)/(double)normTransform.eigenvalues().sum().real();
+    return pdf;
+}
+int Utilities::randcat( vector<double> * vec){
+    // GEt cumsum
+    for(int i =0;i<vec->size();i++) vec->at(i) += i>0?vec->at(i-1):0;
+    double r = ((double) rand() / (RAND_MAX)) + 1;
+    for(int i=0;i< vec->size();i++) if( vec->at(i) < r) return i;
+}
+double Utilities::iwishrnd( Matrix3d tau, RowVector3d nu){
+    Eigen::Matrix3d normTransform(dimensionality, dimensionality);
+    Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
+    if (cholSolver.info()==Eigen::Success)
+        normTransform = cholSolver.matrixL();
+    else {
+    // Use eigen solver
+     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(covar);
+     normTransform = eigenSolver.eigenvectors()
+                    * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
+      }
+    int sizeOfMat = normTransform.rows();
 
-  Eigen::MatrixXd samples = (normTransform
-                           * Eigen::MatrixXd::NullaryExpr(size,1,randN)).colwise()
-                           + mean;
-    std::cout << "Mean\n" << mean << std::endl;
-    std::cout << "Covar\n" << covar << std::endl;
-    std::cout << "Samples\n" << samples << std::endl;
-    return samples;
+    MatrixXd test  =
 }

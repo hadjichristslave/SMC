@@ -1,6 +1,7 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 #include <vector>
+#include <math.h>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -8,8 +9,12 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <gsl/gsl_randist.h>
-using namespace std;
+#include <boost/math/distributions/normal.hpp>
+#include <boost/math/distributions/exponential.hpp>
 
+using namespace std;
+using namespace boost::math;
+using namespace Eigen;
 
 namespace Eigen {
     namespace internal {
@@ -44,7 +49,8 @@ class Utilities
 
         //Read a file that has a specific number of dimensions for each attribute
         virtual vector < vector < vector<double> > >  readFile(string CloudSeperator);
-        Eigen::MatrixXd sampleMultivariateNormal(Eigen::VectorXd mean , Eigen::MatrixXd covar , int dimensionality );
+        double sampleMultivariateNormal(Vector3d instance, Vector3d mu, Matrix3d covar, int dimensionality);
+        int randcat( vector<double> * vec);
     protected:
     private:
 };
