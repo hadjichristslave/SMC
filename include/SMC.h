@@ -89,7 +89,7 @@ class SMC
                           vector < vector < vector<double> > > cloudData, \
                           SMC::Params params, int numOfParticles,\
                           int numOfSamples);
-        const void smc_sample(SMC::StateProgression  * currState, \
+        const void smc_sample(  SMC::StateProgression  * currState, \
                                 vector< vector<double> >cloudInstance, \
                                 SMC::Params params, \
                                 int currentTime,
