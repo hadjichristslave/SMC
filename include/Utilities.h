@@ -2,15 +2,18 @@
 #define UTILITIES_H
 #include <vector>
 #include <math.h>
+#include <cmath>
+#include <random>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <eigen3/Eigen/Dense>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
-#include <gsl/gsl_randist.h>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/math/distributions/exponential.hpp>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_randist.h>
 
 using namespace std;
 using namespace boost::math;
@@ -51,6 +54,7 @@ class Utilities
         virtual vector < vector < vector<double> > >  readFile(string CloudSeperator);
         double sampleMultivariateNormal(Vector3d instance, Vector3d mu, Matrix3d covar, int dimensionality);
         int randcat( vector<double> * vec);
+        Matrix3d iwishrnd( Matrix3d tau, double nu, int dimensionality);
     protected:
     private:
 };

@@ -18,11 +18,15 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
     int currentCloud   = -1, currPointIndex = -1;
 
     ifstream myfile ("/home/panos/Desktop/cloudData/aggregated.csv");
-
+    int lineCount = 0;
     if (myfile.is_open())
     {
         while ( getline (myfile,line) )
         {
+            if(lineCount ==0){
+                lineCount++;
+                continue;
+            }
 
             if(line == CloudSeperator){
                 vector< vector< double> > dat;
@@ -87,18 +91,36 @@ int Utilities::randcat( vector<double> * vec){
     double r = ((double) rand() / (RAND_MAX)) + 1;
     for(int i=0;i< vec->size();i++) if( vec->at(i) < r) return i;
 }
-double Utilities::iwishrnd( Matrix3d tau, RowVector3d nu){
-    Eigen::Matrix3d normTransform(dimensionality, dimensionality);
-    Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
+Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality){
+    Matrix3d normTransform(dimensionality, dimensionality);
+    LLT<Eigen::Matrix3d> cholSolver(tau);
     if (cholSolver.info()==Eigen::Success)
         normTransform = cholSolver.matrixL();
-    else {
-    // Use eigen solver
-     Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(covar);
+    else{
+     SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(tau);
      normTransform = eigenSolver.eigenvectors()
-                    * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
-      }
-    int sizeOfMat = normTransform.rows();
+                    * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();}
 
-    MatrixXd test  =
+    int sizeOfMat = normTransform.rows();
+    const gsl_rng_type * T;
+    gsl_rng * r;
+    gsl_rng_env_setup();
+
+    T = gsl_rng_default;
+    r = gsl_rng_alloc(T);
+
+    RowVector3d chi2rand(dimensionality);
+    chi2rand << gsl_ran_chisq(r , nu) , gsl_ran_chisq(r , nu-1) , gsl_ran_chisq(r , nu-2);
+    Matrix3d tempMat = chi2rand.cwiseSqrt().asDiagonal();
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<> d(0,1);
+    for( int i=0;i<tempMat.rows();i++)
+        for(int j=0;j<tempMat.cols();j++)
+            if(i>j) tempMat(i,j) = d(gen);
+    tempMat = normTransform * tempMat;
+    Eigen::Matrix3d wishartstuff= tempMat * tempMat.transpose();
+    wishartstuff = wishartstuff.array().inverse();
+    return wishartstuff;
 }

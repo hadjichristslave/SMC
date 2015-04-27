@@ -37,31 +37,21 @@ int main(int argc, char* argv[])
     // Variable declaration
     SMC smc;
     Utilities ut;
-    cout << "parsing file..." <<  endl;
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----");
-    cout << "parsing of the file succesfull!"  << endl;
-    cout << "Procceding with the clustering.." << endl;
+
+    int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
 
     //Format: params = {crp, del, #aux, tau0, v0, mu0, k0, q0, _,_,_<-#colorbins?,lambda0(angle distance measure)}
-    SMC::Params params;
+    SMC::Params Baseparams;
+    Baseparams.cloudInstances = dataPoints.size();
 
-    params.cloudInstances = dataPoints.size();
     //State format: = { assignments, cluster parameters, clusterSizes(Number of elements) }
-    SMC::State state(dataPoints.size());
+    //SMC::State state(dataPoints.size());
 
-    vector< SMC::State > particles(numOfParticles);
+    //SMC::State particles(numOfParticles);f
+    vector < SMC::StateProgression > particles(timeStates, timeStates);
 
-    smc.infer(particles, dataPoints, params, numOfParticles , numOfSamples);
-
-
-
-//    vector<double> vec(10,100);
-//    for_each(vec.begin(), vec.end(), [] (int y) mutable {
-//        y++;
-//        cout << y << endl;
-//    });
-
-
+    smc.infer(particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
 
 
     return 0;
