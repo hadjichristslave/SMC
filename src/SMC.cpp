@@ -23,6 +23,7 @@ const void SMC::infer(vector< StateProgression >  particles, \
 
     for(int t=0;t<cloudData.size();t++){
     //for all particles
+    cout << "time " << t << endl;
         for(int j=0;j< numOfParticles; j++){
             SMC::StateProgression currState = particles[j];
             //for all samples in time t
