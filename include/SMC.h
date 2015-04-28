@@ -2,8 +2,6 @@
 #define SMC_H
 #include <eigen3/Eigen/Dense>
 #include "Utilities.h"
-#include "Point.h"
-#include "PointCloud.h"
 #include <iostream>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
@@ -17,7 +15,6 @@ class SMC
     public:
         SMC();
         virtual ~SMC();
-
         struct SufficientStatistics{
             std::vector<double> mean        = decltype(mean)(3,0);
             Matrix3d            covar       = MatrixXd::Identity(3,3);
@@ -54,7 +51,6 @@ class SMC
             RowVector3d  mu = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
-            //Format: params = {crp, del, #aux,  tau0, v0, mu0, k0, q0, _,_,_<-#colorbin
             Params(void){
                 crp = .1; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
@@ -62,6 +58,9 @@ class SMC
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
                 // alpha is updated by the numver of observations whereas  beta by their sum
                 exp_alpha0 = 1;  exp_beta0 = 1;
+            }
+            Params(double a) : crp(a)
+            {
             }
         };
         struct State{
@@ -93,12 +92,14 @@ class SMC
                                    SMC::Params params, \
                                    vector<double> pointInstance,\
                                    int currentTime);
-        const void updateParams(MatrixXd data, \
+        SMC::Params updateParams(MatrixXd data, \
                                 SMC::Params params , \
                                 int colourbins);
+        Eigen::MatrixXd getDataOfCluster(int cluster, vector<int> * assignments , vector< vector<double> > * cloudInstance);
 
     protected:
     private:
+        const static int timeOffset = 2;
 };
 
 #endif // SMC_H

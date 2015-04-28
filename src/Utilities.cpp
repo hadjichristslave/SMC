@@ -62,7 +62,7 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
     return clouds;
 }
 
-double Utilities::sampleMultivariateNormal( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
+double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
 
   Eigen::Matrix3d normTransform(dimensionality, dimensionality);
   Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
@@ -124,4 +124,19 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality){
     Eigen::Matrix3d wishartstuff= tempMat * tempMat.transpose();
     wishartstuff = wishartstuff.array().inverse();
     return wishartstuff;
+}
+
+Eigen::MatrixXd Utilities::sampleMultivariateNormal(Eigen::RowVector3d mean, Eigen::Matrix3d covar, int samples, int dimensionality){
+    Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor
+    Eigen::internal::scalar_normal_dist_op<double>::rng.seed(1); // Seed the rng
+    Eigen::MatrixXd normTransform(dimensionality,dimensionality);
+    Eigen::LLT<Eigen::MatrixXd> cholSolver(covar);
+    if (cholSolver.info()==Eigen::Success)
+        normTransform = cholSolver.matrixL();
+    else {
+        Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(covar);
+        normTransform = eigenSolver.eigenvectors()* eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
+    }
+    MatrixXd samplez = (normTransform * MatrixXd::NullaryExpr(dimensionality,samples,randN)).colwise() + mean.transpose();
+    return samplez;
 }

@@ -11,9 +11,6 @@
 
 using namespace std;
 
-
-
-
 int main(int argc, char* argv[])
 {
     // Config file parsing
@@ -40,6 +37,7 @@ int main(int argc, char* argv[])
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----");
 
     int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
+    cout << timeStates <<endl;
 
     //Format: params = {crp, del, #aux, tau0, v0, mu0, k0, q0, _,_,_<-#colorbins?,lambda0(angle distance measure)}
     SMC::Params Baseparams;
