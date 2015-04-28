@@ -55,6 +55,7 @@ class Utilities
         double sampleMultivariateNormal(Vector3d instance, Vector3d mu, Matrix3d covar, int dimensionality);
         int randcat( vector<double> * vec);
         Matrix3d iwishrnd( Matrix3d tau, double nu, int dimensionality);
+
     protected:
     private:
 };

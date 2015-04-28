@@ -54,11 +54,24 @@ const void SMC::smc_sample(StateProgression  * currState, \
             cout <<" got in else" << endl;
             if( currState->clusterSizes.back()[i] > 0 ){
                 if( currentTime == 0){
-                    vector< vector< double> > dataOfCluster;
+
+                    int numOfAssign= 0 ;
+                     for( int jkl = 0 ;jkl< currState->assignments.size();jkl++)
+                        if( currState->assignments[jkl] == i)
+                            numOfAssign++;
+                    Eigen::MatrixXd clusteredData(numOfAssign,cloudInstance[0].size());
+
+                    numOfAssign = 0;
                     for( int jkl = 0 ;jkl< currState->assignments.size();jkl++)
-                        if( assignments[jkl] == i)
-                            dataOfCluster.push_back( cloudInstance[jkl]);
-                    updateParams()
+                        if( currState->assignments[jkl] == i){
+                            std::vector<double> v = cloudInstance[jkl];
+                            double* ptr = &v[0];
+                            Eigen::Map<Eigen::RowVectorXd> my_vect(ptr, v.size());
+                            clusteredData.row(numOfAssign) = my_vect;
+                            numOfAssign++;
+                         }
+                    // Update the parameters given the data that belong to the cluster
+                    updateParams(clusteredData, params, 3);
 
                 }else{
 
@@ -149,7 +162,30 @@ const void SMC::newCluster(SMC::StateProgression * currState, \
     currState->stateProg[currentTime].push_back(pr);
 }
 
-const void SMC::updateParams(MatrixXd position, MatrixXd colourInformation, MatrixXd angleInformation, SMC::Params params){
+const void SMC::updateParams(MatrixXd data, SMC::Params params , int colourbins){
+    MatrixXd position = data.leftCols(3);
+    MatrixXd colours  = data.middleCols(6,colourbins*colourbins*colourbins);
 
+    MatrixXd angles   = data.block(0, 3, data.rows(), 3);
 
+    int obsSize  = position.rows();
+
+    MatrixXd mean   = position.colwise().mean();
+
+    MatrixXd S = ((position.row(0) - mean).transpose())* (position.row(0) - mean);
+    for(int i=1;i< position.rows();i++)
+        S =  S.array() + (( (position.row(i) - mean).transpose())*((position.row(i) - mean))).array();
+
+    double kappa_n   = (double)params.kappa0 + obsSize;
+    double nu_n      = (double)params.nu0    + obsSize;
+    RowVector3d mu_n = (mean.array()* obsSize / kappa_n) + (params.mu.array() * params.kappa0/kappa_n);
+
+    MatrixXd tau_n = params.tau0.array() + S.array(); + ( params.kappa0 * obsSize * ( params.mu - mean )*(params.mu - mean).transpose() );
+
+    params.q0 = params.q0.array()  + colours.colwise().sum().array();
+
+    double exp_alpha_n = params.exp_alpha0 + obsSize , exp_beta_n =params.exp_beta0 + angles.sum();
+    cout  <<    exp_alpha_n << "-" <<  exp_beta_n;
 }
+
+

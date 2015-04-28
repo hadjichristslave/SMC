@@ -50,6 +50,7 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
                 double dat = atof(token.c_str());
                 clouds[currentCloud][currPointIndex].push_back(dat);
                 line.erase(0, pos + delimiter.length());
+                if (line=="") break;
             }
             clouds[currentCloud][currPointIndex].push_back( atof(line.c_str()));
         }

@@ -50,7 +50,7 @@ class SMC
         struct Params{
             std::vector<double> position = decltype(position)(3,0);
             int   cloudInstances, auxiliaryNum , colourBin , cBin1, cBin2, cBin3, colourBins = 3;
-            double crp, del, nu0, kappa0, KullbackDistance, EMDDistance;
+            double crp, del, nu0, kappa0, KullbackDistance, EMDDistance , exp_alpha0, exp_beta0;
             RowVector3d  mu = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
@@ -59,6 +59,9 @@ class SMC
                 crp = .1; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
+                // For my exponential alpha and beta are the parameters of the prior distribution Gamma
+                // alpha is updated by the numver of observations whereas  beta by their sum
+                exp_alpha0 = 1;  exp_beta0 = 1;
             }
         };
         struct State{
@@ -90,7 +93,9 @@ class SMC
                                    SMC::Params params, \
                                    vector<double> pointInstance,\
                                    int currentTime);
-        const void updateParams();
+        const void updateParams(MatrixXd data, \
+                                SMC::Params params , \
+                                int colourbins);
 
     protected:
     private:
