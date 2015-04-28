@@ -18,7 +18,6 @@ class SMC
         SMC();
         virtual ~SMC();
 
-
         struct SufficientStatistics{
             std::vector<double> mean        = decltype(mean)(3,0);
             Matrix3d            covar       = MatrixXd::Identity(3,3);
@@ -55,18 +54,11 @@ class SMC
             RowVector3d  mu = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
-
             //Format: params = {crp, del, #aux,  tau0, v0, mu0, k0, q0, _,_,_<-#colorbin
-            //params = {0.1, 0.7, 10, 3*eye(2), 60, [0,0], 0.05, 10*ones(1,10), 1, 1, 1};
-            Params(void)
-            {
-                crp = .1;
-                del = .7;
-                auxiliaryNum = 10;
-                nu0 = 60;
-                kappa0 = .05;
+            Params(void){
+                crp = .1; del = .7;auxiliaryNum = 10;
+                nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
-              // Initialize Foo
             }
         };
         struct State{
@@ -77,15 +69,14 @@ class SMC
                                                       // Inside vector defines cluster index
                                                       // Params define cluster statistics at time t at cluster k
             vector<int>                    assignments;
-            vector < vector<double> >      clusterSizes; // Double despite them being integers because I'm bored to do typecasting on every iteration :)
+            vector < vector<int> >         clusterSizes;
             StateProgression(int timeWindow){
                 stateProg.resize(timeWindow);
             }
         };
-
         Utilities ut;
 
-        const void infer( vector< SMC::StateProgression > particles, \
+        const void infer( vector< SMC::StateProgression > * particles, \
                           vector < vector < vector<double> > > cloudData, \
                           SMC::Params params, int numOfParticles,\
                           int numOfSamples);
@@ -99,6 +90,7 @@ class SMC
                                    SMC::Params params, \
                                    vector<double> pointInstance,\
                                    int currentTime);
+        const void updateParams();
 
     protected:
     private:

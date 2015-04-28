@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     //SMC::State particles(numOfParticles);f
     vector < SMC::StateProgression > particles(timeStates, timeStates);
 
-    smc.infer(particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
+    smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
 
 
     return 0;
