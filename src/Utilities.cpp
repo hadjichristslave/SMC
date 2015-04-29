@@ -147,17 +147,13 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
         return wishartstuff;
     }else{
         MatrixXd tempMat(df, dimensionality);
-        cout << "temp mat rows and cols" << tempMat.rows() << "-" << tempMat.cols()<<endl;
         for(int i=0;i<tempMat.rows();i++)
             for(int j=0;j<tempMat.cols();j++)
                 if(i>j) tempMat(i,j) = d(gen);
 
          Eigen::MatrixXd tempwishartstuff(tempMat * normTransform);
-         cout << "tempwishartstuff mat rows and cols" << tempwishartstuff.rows() << "-" << tempwishartstuff.cols()<<endl;
          Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff) ;
-         cout << "wishartstuff mat rows and cols" << wishartstuff.rows() << "-" << wishartstuff.cols()<<endl;
          return wishartstuff.inverse();
-
     }
 }
 
