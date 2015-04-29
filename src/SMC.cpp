@@ -105,7 +105,7 @@ const void SMC::smc_sample(StateProgression  * currState, \
 //                  state{2}{t,k}{3} = gammarnd(alpha, beta);
                     SMC::SufficientStatistics pr;
                     pr.covar = ut.iwishrnd(par.tau0, par.nu0, 3, par.nu0);
-                    pr.mean  = ut.sampleMultivariateNormal(par.mu0, par.tau0,3);
+                    pr.mean  = ut.sampleMultivariateNormal(par.mu0, par.tau0,1,3);
                     //pr.exponential = ut.gammarnd(params.gamma_alpha0  , params.gamma_beta0);
                     //pr.covar = ut.iwishrnd(params.tau0, params.nu0, params.tau0.rows());
                     //currState->stateProg[currentTime] = iwishrnd();
