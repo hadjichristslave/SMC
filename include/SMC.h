@@ -63,12 +63,12 @@ class SMC
             Params(double a) : crp(a){}
             friend ostream& operator<<(ostream& out ,const Params& rhs){
                 out << "----------------Params printing-------------------" << endl;
-                out << " mu " << mu0 << endl;
-                out << " tau " << tau0 << endl;
-                out << " q0 " << q0 << endl;
-                out << " kappa0 " << kappa0 << endl;
-                out << " gamma alpha " << gamma_alpha0 << endl;
-                out << " gamma beta  " << gamma_beta0 << endl;
+                out << " mu " << rhs.mu0 << endl;
+                out << " tau " << rhs.tau0 << endl;
+                out << " q0 " << rhs.q0 << endl;
+                out << " kappa0 " << rhs.kappa0 << endl;
+                out << " gamma alpha " << rhs.gamma_alpha0 << endl;
+                out << " gamma beta  " << rhs.gamma_beta0 << endl;
                 out << "----------------Params printing end-------------------" << endl;
                 return out;
             }

@@ -116,7 +116,7 @@ double Utilities::gammarnd(double alpha, double beta){
     r = gsl_rng_alloc(T);
     return gsl_ran_gamma(r , alpha, beta);
 }
-Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality){
+Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int df){
     Matrix3d normTransform(dimensionality, dimensionality);
     LLT<Eigen::Matrix3d> cholSolver(tau);
     if (cholSolver.info()==Eigen::Success)
@@ -126,24 +126,39 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality){
         normTransform = eigenSolver.eigenvectors()* eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
      }
     int sizeOfMat = normTransform.rows();
-    const gsl_rng_type * T;
-    gsl_rng * r;
-    gsl_rng_env_setup();
-    T = gsl_rng_default;
-    r = gsl_rng_alloc(T);
-    RowVector3d chi2rand(dimensionality);
-    chi2rand << gsl_ran_chisq(r , nu) , gsl_ran_chisq(r , nu-1) , gsl_ran_chisq(r , nu-2);
-    Matrix3d tempMat = chi2rand.cwiseSqrt().asDiagonal();
     std::random_device rd;
     std::mt19937 gen(rd());
     std::normal_distribution<> d(0,1);
-    for(int i=0;i<tempMat.rows();i++)
-        for(int j=0;j<tempMat.cols();j++)
-            if(i>j) tempMat(i,j) = d(gen);
-    tempMat = normTransform * tempMat;
-    Eigen::Matrix3d wishartstuff= tempMat * tempMat.transpose();
-    wishartstuff = wishartstuff.array().inverse();
-    return wishartstuff;
+    if(df ==0.0){
+        const gsl_rng_type * T;
+        gsl_rng * r;
+        gsl_rng_env_setup();
+        T = gsl_rng_default;
+        r = gsl_rng_alloc(T);
+        RowVector3d chi2rand(dimensionality);
+        chi2rand << gsl_ran_chisq(r , nu) , gsl_ran_chisq(r , nu-1) , gsl_ran_chisq(r , nu-2);
+        Matrix3d tempMat = chi2rand.cwiseSqrt().asDiagonal();
+        for(int i=0;i<tempMat.rows();i++)
+            for(int j=0;j<tempMat.cols();j++)
+                if(i>j) tempMat(i,j) = d(gen);
+        tempMat = normTransform * tempMat;
+        Eigen::Matrix3d wishartstuff= tempMat * tempMat.transpose();
+        wishartstuff = wishartstuff.array().inverse();
+        return wishartstuff;
+    }else{
+        MatrixXd tempMat(df, dimensionality);
+        cout << "temp mat rows and cols" << tempMat.rows() << "-" << tempMat.cols()<<endl;
+        for(int i=0;i<tempMat.rows();i++)
+            for(int j=0;j<tempMat.cols();j++)
+                if(i>j) tempMat(i,j) = d(gen);
+
+         Eigen::MatrixXd tempwishartstuff(tempMat * normTransform);
+         cout << "tempwishartstuff mat rows and cols" << tempwishartstuff.rows() << "-" << tempwishartstuff.cols()<<endl;
+         Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff) ;
+         cout << "wishartstuff mat rows and cols" << wishartstuff.rows() << "-" << wishartstuff.cols()<<endl;
+         return wishartstuff.inverse();
+
+    }
 }
 
 Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::MatrixXd covar, int samples, int dimensionality){

@@ -55,7 +55,7 @@ class Utilities
         Eigen::MatrixXd sampleMultivariateNormal( Eigen::VectorXd mean, Eigen::MatrixXd covar, int numOfSamples, int dimensionality);
         Eigen::MatrixXd sampleMultinomial(vector<double> probabilities, int samples);
         int randcat( vector<double> * vec);
-        Eigen::Matrix3d iwishrnd( Matrix3d tau, double nu, int dimensionality);
+        Eigen::Matrix3d iwishrnd( Matrix3d tau, double nu, int dimensionality, int df);
         Eigen::VectorXd exprnd(double rate, int samples);
         double exppdf(double x , double lambda);
         double gammarnd(double alpha , double beta);
