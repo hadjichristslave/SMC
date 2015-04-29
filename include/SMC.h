@@ -22,13 +22,14 @@ class SMC
             double              exponential;
             SufficientStatistics(vector<double> pointInstance , int begin){
                 double sum = 0;
-                for(int i =begin-1; i < pointInstance.size(); i++){
+                for(int i =begin; i < pointInstance.size(); i++){
                     categorical.push_back(pointInstance[i]);
                     sum += pointInstance[i];
                 }
                 if(sum!=0)
                     for_each(categorical.begin(), categorical.end(), [&sum] (double &y) mutable { y = y/sum;});
             }
+            SufficientStatistics(void){}
             friend ostream& operator<<(ostream& out ,const SufficientStatistics& rhs){
                 out << "========Start of SS print======"<< endl;
                 out <<" Mean statistics";
@@ -47,8 +48,8 @@ class SMC
         struct Params{
             std::vector<double> position = decltype(position)(3,0);
             int   cloudInstances, auxiliaryNum , colourBin , cBin1, cBin2, cBin3, colourBins = 3;
-            double crp, del, nu0, kappa0, KullbackDistance, EMDDistance , exp_alpha0, exp_beta0;
-            RowVector3d  mu = RowVector3d::Zero(1,3);
+            double crp, del, nu0, kappa0, gamma_alpha0, gamma_beta0 , exp_lambda0 =1;
+            RowVector3d  mu0 = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
@@ -57,10 +58,19 @@ class SMC
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
                 // alpha is updated by the numver of observations whereas  beta by their sum
-                exp_alpha0 = 1;  exp_beta0 = 1;
+                gamma_alpha0 = 1;  gamma_beta0 = 1;
             }
-            Params(double a) : crp(a)
-            {
+            Params(double a) : crp(a){}
+            friend ostream& operator<<(ostream& out ,const Params& rhs){
+                out << "----------------Params printing-------------------" << endl;
+                out << " mu " << mu0 << endl;
+                out << " tau " << tau0 << endl;
+                out << " q0 " << q0 << endl;
+                out << " kappa0 " << kappa0 << endl;
+                out << " gamma alpha " << gamma_alpha0 << endl;
+                out << " gamma beta  " << gamma_beta0 << endl;
+                out << "----------------Params printing end-------------------" << endl;
+                return out;
             }
         };
         struct State{

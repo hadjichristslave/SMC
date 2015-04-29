@@ -63,24 +63,9 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
 }
 
 double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
-
-  Eigen::Matrix3d normTransform(dimensionality, dimensionality);
-  Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
-
-  // We can only use the cholesky decomposition if
-  // the covariance matrix is symmetric, pos-definite.
-  // But a covariance matrix might be pos-semi-definite.
-  // In that case, we'll go to an EigenSolver
-
-  if (cholSolver.info()==Eigen::Success) {
-    // Use cholesky solver
+    Eigen::Matrix3d normTransform(dimensionality, dimensionality);
+    Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
     normTransform = cholSolver.matrixL();
-  } else {
-    // Use eigen solver
-    Eigen::SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(covar);
-    normTransform = eigenSolver.eigenvectors()
-                   * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
-  }
     RowVector3d difference = instance - mu;
     RowVector3d tempDif  = difference * normTransform.inverse();
     double pdf = pow( (2*M_PI) , ((double)-dimensionality/2) ) * exp(tempDif.array().square().sum()/2)/(double)normTransform.eigenvalues().sum().real();
@@ -92,32 +77,67 @@ int Utilities::randcat( vector<double> * vec){
     double r = ((double) rand() / (RAND_MAX)) + 1;
     for(int i=0;i< vec->size();i++) if( vec->at(i) < r) return i;
 }
+Eigen::MatrixXd Utilities::sampleMultinomial(vector<double> probabilities, int samples){
+    // Return samples number of items from a multinomial with probabilities vector defining the probability of samplign each item
+    MatrixXd mat(samples, probabilities.size());
+    vector<double> cumsum =probabilities;
+    for(int j=1; j<cumsum.size(); ++j)  cumsum[j] += cumsum[j-1];
+
+    for(int i=0;i< samples; i++){
+        double r = ((double) rand() / (RAND_MAX));
+        int sample = randcat( & cumsum);
+        Eigen::RowVectorXd tempVec;
+        tempVec.resize(cumsum.size());
+        tempVec.setZero();
+        tempVec(sample)++;
+        mat.row(i) = tempVec;
+    }
+    return mat;
+}
+Eigen::VectorXd Utilities::exprnd(double rate , int samples){
+    VectorXd vec(samples);
+    const gsl_rng_type * T;
+    gsl_rng * r;
+    gsl_rng_env_setup();
+    T = gsl_rng_default;
+    r = gsl_rng_alloc(T);
+    for(int i =0 ; i<samples;i++)
+        vec(i) = gsl_ran_exponential(r, rate);
+    return vec;
+}
+double Utilities::exppdf(double x , double lambda){
+    return gsl_ran_exponential_pdf(x , lambda);
+}
+double Utilities::gammarnd(double alpha, double beta){
+    const gsl_rng_type * T;
+    gsl_rng * r;
+    gsl_rng_env_setup();
+    T = gsl_rng_default;
+    r = gsl_rng_alloc(T);
+    return gsl_ran_gamma(r , alpha, beta);
+}
 Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality){
     Matrix3d normTransform(dimensionality, dimensionality);
     LLT<Eigen::Matrix3d> cholSolver(tau);
     if (cholSolver.info()==Eigen::Success)
         normTransform = cholSolver.matrixL();
     else{
-     SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(tau);
-     normTransform = eigenSolver.eigenvectors()
-                    * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();}
-
+        SelfAdjointEigenSolver<Eigen::Matrix3d> eigenSolver(tau);
+        normTransform = eigenSolver.eigenvectors()* eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
+     }
     int sizeOfMat = normTransform.rows();
     const gsl_rng_type * T;
     gsl_rng * r;
     gsl_rng_env_setup();
-
     T = gsl_rng_default;
     r = gsl_rng_alloc(T);
-
     RowVector3d chi2rand(dimensionality);
     chi2rand << gsl_ran_chisq(r , nu) , gsl_ran_chisq(r , nu-1) , gsl_ran_chisq(r , nu-2);
     Matrix3d tempMat = chi2rand.cwiseSqrt().asDiagonal();
-
     std::random_device rd;
     std::mt19937 gen(rd());
     std::normal_distribution<> d(0,1);
-    for( int i=0;i<tempMat.rows();i++)
+    for(int i=0;i<tempMat.rows();i++)
         for(int j=0;j<tempMat.cols();j++)
             if(i>j) tempMat(i,j) = d(gen);
     tempMat = normTransform * tempMat;
@@ -126,17 +146,12 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality){
     return wishartstuff;
 }
 
-Eigen::MatrixXd Utilities::sampleMultivariateNormal(Eigen::RowVector3d mean, Eigen::Matrix3d covar, int samples, int dimensionality){
+Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::MatrixXd covar, int samples, int dimensionality){
     Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor
     Eigen::internal::scalar_normal_dist_op<double>::rng.seed(1); // Seed the rng
     Eigen::MatrixXd normTransform(dimensionality,dimensionality);
     Eigen::LLT<Eigen::MatrixXd> cholSolver(covar);
-    if (cholSolver.info()==Eigen::Success)
-        normTransform = cholSolver.matrixL();
-    else {
-        Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(covar);
-        normTransform = eigenSolver.eigenvectors()* eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
-    }
-    MatrixXd samplez = (normTransform * MatrixXd::NullaryExpr(dimensionality,samples,randN)).colwise() + mean.transpose();
+    normTransform = cholSolver.matrixL();
+    MatrixXd samplez = (normTransform * MatrixXd::NullaryExpr(dimensionality,samples,randN)).colwise() + mean;
     return samplez;
 }

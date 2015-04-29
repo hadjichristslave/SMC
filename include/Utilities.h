@@ -52,9 +52,13 @@ class Utilities
         //Read a file that has a specific number of dimensions for each attribute
         virtual vector < vector < vector<double> > >  readFile(string CloudSeperator);
         double multivariateNormalPDF(Vector3d instance, Vector3d mu, Matrix3d covar, int dimensionality);
-        Eigen::MatrixXd sampleMultivariateNormal( Eigen::RowVector3d mean, Eigen::Matrix3d covar, int numOfSamples, int dimensionality);
+        Eigen::MatrixXd sampleMultivariateNormal( Eigen::VectorXd mean, Eigen::MatrixXd covar, int numOfSamples, int dimensionality);
+        Eigen::MatrixXd sampleMultinomial(vector<double> probabilities, int samples);
         int randcat( vector<double> * vec);
         Eigen::Matrix3d iwishrnd( Matrix3d tau, double nu, int dimensionality);
+        Eigen::VectorXd exprnd(double rate, int samples);
+        double exppdf(double x , double lambda);
+        double gammarnd(double alpha , double beta);
 
     protected:
     private:
