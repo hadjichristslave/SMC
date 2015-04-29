@@ -105,11 +105,13 @@ const void SMC::smc_sample(StateProgression  * currState, \
 //                  state{2}{t,k}{3} = gammarnd(alpha, beta);
                     SMC::SufficientStatistics pr;
                     pr.covar = ut.iwishrnd(par.tau0, par.nu0, 3, par.nu0);
+                    Vector3d tempMean(ut.sampleMultivariateNormal(par.mu0, par.tau0.array()/par.kappa0,1,3));
+                    pr.mean[0] = tempMean(0);
+                    pr.mean[1] = tempMean(1);
+                    pr.mean[2] = tempMean(2);
+                    pr.exponential = ut.gammarnd(params.gamma_alpha0  , params.gamma_beta0);
 
-                    ut.sampleMultivariateNormal(par.mu0, par.tau0,1,3);
-                    //pr.exponential = ut.gammarnd(params.gamma_alpha0  , params.gamma_beta0);
-                    //pr.covar = ut.iwishrnd(params.tau0, params.nu0, params.tau0.rows());
-                    //currState->stateProg[currentTime] = iwishrnd();
+
 
 
                 }
