@@ -59,6 +59,7 @@ class Utilities
         Eigen::VectorXd exprnd(double rate, int samples);
         double exppdf(double x , double lambda);
         double gammarnd(double alpha , double beta);
+        RowVectorXd dirrnd(RowVectorXd q0);
 
     protected:
     private:

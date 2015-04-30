@@ -22,7 +22,7 @@ class SMC
             double              exponential;
             SufficientStatistics(vector<double> pointInstance , int begin){
                 double sum = 0;
-                for(int i =begin; i < pointInstance.size(); i++){
+                for(unsigned int i =begin; i < pointInstance.size(); i++){
                     categorical.push_back(pointInstance[i]);
                     sum += pointInstance[i];
                 }
@@ -37,7 +37,7 @@ class SMC
                 out << "Covariance statistics" << endl;
                 out << rhs.covar;
                 out << endl;
-                for( int i =0 ; i< rhs.categorical.size();i++)
+                for(unsigned int i =0 ; i< rhs.categorical.size();i++)
                     out << rhs.categorical[i] << ",";
                 out << endl;
                 out << " Exponent" << rhs.exponential<< endl;
@@ -53,7 +53,7 @@ class SMC
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
-                crp = .1; del = .7;auxiliaryNum = 10;
+                crp = 99000000 ; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
@@ -105,11 +105,27 @@ class SMC
         SMC::Params updateParams(MatrixXd data, \
                                 SMC::Params params , \
                                 int colourbins);
-        Eigen::MatrixXd getDataOfCluster(int cluster, vector<int> * assignments , vector< vector<double> > * cloudInstance);
+        Eigen::MatrixXd getDataOfCluster(int cluster, vector<int> * assignments,\
+                                         vector< vector<double> > * cloudInstance);
+        const void removeEmptyStates(SMC::StateProgression * state);
+
+        const void resample( vector< SMC::StateProgression > * particles, \
+                          vector < vector<double> > cloudData, \
+                          SMC::Params params,
+                          int currTime);
+        double computeWeights( SMC::StateProgression * stuff , int currTime , vector< vector<double> > * cloudData);
+        double getWeightNumerator(SMC::StateProgression * stuff , int currTime, vector< vector<double> > * cloudData);
+        double getWeightDenominator(SMC::StateProgression * stuff , int currTime, vector< vector<double> > * cloudData);
+        double getJointProbTheta();
+        double getJointProbAssig();
+        double getJointProbData();
+        double getPosteriorTheta();
+        double getPosteriorAssignments(SMC::StateProgression * currState , int currTime, vector< vector<double> > * cloudData);
+
 
     protected:
     private:
-        const static int timeOffset = 2;
+        const static int timeOffset = 1;
 };
 
 #endif // SMC_H

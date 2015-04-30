@@ -16,19 +16,54 @@ const void SMC::infer(vector< StateProgression >  * particles, \
                       SMC::Params params, int numOfParticles,\
                       int numOfSamples){
 //for all time intervals
-    for(int t=0;t<cloudData.size();t++)
+    for(unsigned int t=0;t<cloudData.size();t++)
         for(int j=0;j< numOfParticles; j++)
             particles->at(j).assignments.resize(cloudData[t].size() , -1);
 
-    for(int t=0;t<cloudData.size();t++){
+    for(unsigned int t=0;t<cloudData.size();t++){
         //for all particles
-        cout << "T ->" << t<< endl;
-        if(t%2==1) continue;
-        for(int j=0;j< numOfParticles; j++)
+        cout << " T is " << t << endl;
+        for(int j=0;j< numOfParticles; j++){
             for(int s=0;s< numOfSamples;s++)
                 smc_sample( & particles->at(j), cloudData[t], params, t,  s , cloudData[t].size());
-
+            removeEmptyStates( & particles->at(j));
+        }
+        resample( particles, cloudData[t],  params, t);
     }
+
+
+}
+const void SMC::removeEmptyStates(SMC::StateProgression * state){
+    int currentObs = state->assignments.size();
+    vector< vector<int> > data = state->clusterSizes;
+    vector< int > sums(data.size(),0);
+    for(unsigned int i = 0 ;i< data.size(); i++)
+        for_each(data[i].begin(), data[i].end(), [&] (double y) mutable { sums[i] +=y; });
+    int counter = 0;
+    for(int i =0 ;i<sums.size();i++){
+        if(sums[i]>0){
+            for(int j =0;j<state->assignments.size();j++)
+                state->assignments[j]        =  (state->assignments[j]==i)?counter:state->assignments[j];
+            cout << state->clusterSizes.size() << "-" <<state->clusterSizes[0].size() << endl;
+            cout << state->stateProg.size() << "-" <<state->stateProg[0].size() << endl;
+
+            for(int jj =0 ; jj< state->stateProg.size(); jj++){
+            // issues in my csv parser.
+            // Every second cloud is null that's why this size --0 thingy.
+            // cheers.
+                if(state->stateProg[jj].size()==0) continue;
+                state->stateProg[jj][counter]    = state->stateProg[jj][i];
+            }
+            state->clusterSizes[counter]           = state->clusterSizes[i];
+            counter++;
+        }
+    }
+    for(int jj =0 ; jj< state->stateProg.size(); jj++){
+        if(state->stateProg[jj].size()==0) continue;
+        state->stateProg[jj].erase (state->stateProg[jj].begin()+counter,state->stateProg[jj].end());
+    }
+
+    state->clusterSizes.erase (state->clusterSizes.begin()+counter,state->clusterSizes.end());
 
 
 }
@@ -98,38 +133,35 @@ const void SMC::smc_sample(StateProgression  * currState, \
                         par = updateParams(clusteredData, params, 3);
 
                     }
-//                  Format: params = {crp, del, #aux, tau0, v0, mu0, k0, q0, _,_,_<-#colorbins?}
-//                  state{2}{t,k}{2} = iwishrnd(params_post{4},params_post{5});
-//                  state{2}{t,k}{1} = mvnrnd(params_post{6},state{2}{t,k}{2}/params_post{7});
-//                  state{2}{t,k}{3} = dirrnd(params_post{8},1);
-//                  state{2}{t,k}{3} = gammarnd(alpha, beta);
                     SMC::SufficientStatistics pr;
-                    pr.covar = ut.iwishrnd(par.tau0, par.nu0, 3, par.nu0);
+                    pr.covar      = ut.iwishrnd(par.tau0, par.nu0, 3, par.nu0);
                     Vector3d tempMean(ut.sampleMultivariateNormal(par.mu0, par.tau0.array()/par.kappa0,1,3));
-                    pr.mean[0] = tempMean(0);
-                    pr.mean[1] = tempMean(1);
-                    pr.mean[2] = tempMean(2);
+                    pr.mean[0]     = tempMean(0);
+                    pr.mean[1]     = tempMean(1);
+                    pr.mean[2]     = tempMean(2);
                     pr.exponential = ut.gammarnd(params.gamma_alpha0  , params.gamma_beta0);
-
-
-
-
+                    RowVectorXd temp(ut.dirrnd(params.q0));
+                    pr.categorical.resize(temp.cols());
+                    for(int ii=0;ii<temp.cols(); ii++) pr.categorical[ii] = temp(ii);
+                    currState->stateProg[currentTime][i] = pr;
                 }
             }
         }
     }
+
     //sample an assignment for every datapoint in the dataset
     for(int i=0;i<dataSize;i++){
         vector<double> pointInstance = cloudInstance[i];
         vector<double> clusterLogProb(currentClusters);
         int old_k = -1;
-        //second time within the algorithm
-        if( currState->assignments.size()>=i+1)
+        //second time within the algorith
+        if( currState->assignments.size()>(unsigned int)i)
             old_k = currState->assignments[i];
         std::vector<double> sizes;
-        if(currState->stateProg[currentTime].size() >0)
-            for( int kk =0; kk< currState->clusterSizes.size(); kk++)
+        if(currState->stateProg[currentTime].size() >0){
+            for( unsigned int kk =0; kk< currState->clusterSizes.size(); kk++)
                 sizes.push_back(currState->clusterSizes[kk].back());
+        }
         double sum = 0;
         sizes.push_back(params.crp);
         for_each(sizes.begin(), sizes.end(), [&sum] (double y) mutable { sum +=y; });
@@ -137,24 +169,24 @@ const void SMC::smc_sample(StateProgression  * currState, \
         vector<double> prob_assig = sizes;
         RowVector3d instance(3);
         instance << pointInstance[0], pointInstance[1], pointInstance[2];
-
         for( int j =0 ; j<currentClusters; j++)
              if(sizes[j]>0)
                     clusterLogProb[j] = log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0, 3));
              else   clusterLogProb[j] = -INFINITY;
 
         clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0*1.0000e+20f, 3)));
+
         //TODO Must add exponent here
         sum = 0;
-        for(int ik=0;ik<clusterLogProb.size();ik++) {
-            prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) * ut.exppdf(pointInstance[6] , params.exp_lambda0);
+        for(unsigned int ik=0;ik<clusterLogProb.size();ik++) {
+            prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) * log(ut.exppdf(pointInstance[5] , params.exp_lambda0));
             sum +=prob_assig[ik];
         } for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { y = y/sum;});
+        //for_each(prob_assig.begin(), prob_assig.end(), [] (double &y) { cout << y << ",";}); cout << endl;
 
         int sample_k = -1;
         if(sum>0)  sample_k = ut.randcat( & prob_assig);
-        else       sample_k =0;
-
+        else       sample_k = 0;
         currState->assignments[i] = sample_k;
         // K+ 1 because k is a cpp 0-index variable
         if( sample_k +1  > currentClusters){
@@ -174,11 +206,11 @@ const void SMC::smc_sample(StateProgression  * currState, \
 // Get all the data that are assigned to cluster CLUSTER
 Eigen::MatrixXd SMC::getDataOfCluster(int cluster, vector<int> * assignments , vector< vector<double> > * cloudInstance){
     int numOfAssign= 0 ;
-    for( int jkl = 0 ;jkl< assignments->size();jkl++)
+    for(unsigned int jkl = 0 ;jkl< assignments->size();jkl++)
         if( assignments->at(jkl) == cluster)  numOfAssign++;
     Eigen::MatrixXd clusteredData(numOfAssign,cloudInstance->at(0).size());
     numOfAssign = 0;
-    for( int jkl = 0 ;jkl< assignments->size();jkl++)
+    for(unsigned int jkl = 0 ;jkl< assignments->size();jkl++)
         if( assignments->at(jkl) == cluster){
             std::vector<double> v = cloudInstance->at(jkl);
             double* ptr = &v[0];
@@ -219,4 +251,97 @@ SMC::Params SMC::updateParams(MatrixXd data, SMC::Params params , int colourbins
     newParams.q0 = params.q0.array()  + colours.colwise().sum().array();
     newParams.gamma_alpha0 = params.gamma_alpha0 + obsSize , newParams.gamma_beta0 =params.gamma_beta0 + angles.sum();
     return newParams;
+}
+const void SMC::resample( vector< SMC::StateProgression > * particles, \
+                          vector < vector<double> >  cloudData, \
+                          SMC::Params params,
+                          int currTime){
+    vector<double> weights(particles->size());
+    cout  << "resampling bithces" << endl;
+
+
+    for(int i =0 ; i< particles->size(); i ++ ){
+        weights[i] = computeWeights(& particles->at(i) , currTime , &  cloudData);
+
+    }
+}
+double SMC::computeWeights( SMC::StateProgression * stuff, int currTime , vector<vector <double > > * cloudData){
+    int clusters = stuff->stateProg[currTime].size();
+    return exp(getWeightNumerator( stuff , currTime, cloudData ) - getWeightDenominator( stuff , currTime, cloudData ));
+}
+
+double SMC::getWeightNumerator(SMC::StateProgression * stuff , int currTime, vector< vector<double> > * cloudData){
+    double term1 = getJointProbTheta();
+    double term2 = getJointProbAssig();
+    double term3 = getJointProbData();
+    return term1 + term2 + term3;
+}
+double SMC::getWeightDenominator(SMC::StateProgression * stuff , int currTime, vector< vector<double> > * cloudData){
+    double term1 = getPosteriorTheta();
+    double term2 = getPosteriorAssignments(stuff , currTime, cloudData);
+    return term1  + term2;
+
+}
+
+double SMC::getJointProbTheta(){
+    return 1;
+}
+double SMC::getJointProbAssig(){
+    return .1;
+}
+double SMC::getJointProbData(){
+    return .1;
+}
+
+double SMC::getPosteriorTheta(){
+    return .1;
+};
+double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int currTime, vector< vector<double> > * cloudData){
+       //sample an assignment for every datapoint in the dataset
+    int dataSize = cloudData->size();
+    for(int i=0;i<dataSize;i++){
+        vector<double> pointInstance = cloudData->at(i);
+        vector<double> clusterLogProb(currState->stateProg[currTime].size());
+
+        int old_k = -1;
+        if( currState->assignments.size()>(unsigned int)i)
+            old_k = currState->assignments[i];
+
+        std::vector<double> sizes;
+        if(currState->stateProg[currTime].size() >0){
+            for( unsigned int kk =0; kk< currState->clusterSizes.size(); kk++)
+                sizes.push_back(currState->clusterSizes[kk].back());
+        }
+        double sum = 0;
+        sizes.push_back(99000000);
+        for_each(sizes.begin(), sizes.end(), [&sum] (double y) mutable { sum +=y; });
+        for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { y = y/sum; });
+        vector<double> prob_assig = sizes;
+        RowVector3d instance(3);
+        instance << pointInstance[0], pointInstance[1], pointInstance[2];
+
+        for( int j =0 ; j<currState->stateProg[currTime].size(); j++){
+            RowVector3d mean(3);
+            instance << currState->stateProg[currTime][j].mean[0], \
+                        currState->stateProg[currTime][j].mean[1], \
+                        currState->stateProg[currTime][j].mean[2];
+             if(sizes[j]>0)
+                   clusterLogProb[j] = log(ut.multivariateNormalPDF(instance, \
+                                                                     mean, \
+                                                                     currState->stateProg[currTime][j].covar, 3));
+             else   clusterLogProb[j] = -INFINITY;
+        }
+        Eigen::RowVectorXd mean= Eigen::RowVectorXd::Zero(3);
+        Eigen::MatrixXd covar = Eigen::MatrixXd::Identity(3,3);
+        clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, mean, covar*1.0000e+20f, 3)));
+
+        //TODO Must add exponent here
+        sum = 0;
+        for(unsigned int ik=0;ik<clusterLogProb.size();ik++) {
+            prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) \
+             * log(ut.exppdf(pointInstance[5], currState->stateProg[currTime][ik].exponential));
+        }
+    }
+
+    return 0;
 }

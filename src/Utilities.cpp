@@ -29,12 +29,9 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
             }
 
             if(line == CloudSeperator){
-                vector< vector< double> > dat;
-                clouds.push_back(dat);
-                currentCloud++;
                 currPointIndex = -1;
                 continue;
-            }else if(currPointIndex == -1){
+            }if(currPointIndex == -1){
                 vector< vector< double> > dat;
                 clouds.push_back(dat);
                 currentCloud++;
@@ -74,8 +71,8 @@ double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3
 int Utilities::randcat( vector<double> * vec){
     // GEt cumsum
     for(int i =0;i<vec->size();i++) vec->at(i) += i>0?vec->at(i-1):0;
-    double r = ((double) rand() / (RAND_MAX)) + 1;
-    for(int i=0;i< vec->size();i++) if( vec->at(i) < r) return i;
+    double r = ((double) rand() / (RAND_MAX));
+    for(int i=0;i< vec->size();i++) if( vec->at(i) >= r) return i;
 }
 Eigen::MatrixXd Utilities::sampleMultinomial(vector<double> probabilities, int samples){
     // Return samples number of items from a multinomial with probabilities vector defining the probability of samplign each item
@@ -115,6 +112,15 @@ double Utilities::gammarnd(double alpha, double beta){
     T = gsl_rng_default;
     r = gsl_rng_alloc(T);
     return gsl_ran_gamma(r , alpha, beta);
+}
+RowVectorXd Utilities::dirrnd(RowVectorXd q0){
+    RowVectorXd resp(q0.cols());
+    double sum = 0;
+    for( int i =0;i<q0.cols();i++){
+        resp(i)  = gammarnd(q0(i),1);
+        sum += resp(i);
+    }for(int i =0;i<q0.cols();i++) resp(i)  /= sum;
+    return resp;
 }
 Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int df){
     Matrix3d normTransform(dimensionality, dimensionality);
