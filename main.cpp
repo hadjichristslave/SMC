@@ -30,6 +30,17 @@ int main(int argc, char* argv[])
     int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
     //Format: params = {crp, del, #aux, tau0, v0, mu0, k0, q0, _,_,_<-#colorbins?,lambda0(angle distance measure)}
     //State format: = { assignments, cluster parameters, clusterSizes(Number of elements) }
+    //RowVector3d x;
+    //x << -.886363 ,-.808702, -.0398121;
+    //RowVector3d mu;
+    //mu <<  1.20956e-316, 1.4822e-323, 1.4822e-323;
+    //Matrix3d covar;
+    //covar  << .00560623, -.00302697, .000888741,
+             //-.00302697, .0017546, -.000225909,
+             // .000888741, -.000225909,  .00351697;
+    //cout << ut.multivariateNormalPDF(x, mu , covar,3) << endl;
+    //return 0;
+
     SMC::Params Baseparams;
     Baseparams.cloudInstances = dataPoints.size();
     vector < SMC::StateProgression > particles(timeStates, timeStates);

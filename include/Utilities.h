@@ -60,6 +60,7 @@ class Utilities
         double exppdf(double x , double lambda);
         double gammarnd(double alpha , double beta);
         RowVectorXd dirrnd(RowVectorXd q0);
+        double catpdf(int index , vector<double>  probabilities);
 
     protected:
     private:

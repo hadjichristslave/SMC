@@ -53,7 +53,7 @@ class SMC
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
-                crp = 99000000 ; del = .7;auxiliaryNum = 10;
+                crp = 999 ; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
@@ -112,7 +112,8 @@ class SMC
         const void resample( vector< SMC::StateProgression > * particles, \
                           vector < vector<double> > cloudData, \
                           SMC::Params params,
-                          int currTime);
+                          int currTime,
+                          int numOfParticles);
         double computeWeights( SMC::StateProgression * stuff , int currTime , vector< vector<double> > * cloudData);
         double getWeightNumerator(SMC::StateProgression * stuff , int currTime, vector< vector<double> > * cloudData);
         double getWeightDenominator(SMC::StateProgression * stuff , int currTime, vector< vector<double> > * cloudData);

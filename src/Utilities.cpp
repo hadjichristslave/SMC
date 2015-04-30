@@ -17,7 +17,7 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
     std::string line;
     int currentCloud   = -1, currPointIndex = -1;
 
-    ifstream myfile ("/home/panos/Desktop/cloudData/aggregated.csv");
+    ifstream myfile ("/home/panos/Desktop/cloudData/subset.csv");
     int lineCount = 0;
     if (myfile.is_open())
     {
@@ -64,9 +64,10 @@ double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3
     Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
     normTransform = cholSolver.matrixL();
     RowVector3d difference = instance - mu;
-    RowVector3d tempDif  = difference * normTransform.inverse();
-    double pdf = pow( (2*M_PI) , ((double)-dimensionality/2) ) * exp(tempDif.array().square().sum()/2)/(double)normTransform.eigenvalues().sum().real();
-    return pdf;
+    RowVector3d tempDif  = difference * normTransform.transpose().inverse();
+    double pdf = pow( (2*M_PI) , ((double)-dimensionality/2) ) * \
+    exp(-tempDif.array().square().sum()/2)/normTransform.transpose().diagonal().prod();
+    return pdf==0?.00000000000000001:pdf;
 }
 int Utilities::randcat( vector<double> * vec){
     // GEt cumsum
@@ -104,6 +105,12 @@ Eigen::VectorXd Utilities::exprnd(double rate , int samples){
 }
 double Utilities::exppdf(double x , double lambda){
     return gsl_ran_exponential_pdf(x , lambda);
+}
+double Utilities::catpdf(int index , vector<double>  probabilities){
+    double sum = 0;
+    for_each(probabilities.begin(), probabilities.end(), [&sum] (double y) mutable { sum +=y; });
+    for_each(probabilities.begin(), probabilities.end(), [&sum] (double y) mutable { y /= sum; });
+    return probabilities[index];
 }
 double Utilities::gammarnd(double alpha, double beta){
     const gsl_rng_type * T;

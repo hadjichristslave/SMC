@@ -22,13 +22,12 @@ const void SMC::infer(vector< StateProgression >  * particles, \
 
     for(unsigned int t=0;t<cloudData.size();t++){
         //for all particles
-        cout << " T is " << t << endl;
         for(int j=0;j< numOfParticles; j++){
             for(int s=0;s< numOfSamples;s++)
                 smc_sample( & particles->at(j), cloudData[t], params, t,  s , cloudData[t].size());
             removeEmptyStates( & particles->at(j));
         }
-        resample( particles, cloudData[t],  params, t);
+        resample( particles, cloudData[t],  params, t , numOfParticles);
     }
 
 
@@ -44,13 +43,7 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state){
         if(sums[i]>0){
             for(int j =0;j<state->assignments.size();j++)
                 state->assignments[j]        =  (state->assignments[j]==i)?counter:state->assignments[j];
-            cout << state->clusterSizes.size() << "-" <<state->clusterSizes[0].size() << endl;
-            cout << state->stateProg.size() << "-" <<state->stateProg[0].size() << endl;
-
             for(int jj =0 ; jj< state->stateProg.size(); jj++){
-            // issues in my csv parser.
-            // Every second cloud is null that's why this size --0 thingy.
-            // cheers.
                 if(state->stateProg[jj].size()==0) continue;
                 state->stateProg[jj][counter]    = state->stateProg[jj][i];
             }
@@ -175,14 +168,12 @@ const void SMC::smc_sample(StateProgression  * currState, \
              else   clusterLogProb[j] = -INFINITY;
 
         clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0*1.0000e+20f, 3)));
-
         //TODO Must add exponent here
         sum = 0;
         for(unsigned int ik=0;ik<clusterLogProb.size();ik++) {
-            prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) * log(ut.exppdf(pointInstance[5] , params.exp_lambda0));
+            prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) * ut.exppdf(pointInstance[5] , params.exp_lambda0);
             sum +=prob_assig[ik];
-        } for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { y = y/sum;});
-        //for_each(prob_assig.begin(), prob_assig.end(), [] (double &y) { cout << y << ",";}); cout << endl;
+        }for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { y = y/sum;});
 
         int sample_k = -1;
         if(sum>0)  sample_k = ut.randcat( & prob_assig);
@@ -254,16 +245,14 @@ SMC::Params SMC::updateParams(MatrixXd data, SMC::Params params , int colourbins
 }
 const void SMC::resample( vector< SMC::StateProgression > * particles, \
                           vector < vector<double> >  cloudData, \
-                          SMC::Params params,
-                          int currTime){
+                          SMC::Params params, \
+                          int currTime,\
+                          int numOfParticles){
     vector<double> weights(particles->size());
-    cout  << "resampling bithces" << endl;
 
-
-    for(int i =0 ; i< particles->size(); i ++ ){
+    for(int i =0 ; i< numOfParticles; i ++ )
         weights[i] = computeWeights(& particles->at(i) , currTime , &  cloudData);
 
-    }
 }
 double SMC::computeWeights( SMC::StateProgression * stuff, int currTime , vector<vector <double > > * cloudData){
     int clusters = stuff->stateProg[currTime].size();
@@ -299,6 +288,8 @@ double SMC::getPosteriorTheta(){
 double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int currTime, vector< vector<double> > * cloudData){
        //sample an assignment for every datapoint in the dataset
     int dataSize = cloudData->size();
+
+    RowVectorXd probAssig_i(dataSize);
     for(int i=0;i<dataSize;i++){
         vector<double> pointInstance = cloudData->at(i);
         vector<double> clusterLogProb(currState->stateProg[currTime].size());
@@ -307,14 +298,16 @@ double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int curr
         if( currState->assignments.size()>(unsigned int)i)
             old_k = currState->assignments[i];
 
-        std::vector<double> sizes;
+        std::vector<double> sizes(0);
         if(currState->stateProg[currTime].size() >0){
-            for( unsigned int kk =0; kk< currState->clusterSizes.size(); kk++)
+            for( int kk =0; kk< currState->clusterSizes.size(); kk++){
                 sizes.push_back(currState->clusterSizes[kk].back());
+            }
         }
         double sum = 0;
-        sizes.push_back(99000000);
-        for_each(sizes.begin(), sizes.end(), [&sum] (double y) mutable { sum +=y; });
+        sizes.push_back(999.0);
+
+        for_each(sizes.begin(), sizes.end(), [&sum] (double y) { sum +=y; });
         for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { y = y/sum; });
         vector<double> prob_assig = sizes;
         RowVector3d instance(3);
@@ -325,23 +318,24 @@ double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int curr
             instance << currState->stateProg[currTime][j].mean[0], \
                         currState->stateProg[currTime][j].mean[1], \
                         currState->stateProg[currTime][j].mean[2];
-             if(sizes[j]>0)
+             if(sizes[j]>0){
                    clusterLogProb[j] = log(ut.multivariateNormalPDF(instance, \
                                                                      mean, \
                                                                      currState->stateProg[currTime][j].covar, 3));
-             else   clusterLogProb[j] = -INFINITY;
+             }else   clusterLogProb[j] = -INFINITY;
         }
+
         Eigen::RowVectorXd mean= Eigen::RowVectorXd::Zero(3);
         Eigen::MatrixXd covar = Eigen::MatrixXd::Identity(3,3);
         clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, mean, covar*1.0000e+20f, 3)));
 
         //TODO Must add exponent here
         sum = 0;
-        for(unsigned int ik=0;ik<clusterLogProb.size();ik++) {
+        for(unsigned int ik=0;ik<currState->stateProg[currTime].size();ik++) {
             prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) \
              * log(ut.exppdf(pointInstance[5], currState->stateProg[currTime][ik].exponential));
         }
+        probAssig_i(i) = log(ut.catpdf(currState->assignments[i] , prob_assig));
     }
-
     return 0;
 }
