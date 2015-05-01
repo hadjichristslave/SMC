@@ -335,7 +335,6 @@ double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int curr
             prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) \
              * log(ut.exppdf(pointInstance[5], currState->stateProg[currTime][ik].exponential));
         }
-        test
         probAssig_i(i) = log(ut.catpdf(currState->assignments[i] , prob_assig));
     }
     return 0;
