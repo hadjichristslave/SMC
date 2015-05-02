@@ -165,7 +165,7 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
                 if(i>j) tempMat(i,j) = d(gen);
 
          Eigen::MatrixXd tempwishartstuff(tempMat * normTransform);
-         Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff) ;
+         Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff);
          return wishartstuff.inverse();
     }
 }
