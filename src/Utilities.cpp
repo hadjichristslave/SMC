@@ -162,8 +162,7 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
         MatrixXd tempMat(df, dimensionality);
         for(int i=0;i<tempMat.rows();i++)
             for(int j=0;j<tempMat.cols();j++)
-                if(i>j) tempMat(i,j) = d(gen);
-
+                tempMat(i,j) = d(gen)*sizeOfMat;
          Eigen::MatrixXd tempwishartstuff(tempMat * normTransform);
          Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff);
          return wishartstuff.inverse();

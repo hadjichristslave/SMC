@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
     //Matrix3d covar;
     //covar  << .00560623, -.00302697, .000888741,
              //-.00302697, .0017546, -.000225909,
-             // .000888741, -.000225909,  .00351697;
-    //cout << ut.multivariateNormalPDF(x, mu , covar,3) << endl;
+              //.000888741, -.000225909,  .00351697;
+    //cout << ut.iwishrnd( covar,60 ,3,1)<< endl;
     //return 0;
 
     SMC::Params Baseparams;

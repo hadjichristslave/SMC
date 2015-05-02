@@ -77,7 +77,7 @@ const void SMC::smc_sample(StateProgression  * currState, \
         // Time - 2 due to the error in my ut file reader. Will make it -1 as soon as i fix the eerror
             currState->stateProg[currentTime] = currState->stateProg[currentTime-timeOffset];
         }else{
-            Params par(30);
+            Params par(CRP);
             if( currState->clusterSizes.back()[i] > 0 ){
                 if( currentTime == 0){
                     Eigen::MatrixXd clusteredData(getDataOfCluster(i, & currState->assignments, &cloudInstance));
@@ -121,6 +121,10 @@ const void SMC::smc_sample(StateProgression  * currState, \
         sizes.push_back(params.crp);
         for_each(sizes.begin(), sizes.end(), [&sum] (double y) mutable { sum +=y; });
         for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { y = y/sum; });
+
+        cout << "sizes and sthi " << endl;
+        for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { cout << y << ","; }); cout << endl;
+        cout << "--------------_" << endl;
         vector<double> prob_assig = sizes;
         RowVector3d instance(3);
         instance << pointInstance[0], pointInstance[1], pointInstance[2];
@@ -129,7 +133,9 @@ const void SMC::smc_sample(StateProgression  * currState, \
                     clusterLogProb[j] = log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0, 3));
              else   clusterLogProb[j] = -INFINITY;
 
-        clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0*1.0000e+20f, 3)));
+        clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0, 3)));
+        cout << " cluster log prob " << endl;
+        for_each(clusterLogProb.begin(), clusterLogProb.end(), [&sum] (double &y) mutable { cout << y << ","; }); cout << endl;
         //TODO Must add exponent here
         sum = 0;
         for(unsigned int ik=0;ik<clusterLogProb.size();ik++) {
@@ -137,12 +143,20 @@ const void SMC::smc_sample(StateProgression  * currState, \
             sum +=prob_assig[ik];
         }for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { y = y/sum;});
 
+        for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { cout << y << ",";}); cout << endl;
+
         int sample_k = -1;
         if(sum>0)  sample_k = ut.randcat( & prob_assig);
         else       sample_k = 0;
+
+        for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { cout << y << ",";}); cout << endl;
+        cout << "k sampled is " << sample_k << endl;
+        cin >> foo;
+
         currState->assignments[i] = sample_k;
         // K+ 1 because k is a cpp 0-index variable
-        if( sample_k +1  > currentClusters){
+        if( sample_k  == currentClusters){
+        cout<< "added shit" <<endl;
             currentClusters++;
             newCluster(currState, params, pointInstance, currentTime);
             vector<int> sizeVec(cloudInstance.size(),0);
@@ -154,6 +168,13 @@ const void SMC::smc_sample(StateProgression  * currState, \
         for(int k=i; k<dataSize;k++)
             currState->clusterSizes[sample_k][k]++;
     }
+    cout << "clusters" << currState->clusterSizes.size() << endl;
+    for(int k=0; k<currState->clusterSizes.size();k++){
+        for(int kk = 0;kk<currState->clusterSizes[k].size();kk++)
+            cout << currState->clusterSizes[k][kk] << ",";
+        cout << "fdfd" << endl;
+    }
+
 
 }
 // Get all the data that are assigned to cluster CLUSTER
@@ -220,13 +241,13 @@ double SMC::computeWeights( SMC::StateProgression * stuff, \
                             int currTime , \
                             vector<vector <double > > * cloudData , \
                             SMC::Params params){
-    int clusters = stuff->stateProg[currTime].size();\
-    cout << " ================" << endl;
-    cout << getWeightNumerator( stuff , currTime, cloudData, params) \
-    << endl <<  getWeightDenominator( stuff , currTime, cloudData, params ) << endl<< endl;
-    cout << "------------" << endl;
-    cout << exp(getWeightNumerator( stuff , currTime, cloudData, params) - getWeightDenominator( stuff , currTime, cloudData, params ))<< endl;
-    cout << "_+_+_+_+_+_+_+_+_+_+_+" << endl;
+    int clusters = stuff->stateProg[currTime].size();
+    //cout << " ================" << endl;
+    //cout << getWeightNumerator( stuff , currTime, cloudData, params) \
+    //<< endl <<  getWeightDenominator( stuff , currTime, cloudData, params ) << endl<< endl;
+    //cout << "------------" << endl;
+    //cout << exp(getWeightNumerator( stuff , currTime, cloudData, params) - getWeightDenominator( stuff , currTime, cloudData, params ))<< endl;
+    //cout << "_+_+_+_+_+_+_+_+_+_+_+" << endl;
     return exp(getWeightNumerator( stuff , currTime, cloudData, params)- getWeightDenominator( stuff , currTime, cloudData, params ));
 }
 
@@ -274,7 +295,7 @@ double SMC::getJointProbAssig(SMC::StateProgression * currState , int currTime, 
             for( int kk =0; kk< currState->clusterSizes.size(); kk++)
                 sizes.push_back(currState->clusterSizes[kk].back());
         double sum = 0;
-        sizes.push_back(30.0);
+        sizes.push_back(CRP);
         for_each(sizes.begin(), sizes.end(), [&sum] (double y) { sum +=y; });
         for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { y = y/sum; });
         vector<double> prob_assig = sizes;
@@ -291,7 +312,7 @@ double SMC::getJointProbTheta(SMC::StateProgression * currState,\
     VectorXd postProbTheta(currentClusters);
     // Update cluster parameterse given the points within them
     for(int i=0;i<currentClusters;i++){
-        Params par(30);
+        Params par(CRP);
         if( currState->clusterSizes.back()[i] > 0 ){
             if( currTime == 0){
                 Eigen::MatrixXd clusteredData(getDataOfCluster(i, & currState->assignments, cloudData));
@@ -324,7 +345,7 @@ double SMC::getPosteriorTheta(SMC::StateProgression * currState,\
     VectorXd postProbTheta(currentClusters);
     // Update cluster parameterse given the points within them
     for(int i=0;i<currentClusters;i++){
-        Params par(30);
+        Params par(CRP);
         if( currState->clusterSizes.back()[i] > 0 ){
             if( currTime == 0){
                 Eigen::MatrixXd clusteredData(getDataOfCluster(i, & currState->assignments, cloudData));
@@ -362,13 +383,11 @@ double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int curr
         if( currState->assignments.size()>(unsigned int)i) old_k = currState->assignments[i];
 
         std::vector<double> sizes(0);
-        if(currState->stateProg[currTime].size() >0){
-            for( int kk =0; kk< currState->clusterSizes.size(); kk++){
+        if(currState->stateProg[currTime].size() >0)
+            for( int kk =0; kk< currState->clusterSizes.size(); kk++)
                 sizes.push_back(currState->clusterSizes[kk].back());
-            }
-        }
         double sum = 0;
-        sizes.push_back(30.0);
+        sizes.push_back(CRP);
         for_each(sizes.begin(), sizes.end(), [&sum] (double y) { sum +=y; });
         for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { y = y/sum; });
         vector<double> prob_assig = sizes;
@@ -385,10 +404,9 @@ double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int curr
                                                                      currState->stateProg[currTime][j].covar, 3));
              else   clusterLogProb[j] = -INFINITY;
         }
-        Eigen::RowVectorXd mean= Eigen::RowVectorXd::Zero(3);
-        Eigen::MatrixXd covar = Eigen::MatrixXd::Identity(3,3);
+        Eigen::RowVectorXd mean    = Eigen::RowVectorXd::Zero(3);
+        Eigen::MatrixXd covar      = Eigen::MatrixXd::Identity(3,3);
         clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, mean, covar*1.0000e+20f, 3)));
-        //TODO Must add exponent here
         sum = 0;
         for(unsigned int ik=0;ik<currState->stateProg[currTime].size();ik++) {
             prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) \
