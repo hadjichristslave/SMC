@@ -53,7 +53,7 @@ class SMC
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
-                crp = 3 ; del = .7;auxiliaryNum = 10;
+                crp = 1 ; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
@@ -162,7 +162,7 @@ class SMC
     protected:
     private:
         const static int timeOffset = 1;
-        const static int CRP        = 3;
+        const static int CRP        = 1;
 };
 
 #endif // SMC_H

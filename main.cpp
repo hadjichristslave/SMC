@@ -26,8 +26,10 @@ int main(int argc, char* argv[])
     // Variable declaration
     SMC smc;
     Utilities ut;
+    cout << "Stuff;" << endl;
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----");
     int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
+
     //Format: params = {crp, del, #aux, tau0, v0, mu0, k0, q0, _,_,_<-#colorbins?,lambda0(angle distance measure)}
     //State format: = { assignments, cluster parameters, clusterSizes(Number of elements) }
     //RowVector3d x;
@@ -40,10 +42,9 @@ int main(int argc, char* argv[])
               //.000888741, -.000225909,  .00351697;
     //cout << ut.iwishrnd( covar,60 ,3,1)<< endl;
     //return 0;
-
     SMC::Params Baseparams;
     Baseparams.cloudInstances = dataPoints.size();
-    vector < SMC::StateProgression > particles(timeStates, timeStates);
+    vector < SMC::StateProgression > particles(numOfParticles, timeStates);
     smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
     return 0;
 }
