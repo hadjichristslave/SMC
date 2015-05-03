@@ -23,16 +23,10 @@ const void SMC::infer(vector< StateProgression >  * particles, \
     for(unsigned int t=0;t<cloudData.size();t++){
         //for all particles
         for(int j=0;j< numOfParticles; j++){
-            for(int s=0;s< numOfSamples;s++)
-                smc_sample( & particles->at(j), cloudData[t], params, t,  s , cloudData[t].size());
-            cout << "---------------------" << endl;
-            for(int k=0; k<particles->at(j).clusterSizes.size();k++)
-                cout << particles->at(j).clusterSizes[k].back() << ",";
-            cout<< endl;
+            for(int s=0;s< numOfSamples;s++){
+                sample( & particles->at(j), cloudData[t], params, t,  s , cloudData[t].size());
+            }
             removeEmptyStates( & particles->at(j), t);
-            for(int k=0; k<particles->at(j).clusterSizes.size();k++)
-                cout << particles->at(j).clusterSizes[k].back() << ",";
-            cout<< endl;
         }
         resample( particles, cloudData[t],  params, t , numOfParticles);
     }
@@ -44,18 +38,15 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state, int currTime){
     vector< vector<int> > data = state->clusterSizes;
     vector< int > sums(data.size(),0);
     for(unsigned int i = 0 ;i< data.size(); i++)
-        for_each(data[i].begin(), data[i].end(), [&] (double y) mutable { sums[i] +=y; });
+        for_each(data[i].begin(), data[i].end(), [&] (double y) mutable { sums[i] +=y;});
     int counter = 0;
     for(int i =0 ;i<sums.size();i++){
         if(sums[i]>0){
             for(int j =0;j<state->assignments.size();j++)
                 state->assignments[j]        =  (state->assignments[j]==i)?counter:state->assignments[j];
-            // change the index of a cluster to the reduced one.
-            for(int jj =0 ; jj< state->stateProg.size(); jj++){
-                if(state->stateProg[jj].size()==0) continue;
-                state->stateProg[jj][counter]    = state->stateProg[jj][i];
-            }
-            state->clusterSizes[counter]           = state->clusterSizes[i];
+            // change the index of a cluster to the reduced one
+            state->stateProg[currTime][counter]          = state->stateProg[currTime][i];
+            state->clusterSizes[counter]                 = state->clusterSizes[i];
             counter++;
         }
     }
@@ -63,10 +54,9 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state, int currTime){
     // CLuster that survive can be traced back though
     state->stateProg[currTime].erase (state->stateProg[currTime].begin()+counter,state->stateProg[currTime].end());
     state->clusterSizes.erase (state->clusterSizes.begin()+counter,state->clusterSizes.end());
-
 }
 // Sample  cluster parameters for cloud data at a given time
-const void SMC::smc_sample(StateProgression  * currState, \
+const void SMC::sample(StateProgression  * currState, \
                 vector< vector<double> >cloudInstance, \
                 SMC::Params params, \
                 int currentTime, \
@@ -109,7 +99,6 @@ const void SMC::smc_sample(StateProgression  * currState, \
     }
     //sample an assignment for every datapoint in the dataset
     for(int i=0;i<dataSize;i++){
-
         vector<double> pointInstance = cloudInstance[i];
         vector<double> clusterLogProb(currentClusters);
         int old_k = -1;
@@ -153,6 +142,7 @@ const void SMC::smc_sample(StateProgression  * currState, \
             vector<int> sizeVec(cloudInstance.size(),0);
             currState->clusterSizes.push_back(sizeVec);
         }
+
         if(old_k!=-1)
             for(int k=i; k<dataSize;k++)
                 currState->clusterSizes[old_k][k]--;
@@ -221,6 +211,15 @@ const void SMC::resample( vector< SMC::StateProgression > * particles, \
     for(int i =0 ; i< numOfParticles; i ++ ){
         weights[i] = computeWeights(& particles->at(i) , currTime , &  cloudData , params);
     }
+    double sum = 0;
+    for_each( weights.begin(), weights.end(), [&sum] (double y) mutable { sum+=y; });
+    for(int i =0 ; i < weights.size();i++)    weights[i] = weights[i]/sum;
+    for_each( weights.begin(), weights.end(), [&sum] (double y) { cout << y << ",";}); cout << endl;
+    vector< SMC::StateProgression > tempParts;
+
+    for(int i = 0 ; i< particles->size() ; i ++)
+        tempParts.push_back(particles->at(ut.randcat( & weights)));
+    * particles = tempParts;
 }
 double SMC::computeWeights( SMC::StateProgression * stuff, \
                             int currTime , \
@@ -251,7 +250,6 @@ double SMC::getJointProbData(SMC::StateProgression * currState , int currTime, v
         instance(1) = cloudData->at(i)[1];
         instance(2) = cloudData->at(i)[2];
         int assignment = currState->assignments[i];
-
         Vector3d mean(3);
         mean(0) = currState->stateProg[currTime][assignment].mean[0];
         mean(1) = currState->stateProg[currTime][assignment].mean[1];
@@ -310,7 +308,7 @@ double SMC::getJointProbTheta(SMC::StateProgression * currState,\
                                                  par.exp_lambda0));
         }
     }
-    return postProbTheta.sum();
+    return  postProbTheta.sum()==-INFINITY?0:postProbTheta.sum();
 }
 
 double SMC::getPosteriorTheta(SMC::StateProgression * currState,\
@@ -333,7 +331,6 @@ double SMC::getPosteriorTheta(SMC::StateProgression * currState,\
                 Vector3d tempMean(3);
                 tempMean(0) = pr[0];
                 tempMean(1) = pr[1];
-                tempMean(2) = pr[2];
                 postProbTheta(i) = log(ut.multivariateNormalPDF( tempMean,\
                                                                 par.mu0,\
                                                                 currState->stateProg[currTime][i].covar.array()/par.kappa0,\
@@ -342,8 +339,7 @@ double SMC::getPosteriorTheta(SMC::StateProgression * currState,\
                                                  par.exp_lambda0));
         }
     }
-
-    return postProbTheta.sum();
+    return  postProbTheta.sum()==-INFINITY?0:postProbTheta.sum();
 };
 
 double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int currTime, vector< vector<double> > * cloudData){

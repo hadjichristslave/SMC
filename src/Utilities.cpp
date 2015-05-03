@@ -55,7 +55,6 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
     }else{
         cout << " could not read data file";
     }
-
     return clouds;
 }
 
