@@ -107,7 +107,7 @@ class SMC
                                 int colourbins);
         Eigen::MatrixXd getDataOfCluster(int cluster, vector<int> * assignments,\
                                          vector< vector<double> > * cloudInstance);
-        const void removeEmptyStates(SMC::StateProgression * state);
+        const void removeEmptyStates(SMC::StateProgression * state, int currTime);
 
         const void resample(         vector< SMC::StateProgression > * particles, \
                                      vector < vector<double> > cloudData, \

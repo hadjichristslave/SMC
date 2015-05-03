@@ -25,14 +25,21 @@ const void SMC::infer(vector< StateProgression >  * particles, \
         for(int j=0;j< numOfParticles; j++){
             for(int s=0;s< numOfSamples;s++)
                 smc_sample( & particles->at(j), cloudData[t], params, t,  s , cloudData[t].size());
-            removeEmptyStates( & particles->at(j));
+            cout << "---------------------" << endl;
+            for(int k=0; k<particles->at(j).clusterSizes.size();k++)
+                cout << particles->at(j).clusterSizes[k].back() << ",";
+            cout<< endl;
+            removeEmptyStates( & particles->at(j), t);
+            for(int k=0; k<particles->at(j).clusterSizes.size();k++)
+                cout << particles->at(j).clusterSizes[k].back() << ",";
+            cout<< endl;
         }
         resample( particles, cloudData[t],  params, t , numOfParticles);
     }
 
 
 }
-const void SMC::removeEmptyStates(SMC::StateProgression * state){
+const void SMC::removeEmptyStates(SMC::StateProgression * state, int currTime){
     int currentObs = state->assignments.size();
     vector< vector<int> > data = state->clusterSizes;
     vector< int > sums(data.size(),0);
@@ -43,6 +50,7 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state){
         if(sums[i]>0){
             for(int j =0;j<state->assignments.size();j++)
                 state->assignments[j]        =  (state->assignments[j]==i)?counter:state->assignments[j];
+            // change the index of a cluster to the reduced one.
             for(int jj =0 ; jj< state->stateProg.size(); jj++){
                 if(state->stateProg[jj].size()==0) continue;
                 state->stateProg[jj][counter]    = state->stateProg[jj][i];
@@ -51,13 +59,10 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state){
             counter++;
         }
     }
-    for(int jj =0 ; jj< state->stateProg.size(); jj++){
-        if(state->stateProg[jj].size()==0) continue;
-        state->stateProg[jj].erase (state->stateProg[jj].begin()+counter,state->stateProg[jj].end());
-    }
-
+    // Fix remove the redundant ones. Only removing the states of curr time due dynamic number of clusters on every step
+    // CLuster that survive can be traced back though
+    state->stateProg[currTime].erase (state->stateProg[currTime].begin()+counter,state->stateProg[currTime].end());
     state->clusterSizes.erase (state->clusterSizes.begin()+counter,state->clusterSizes.end());
-
 
 }
 // Sample  cluster parameters for cloud data at a given time
@@ -67,8 +72,6 @@ const void SMC::smc_sample(StateProgression  * currState, \
                 int currentTime, \
                 int currentSample , \
                 int dataSize){
-
-    cout << " Start " << currentSample << endl;
     //Get the current clusters.
     // Time - 2 due to the error in my ut file reader. Will make it -1 as soon as i fix the eerror
     int currentClusters = currState->stateProg[currentTime>0?(currentTime-timeOffset):0].size();
@@ -81,12 +84,9 @@ const void SMC::smc_sample(StateProgression  * currState, \
             Params par(CRP);
             if( currState->clusterSizes.back()[i] > 0 ){
                 if( currentTime == 0){
-                    cout << " got there " << endl;
                     Eigen::MatrixXd clusteredData(getDataOfCluster(i, & currState->assignments, &cloudInstance));
-                    cout << " got out with size" <<  clusteredData.rows() << "-" << clusteredData.cols() << endl;
                     // Update the parameters given the data that belong to the cluster
                     par = updateParams(clusteredData, params, 3);
-                    cout << " got out completely" << endl;
 
                 }else{
                     par = calculatePosteriorParams(currentTime, currState,  params, &cloudInstance,i);
@@ -145,7 +145,6 @@ const void SMC::smc_sample(StateProgression  * currState, \
         int sample_k = -1;
         if(sum>0)  sample_k = ut.randcat( & prob_assig);
         else       sample_k = 0;
-        cout << " sample  2" << currentSample<< endl;
         currState->assignments[i] = sample_k;
         // K+ 1 because k is a cpp 0-index variable
         if( sample_k  == currentClusters){
