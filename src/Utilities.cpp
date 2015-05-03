@@ -1,15 +1,6 @@
 #include "Utilities.h"
-
-
-Utilities::Utilities()
-{
-    //ctor
-}
-
-Utilities::~Utilities()
-{
-    //dtor
-}
+Utilities::Utilities(){}
+Utilities::~Utilities(){}
 
 vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator){
     vector< vector< vector<double> > > clouds;
@@ -19,16 +10,12 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
 
     ifstream myfile ("/home/panos/Desktop/cloudData/subset.csv");
     int lineCount = 0;
-    if (myfile.is_open())
-    {
-        while ( getline (myfile,line) )
-        {
+    if (myfile.is_open()){
+        while ( getline (myfile,line) ){
             if(lineCount ==0){
                 lineCount++;
                 continue;
-            }
-
-            if(line == CloudSeperator){
+            }if(line == CloudSeperator){
                 currPointIndex = -1;
                 continue;
             }if(currPointIndex == -1){
@@ -57,7 +44,6 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
     }
     return clouds;
 }
-
 double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
     Eigen::Matrix3d normTransform(dimensionality, dimensionality);
     Eigen::LLT<Eigen::Matrix3d> cholSolver(covar);
@@ -167,7 +153,6 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
          return wishartstuff.inverse();
     }
 }
-
 Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::MatrixXd covar, int samples, int dimensionality){
     Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor
     Eigen::internal::scalar_normal_dist_op<double>::rng.seed(1); // Seed the rng
