@@ -6,7 +6,6 @@
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
-
 using namespace std;
 using namespace Eigen;
 
@@ -156,8 +155,6 @@ class SMC
                                       SMC::Params params,\
                                       vector< vector<double> > * cloudData,
                                       int curDataPoint);
-
-
 
     protected:
     private:

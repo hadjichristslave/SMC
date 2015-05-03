@@ -26,7 +26,6 @@ int main(int argc, char* argv[])
     // Variable declaration
     SMC smc;
     Utilities ut;
-    cout << "Stuff;" << endl;
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----");
     int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
 

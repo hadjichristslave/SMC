@@ -30,8 +30,6 @@ const void SMC::infer(vector< StateProgression >  * particles, \
         }
         resample( particles, cloudData[t],  params, t , numOfParticles);
     }
-
-
 }
 const void SMC::removeEmptyStates(SMC::StateProgression * state, int currTime){
     int currentObs = state->assignments.size();
@@ -214,7 +212,6 @@ const void SMC::resample( vector< SMC::StateProgression > * particles, \
     double sum = 0;
     for_each( weights.begin(), weights.end(), [&sum] (double y) mutable { sum+=y; });
     for(int i =0 ; i < weights.size();i++)    weights[i] = weights[i]/sum;
-    for_each( weights.begin(), weights.end(), [&sum] (double y) { cout << y << ",";}); cout << endl;
     vector< SMC::StateProgression > tempParts;
 
     for(int i = 0 ; i< particles->size() ; i ++)
