@@ -3,6 +3,7 @@
 #include <eigen3/Eigen/Dense>
 #include "Utilities.h"
 #include <iostream>
+#include <fstream>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 
@@ -30,17 +31,19 @@ class SMC
             }
             SufficientStatistics(void){}
             friend ostream& operator<<(ostream& out ,const SufficientStatistics& rhs){
-                out << "========Start of SS print======"<< endl;
-                out <<" Mean statistics";
-                out << rhs.mean[0] << "," << rhs.mean[1] << "," << rhs.mean[2] << endl;
-                out << "Covariance statistics" << endl;
-                out << rhs.covar;
-                out << endl;
-                for(unsigned int i =0 ; i< rhs.categorical.size();i++)
-                    out << rhs.categorical[i] << ",";
-                out << endl;
-                out << " Exponent" << rhs.exponential<< endl;
-                out << "==========End of SS print====="<< endl;
+                //out << "========Start of SS print======"<< endl;
+                //out <<" Mean statistics";
+                out << rhs.mean[0] << " " << rhs.mean[1] << " " << rhs.mean[2] << endl;
+                out << "-" << endl;
+                //out << "Covariance statistics" << endl;
+                out << rhs.covar << endl;
+                out << "+" << endl;
+                //out << endl;
+                //for(unsigned int i =0 ; i< rhs.categorical.size();i++)
+                    //out << rhs.categorical[i] << ",";
+                //out << endl;
+                //out << " Exponent" << rhs.exponential<< endl;
+                //out << "==========End of SS print====="<< endl;
                 return out;
             }
         };
@@ -52,7 +55,7 @@ class SMC
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
-                crp = 1 ; del = .7;auxiliaryNum = 10;
+                crp = 3 ; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
@@ -158,8 +161,9 @@ class SMC
 
     protected:
     private:
+        const static int CRP = 3;
         const static int timeOffset = 1;
-        const static int CRP        = 1;
+
 };
 
 #endif // SMC_H

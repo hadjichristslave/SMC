@@ -13,10 +13,13 @@ const void SMC::infer(vector< StateProgression >  * particles, \
     for(unsigned int t=0;t<cloudData.size();t++){
         //for all particles
         for(int j=0;j< numOfParticles; j++){
-            for(int s=0;s< numOfSamples;s++){
+            for(int s=0;s< numOfSamples;s++)
                 sample( & particles->at(j), cloudData[t], params, t,  s , cloudData[t].size());
-            }
             removeEmptyStates( & particles->at(j), t);
+                std::ofstream myfile;
+                myfile.open ("/home/panos/Desktop/example.txt",std::ios_base::app);
+                myfile << "-----" << endl;
+                myfile.close();
         }
         resample( particles, cloudData[t],  params, t , numOfParticles);
     }
@@ -38,8 +41,6 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state, int currTime){
             counter++;
         }
     }
-    // Fix remove the redundant ones. Only removing the states of curr time due dynamic number of clusters on every step
-    // CLuster that survive can be traced back though
     state->stateProg[currTime].erase (state->stateProg[currTime].begin()+counter,state->stateProg[currTime].end());
     state->clusterSizes.erase (state->clusterSizes.begin()+counter,state->clusterSizes.end());
 }
@@ -137,6 +138,13 @@ const void SMC::sample(StateProgression  * currState, \
         for(int k=i; k<dataSize;k++)
             currState->clusterSizes[sample_k][k]++;
     }
+
+    ofstream myfile;
+    myfile.open ("/home/panos/Desktop/example.txt");
+    for(int i = 0; i< currState->stateProg[currentTime].size(); i ++)
+        myfile << currState->stateProg[currentTime][i] << endl;
+    myfile << "$" << endl;
+    myfile.close();
 }
 // Get all the data that are assigned to cluster CLUSTER
 Eigen::MatrixXd SMC::getDataOfCluster(int cluster, vector<int> * assignments , vector< vector<double> > * cloudInstance){
@@ -193,10 +201,8 @@ const void SMC::resample( vector< SMC::StateProgression > * particles, \
                           int currTime,\
                           int numOfParticles){
     vector<double> weights(particles->size());
-
-    for(int i =0 ; i< numOfParticles; i ++ ){
+    for(int i =0 ; i< numOfParticles; i ++ )
         weights[i] = computeWeights(& particles->at(i) , currTime , &  cloudData , params);
-    }
     double sum = 0;
     for_each( weights.begin(), weights.end(), [&sum] (double y) mutable { sum+=y; });
     for(int i =0 ; i < weights.size();i++)    weights[i] = weights[i]/sum;
@@ -204,7 +210,8 @@ const void SMC::resample( vector< SMC::StateProgression > * particles, \
 
     for(int i = 0 ; i< particles->size() ; i ++)
         tempParts.push_back(particles->at(ut.randcat( & weights)));
-    * particles = tempParts;
+    *particles = tempParts;
+
 }
 double SMC::computeWeights( SMC::StateProgression * stuff, \
                             int currTime , \
@@ -333,12 +340,12 @@ double SMC::getPosteriorAssignments(SMC::StateProgression * currState , int curr
         int old_k = -1;
         if( currState->assignments.size()>(unsigned int)i) old_k = currState->assignments[i];
 
-        std::vector<double> sizes(0);
+        std::vector<double> sizes;
         if(currState->stateProg[currTime].size() >0)
             for( int kk =0; kk< currState->clusterSizes.size(); kk++)
                 sizes.push_back(currState->clusterSizes[kk].back());
         double sum = 0;
-        sizes.push_back(CRP);
+        sizes.push_back(SMC::CRP);
         for_each(sizes.begin(), sizes.end(), [&sum] (double y) { sum +=y; });
         for_each(sizes.begin(), sizes.end(), [&sum] (double &y) mutable { y = y/sum; });
         vector<double> prob_assig = sizes;
