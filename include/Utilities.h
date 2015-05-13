@@ -43,9 +43,7 @@ namespace Eigen {
         };
     }
 }
-
-class Utilities
-{
+class Utilities{
     public:
         Utilities();
         virtual ~Utilities();
@@ -61,10 +59,13 @@ class Utilities
         double gammarnd(double alpha , double beta);
         RowVectorXd dirrnd(RowVectorXd q0);
         double catpdf(int index , vector<double>  probabilities);
-
+        // Exponential distribution distances
+        double Expsquaredhellinger(double lambda1, double lambda2);
+        double ExpKLDivergence(double lambda1, double lambda2);
+        // Gaussian distribution distances
+        double GaussKLDivergence(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
 
     protected:
     private:
 };
-
 #endif // UTILITIES_H

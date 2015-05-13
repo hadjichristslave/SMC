@@ -163,3 +163,39 @@ Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::Matrix
     MatrixXd samplez = (normTransform * MatrixXd::NullaryExpr(dimensionality,samples,randN)).colwise() + mean;
     return samplez;
 }
+//Exponential distribution distances
+// Squared hellinger distance as given in wiki
+double Utilities::Expsquaredhellinger(double lambda1, double lambda2){
+    if(lambda1 ==0 && lambda2 == 0) return 10000000;
+    if(lambda1+lambda2<0)          return 10000000;
+    return 1-(2*sqrt(lambda1+ lambda2))/(lambda1 + lambda2);
+}
+// KL divergence as given in wiki
+double Utilities::ExpKLDivergence(double lambda1, double lambda2){
+    return log(lambda1) - log(lambda2) + lambda1/lambda2  -1;
+}
+//KL divergence for gaussians as given in https://tgmstat.wordpress.com/2013/07/10/kullback-leibler-divergence/#ref5
+double Utilities::GaussKLDivergence(std::vector<double> tempmean1, Matrix3d covar1, std::vector<double> tempmean2, Matrix3d covar2 ){
+    double KL = 0.5;
+
+    Vector3d mean1(3);
+    mean1(0) = tempmean1[0];
+    mean1(1) = tempmean1[1];
+    mean1(2) = tempmean1[2];
+
+    Vector3d mean2(3);
+    mean2(0) = tempmean2[0];
+    mean2(1) = tempmean2[1];
+    mean2(2) = tempmean2[2];
+
+    double firstPart    = log(covar1.determinant()/covar2.determinant());
+
+    MatrixXd second     = (covar1.transpose().array()*covar2.array());
+
+    double secondPart   = second.trace();
+
+    double thirdPart    = (mean2-mean1).transpose()*covar2.inverse()*(mean2-mean1);
+
+    KL *= (firstPart + secondPart+ thirdPart);
+    return KL;
+}

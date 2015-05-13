@@ -58,7 +58,11 @@ int main(int argc, char* argv[])
         lands.addLandMark(land);
     }
     cout << "number of landmarks " << lands.size() << endl;
-
+    for(int i=1;i<lands.size();i++){
+        SMC::SufficientStatistics landmark1 = lands.landmarks[i].distribution;
+        SMC::SufficientStatistics landmark2 = lands.landmarks[i-1].distribution;
+        cout << ut.GaussKLDivergence(landmark1.mean, landmark1.covar, landmark2.mean, landmark2.covar) << endl;
+    }
 
  /*   const size_t numberOfSamples = 100;
     const size_t numberOfFeatures = 2;

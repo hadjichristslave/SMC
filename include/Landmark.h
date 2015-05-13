@@ -4,9 +4,9 @@
 
 class Landmark
 {
-    int uuid;
-    SMC::SufficientStatistics distribution;
     public:
+        int uuid;
+        SMC::SufficientStatistics distribution;
         Landmark(int LandId , SMC::SufficientStatistics stats);
         virtual ~Landmark();
         int getId();
