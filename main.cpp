@@ -9,11 +9,22 @@
 #include "SMC.h"
 #include "Utilities.h"
 
-using namespace std;
+#include <stdexcept>
+#include <vector>
+#include <random>
 
+
+#include "Landmark.h"
+#include "Landmarks.h"
+#include "decision-trees.hxx"
+#include "marray.hxx"
+
+using namespace std;
 int main(int argc, char* argv[])
 {
+
     // Config file parsing
+
     int numOfParticles , numOfSamples;
     config_t cfg, *cf;
     const char *base = NULL;
@@ -29,21 +40,63 @@ int main(int argc, char* argv[])
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----");
     int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
 
-    //Format: params = {crp, del, #aux, tau0, v0, mu0, k0, q0, _,_,_<-#colorbins?,lambda0(angle distance measure)}
-    //State format: = { assignments, cluster parameters, clusterSizes(Number of elements) }
-    //RowVector3d x;
-    //x << -.886363 ,-.808702, -.0398121;
-    //RowVector3d mu;
-    //mu <<  1.20956e-316, 1.4822e-323, 1.4822e-323;
-    //Matrix3d covar;
-    //covar  << .00560623, -.00302697, .000888741,
-             //-.00302697, .0017546, -.000225909,
-              //.000888741, -.000225909,  .00351697;
-    //cout << ut.iwishrnd( covar,60 ,3,1)<< endl;
-    //return 0;
     SMC::Params Baseparams;
     Baseparams.cloudInstances = dataPoints.size();
     vector < SMC::StateProgression > particles(numOfParticles, timeStates);
+
     smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
+
+
+
+    smc.init();
+    SMC::StateProgression temp = particles[0];
+    Landmarks lands;
+    for(int i = 0;i< temp.stateProg.size();i++){
+        cout << temp.stateProg[i].back() << endl;
+        Landmark land(smc.numOfLandmarks , temp.stateProg[i].back());
+        smc.numOfLandmarks++;
+        lands.addLandMark(land);
+    }
+    cout << "number of landmarks " << lands.size() << endl;
+
+
+ /*   const size_t numberOfSamples = 100;
+    const size_t numberOfFeatures = 2;
+
+    // define random feature matrix
+    std::default_random_engine RandomNumberGenerator;
+    typedef double Feature;
+    std::uniform_real_distribution<double> randomDistribution(0.0, 1.0);
+    const size_t shape[] = {numberOfSamples, numberOfFeatures};
+    andres::Marray<Feature> features(shape, shape + 2);
+    for(size_t sample = 0; sample < numberOfSamples; ++sample)
+    for(size_t feature = 0; feature < numberOfFeatures; ++feature) {
+        features(sample, feature) = randomDistribution(RandomNumberGenerator);
+    }
+
+    // define labels
+    typedef unsigned char Label;
+    andres::Marray<Label> labels(shape, shape + 1);
+    for(size_t sample = 0; sample < numberOfSamples; ++sample) {
+        if((features(sample, 0) <= 0.5 && features(sample, 1) <= 0.5)
+        || (features(sample, 0) > 0.5 && features(sample, 1) > 0.5)) {
+            labels(sample) = 0;
+        }
+        else {
+            labels(sample) = 1;
+        }
+    }
+
+    // learn decision forest
+    typedef double Probability;
+    andres::ml::DecisionForest<Feature, Label, Probability> decisionForest;
+    const size_t numberOfDecisionTrees = 10;
+    decisionForest.learn(features, labels, numberOfDecisionTrees);
+
+    // predict probabilities for every label and every training sample
+    andres::Marray<Probability> probabilities(shape, shape + 2);
+    decisionForest.predict(features, probabilities);
+    // TODO: test formally
+*/
     return 0;
 }

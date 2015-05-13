@@ -152,6 +152,7 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
          Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff);
          return wishartstuff.inverse();
     }
+
 }
 Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::MatrixXd covar, int samples, int dimensionality){
     Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor

@@ -1,6 +1,11 @@
 #include "SMC.h"
 SMC::SMC(){}
 SMC::~SMC(){}
+
+const void SMC::init(){
+    numOfLandmarks = 0;
+
+}
 const void SMC::infer(vector< StateProgression >  * particles, \
                       vector < vector < vector<double> > > cloudData, \
                       SMC::Params params, int numOfParticles,\
@@ -138,7 +143,6 @@ const void SMC::sample(StateProgression  * currState, \
         for(int k=i; k<dataSize;k++)
             currState->clusterSizes[sample_k][k]++;
     }
-
     ofstream myfile;
     myfile.open ("/home/panos/Desktop/example.txt");
     for(int i = 0; i< currState->stateProg[currentTime].size(); i ++)

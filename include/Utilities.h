@@ -62,6 +62,7 @@ class Utilities
         RowVectorXd dirrnd(RowVectorXd q0);
         double catpdf(int index , vector<double>  probabilities);
 
+
     protected:
     private:
 };

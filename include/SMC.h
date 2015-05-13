@@ -15,6 +15,7 @@ class SMC
     public:
         SMC();
         virtual ~SMC();
+        const void init();
         struct SufficientStatistics{
             std::vector<double> mean        = decltype(mean)(3,0);
             Matrix3d            covar       = MatrixXd::Identity(3,3);
@@ -80,8 +81,8 @@ class SMC
         };
         struct StateProgression{
             vector< vector< SMC::SufficientStatistics > > stateProg;// Outside vector defines time index
-                                                      // Inside vector defines cluster index
-                                                      // Params define cluster statistics at time t at cluster k
+                                                                    // Inside vector defines cluster index
+                                                                    // Params define cluster statistics at time t at cluster k
             vector<int>                    assignments;
             vector < vector<int> >         clusterSizes;
             StateProgression(int timeWindow){
@@ -158,7 +159,7 @@ class SMC
                                       SMC::Params params,\
                                       vector< vector<double> > * cloudData,
                                       int curDataPoint);
-
+        int numOfLandmarks;
     protected:
     private:
         const static int CRP = 3;
