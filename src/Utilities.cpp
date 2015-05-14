@@ -177,25 +177,105 @@ double Utilities::ExpKLDivergence(double lambda1, double lambda2){
 //KL divergence for gaussians as given in https://tgmstat.wordpress.com/2013/07/10/kullback-leibler-divergence/#ref5
 double Utilities::GaussKLDivergence(std::vector<double> tempmean1, Matrix3d covar1, std::vector<double> tempmean2, Matrix3d covar2 ){
     double KL = 0.5;
-
     Vector3d mean1(3);
     mean1(0) = tempmean1[0];
     mean1(1) = tempmean1[1];
     mean1(2) = tempmean1[2];
-
     Vector3d mean2(3);
     mean2(0) = tempmean2[0];
     mean2(1) = tempmean2[1];
     mean2(2) = tempmean2[2];
-
     double firstPart    = log(covar1.determinant()/covar2.determinant());
-
     MatrixXd second     = (covar1.transpose().array()*covar2.array());
-
     double secondPart   = second.trace();
-
     double thirdPart    = (mean2-mean1).transpose()*covar2.inverse()*(mean2-mean1);
-
-    KL *= (firstPart + secondPart+ thirdPart);
-    return KL;
+    return KL*(firstPart + secondPart+ thirdPart);
 }
+
+double Utilities::Wasserstein(std::vector<double> tempmean1, Matrix3d covar1, std::vector<double> tempmean2, Matrix3d covar2 ){
+    Vector3d mean1(3);
+    mean1(0) = tempmean1[0];
+    mean1(1) = tempmean1[1];
+    mean1(2) = tempmean1[2];
+    Vector3d mean2(3);
+    mean2(0) = tempmean2[0];
+    mean2(1) = tempmean2[1];
+    mean2(2) = tempmean2[2];
+    Vector3d diff = mean1 - mean2;
+    MatrixXd first  = covar1 + covar2;
+    MatrixXd second = covar2.array().sqrt() * covar1.array() * covar2.array().sqrt();
+    second          = second.array().sqrt();
+    second          = second.array() *2;
+    first           = first - second;
+    return diff.array().square().sum() + first.trace();
+}
+std::vector<float>  Utilities::categoricalhistogramCompare( float histA[signatureLength], float histB[signatureLength]){
+     const int N = sizeof(histA) / sizeof(int);
+     float maxA = *std::max_element(histA, histA+N);
+     float maxB = *std::max_element(histB, histB+N);
+     cv::Mat M1 = cv::Mat(1,signatureLength, cv::DataType<float>::type , histA);
+     cv::Mat M2 = cv::Mat(1,signatureLength, cv::DataType<float>::type , histB);
+     int histSize = signatureLength;
+     float rangeA[] = {0, maxA+1};//ranges are exclusive hence + 1
+     float rangeB[] = {0, maxB+1};// see above
+     const float* histRangeA = {rangeA};
+     const float* histRangeB = {rangeB};
+     bool uniform = true;
+     bool accumulate = false;
+     cv::Mat a1_hist, a2_hist;
+     // normalization means SQRT( sum(component*component)) = 1A
+     cv::calcHist(&M1, 1, 0, cv::Mat(), a1_hist, 1, &histSize, &histRangeA, uniform, accumulate );
+     cv::calcHist(&M2, 1, 0, cv::Mat(), a2_hist, 1, &histSize, &histRangeB, uniform, accumulate );
+     normalize(a1_hist, a1_hist,  0, 1, CV_MINMAX);
+     normalize(a2_hist, a2_hist,  0, 1, CV_MINMAX);
+     cv::Mat sig1(signatureLength ,2, cv::DataType<float>::type);
+     cv::Mat sig2(signatureLength ,2, cv::DataType<float>::type);
+     for(int i=0;i<histSize;i++){
+         float binval = a1_hist.at<float>(i);
+         sig1.at< float >(i, 0) = binval;
+         sig1.at< float >(i, 1) = i;
+         binval = a2_hist.at< float>(i);
+         sig2.at< float >(i, 0) = binval;
+         sig2.at< float >(i, 1) = i;
+     }
+     float emd           = cv::EMD(sig1, sig2, CV_DIST_L2);
+     float compar_hell   = (float)cv::compareHist(a1_hist, a2_hist, CV_COMP_HELLINGER );
+     // WARNING!!! KLDivergence changegs the values of the histograms so it should be called last.
+     float kld =  KLDivergence( &a1_hist, &a2_hist);
+
+     vector<float> distances;
+     distances.push_back(kld);
+     distances.push_back(emd);
+     distances.push_back(compar_hell);
+     return distances;
+}
+
+float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
+     float sum1   0,sum2 = 0;
+     for(int i=0;i<mat1->rows;i++){
+        sum1 += mat1->at<float>(i,0);
+        sum2 += mat2->at<float>(i,0);
+     }
+     for(int i=0;i<mat1->rows;i++){
+         mat1->at<float>(i,0) /= sum1;
+         mat2->at<float>(i,0) /= sum2;
+     }
+     float result = 0.;
+     for(int i=0;i< mat1->rows;i++)
+         if(  mat1->at<float>(0,i) !=0 ){
+            float ratio = mat1->at<float>(i,0)/ mat2->at<float>(0,i);
+             if(ratio>0 && ratio  != std::numeric_limits<float>::infinity() )
+                 result += mat1->at<float>(i,0) * log(ratio);
+         }
+     return result;
+ }
+void Utilities::normalizeVec( vector< int > inputVec){
+   float sum = 0;
+   for(int i = 0; i < inputVec.size(); i++) sum+= inputVec[i];
+   float normalized;
+   for(int i=0;i< inputVec.size(); i++)
+       normalized = (float)inputVec[i]/sum;
+}
+
+
+

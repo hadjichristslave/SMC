@@ -14,6 +14,8 @@
 #include <boost/math/distributions/exponential.hpp>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
+#include <opencv2/opencv.hpp>
+
 
 using namespace std;
 using namespace boost::math;
@@ -64,7 +66,11 @@ class Utilities{
         double ExpKLDivergence(double lambda1, double lambda2);
         // Gaussian distribution distances
         double GaussKLDivergence(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
-
+        double Wasserstein(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
+        // Categorical distributino distances
+        std::vector<float>  categoricalhistogramCompare( float histA[signatureLength], float histB[signatureLength]);
+        float categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2);
+        void normalizeVec( vector< int > inputVec);
     protected:
     private:
 };

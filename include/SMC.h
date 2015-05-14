@@ -31,6 +31,12 @@ class SMC
                     for_each(categorical.begin(), categorical.end(), [&sum] (double &y) mutable { y = y/sum;});
             }
             SufficientStatistics(void){}
+            void copy(SufficientStatistics stat){
+                mean        = stat.mean;
+                covar       = stat.covar;
+                categorical = stat.categorical;
+                exponential = stat.exponential;
+            }
             friend ostream& operator<<(ostream& out ,const SufficientStatistics& rhs){
                 //out << "========Start of SS print======"<< endl;
                 //out <<" Mean statistics";

@@ -52,7 +52,6 @@ int main(int argc, char* argv[])
     SMC::StateProgression temp = particles[0];
     Landmarks lands;
     for(int i = 0;i< temp.stateProg.size();i++){
-        cout << temp.stateProg[i].back() << endl;
         Landmark land(smc.numOfLandmarks , temp.stateProg[i].back());
         smc.numOfLandmarks++;
         lands.addLandMark(land);
@@ -61,10 +60,14 @@ int main(int argc, char* argv[])
     for(int i=1;i<lands.size();i++){
         SMC::SufficientStatistics landmark1 = lands.landmarks[i].distribution;
         SMC::SufficientStatistics landmark2 = lands.landmarks[i-1].distribution;
-        cout << ut.GaussKLDivergence(landmark1.mean, landmark1.covar, landmark2.mean, landmark2.covar) << endl;
+        cout << ut.Wasserstein(landmark1.mean, landmark1.covar, landmark2.mean, landmark2.covar) << endl;
     }
 
- /*   const size_t numberOfSamples = 100;
+    float currentHist[signatureLength];
+    for (int o=0;o<signatureLength;o++) currentHist[o] = fpfhs->points[i].histogram[o];
+
+
+/*    const size_t numberOfSamples = 100;
     const size_t numberOfFeatures = 2;
 
     // define random feature matrix

@@ -1,11 +1,8 @@
 #include "Landmark.h"
 
-Landmark::Landmark(int LandId , SMC::SufficientStatistics stats)
-{
-    //ctor
-
-    int uuid = LandId;
-    SMC::SufficientStatistics distribution = stats;
+Landmark::Landmark(int LandId , SMC::SufficientStatistics stats){
+    uuid = LandId;
+    distribution.copy(stats);
 }
 
 Landmark::~Landmark()
@@ -20,6 +17,6 @@ void Landmark::setId(int id ){
 }
 
 void Landmark::print(){
-    cout << "Landmark id " << endl;
+    cout << "Landmark id " << uuid << endl;
     cout << " With distribution " << endl << distribution << endl;
 }
