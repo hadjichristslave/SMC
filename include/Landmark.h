@@ -8,6 +8,7 @@ class Landmark
         int uuid;
         SMC::SufficientStatistics distribution;
         Landmark(int LandId , SMC::SufficientStatistics stats);
+
         virtual ~Landmark();
         int getId();
         void setId(int id );

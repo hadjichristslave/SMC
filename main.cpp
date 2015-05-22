@@ -2,44 +2,22 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sstream>
 #include <libconfig.h>
 #include <algorithm>
 #include <vector>
-
 #include "SMC.h"
 #include "Utilities.h"
 
 #include <stdexcept>
 #include <vector>
 #include <random>
-
-
 #include "Landmark.h"
 #include "Landmarks.h"
 #include "decision-trees.hxx"
 #include "marray.hxx"
-
+#include "DBWrapper.h"
 using namespace std;
-
-void extractDistances(Landmark landmark1 , Landmark landmark2 , Utilities ut){
-        cout << "wasser " << endl;
-        cout << ut.Wasserstein(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
-        cout << "gauskld" << endl;
-        cout << ut.GaussKLDivergence(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
-        cout << "expkld " << endl;
-        cout << ut.ExpKLDivergence(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
-        cout << " exphellinger " << endl;
-        cout << ut.Expsquaredhellinger(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
-        float histogram1[ landmark1.distribution.categorical.size() ];
-        float histogram2[ landmark2.distribution.categorical.size() ];
-        for (unsigned int o=0;o<landmark2.distribution.categorical.size();o++){
-            histogram1[o] = landmark1.distribution.categorical[o]==0?.000001:landmark1.distribution.categorical[o];
-            histogram2[o] = landmark2.distribution.categorical[o]==0?.000001:landmark1.distribution.categorical[o];
-        }
-        vector<float> distances = ut.categoricalhistogramCompare(histogram1, histogram2, sizeof(histogram1)/sizeof(float));
-        for_each(distances.begin(), distances.end(), [] (float y) { cout << y << ",";});
-        cout << endl;
-}
 
 int main(int argc, char* argv[])
 {
@@ -48,6 +26,7 @@ int main(int argc, char* argv[])
 
     int numOfParticles , numOfSamples;
     const char *filepath = NULL;
+    const char *database = NULL;
     config_t cfg, *cf;
     cf = &cfg;
     config_init(cf);
@@ -56,11 +35,12 @@ int main(int argc, char* argv[])
     config_lookup_int(cf, "particles" , &numOfParticles);
     config_lookup_int(cf, "samples" , &numOfSamples);
     config_lookup_string(cf, "filepath" , &filepath);
-    // Variable declaration
+    config_lookup_string(cf, "database" , &database);
 
+    // Variable declaration
+    DBWrapper dbwr(database);
     SMC smc;
     Utilities ut;
-
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----", filepath);
     int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
     SMC::Params Baseparams;
@@ -70,7 +50,6 @@ int main(int argc, char* argv[])
     smc.init();
     //Get the clusters
     smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
-
     //Compare and decide on whether you have new landmarks or not.
     SMC::StateProgression temp = particles[0];
     Landmarks lands;
@@ -79,9 +58,12 @@ int main(int argc, char* argv[])
         smc.numOfLandmarks++;
         lands.addLandMark(land);
     }
+    //Save landmarks to db
     for(unsigned int i=1;i<lands.size();i++){
-        cout << " new distance pair " << endl;
-        extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
+        //cout << " new distance pair " << endl;
+        SMC::SufficientStatistics dist = lands.landmarks[i].distribution;
+        dbwr.insertLandmark(dist);
+        //extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
     }
 
 

@@ -1,6 +1,8 @@
 #ifndef LANDMARKS_H
 #define LANDMARKS_H
 #include "Landmark.h"
+#include "Utilities.h"
+
 
 using namespace std;
 class Landmarks
@@ -10,6 +12,7 @@ class Landmarks
         virtual ~Landmarks();
         vector<Landmark> landmarks;
         void addLandMark( Landmark land);
+        void extractDistances(Landmark landmark1 , Landmark landmark2 , Utilities ut);
         unsigned int size();
         void print(int landmarkIndex);
     protected:

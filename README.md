@@ -10,6 +10,7 @@ The model is similar to that as the sampler is created to cluster point clouds r
 Eigen
 OpenCV
 Libconfig
+Sqlite3(3 is important)
 
 The project It is compiled using -std=c++11 flag
 
@@ -35,6 +36,7 @@ Linker options are
 -lopencv_core
 -lopencv_highgui
 -lopencv_imgproc
+-lsqlite3
 
 
 #Output
@@ -53,4 +55,6 @@ If the input is a point cloud the resulting clustering will look like this:
 ![](https://github.com/github/hadjichristslave/SMC/images/initialCluster.png)
 
 The cluster concentration on the part of the point cloud that represents the chair is noticeable.
+
+
 
