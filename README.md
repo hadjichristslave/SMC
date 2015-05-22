@@ -29,18 +29,12 @@ The file path is specified in the config file
 
 Linker options are
 
- --lconfig++
-
- --lgsl
-
- --lgslcblas
-
- --lopencv_core
-
- --lopencv_highgui
-
- --lopencv_imgproc
-
+-lconfig++
+-lgsl
+-lgslcblas
+-lopencv_core
+-lopencv_highgui
+-lopencv_imgproc
 
 
 
