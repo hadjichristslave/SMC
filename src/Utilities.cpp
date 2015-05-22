@@ -7,7 +7,6 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator,
     std::string delimiter = ",";
     std::string line;
     int currentCloud   = -1, currPointIndex = -1;
-
     ifstream myfile (filepath);
     int lineCount = 0;
     if (myfile.is_open()){
@@ -64,7 +63,6 @@ Eigen::MatrixXd Utilities::sampleMultinomial(vector<double> probabilities, int s
     MatrixXd mat(samples, probabilities.size());
     vector<double> cumsum =probabilities;
     for(unsigned int j=1; j<cumsum.size(); ++j)  cumsum[j] += cumsum[j-1];
-
     for(int i=0;i< samples; i++){
         int sample = randcat( & cumsum);
         Eigen::RowVectorXd tempVec;
@@ -152,7 +150,6 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
          Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff);
          return wishartstuff.inverse();
     }
-
 }
 Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::MatrixXd covar, int samples, int dimensionality){
     Eigen::internal::scalar_normal_dist_op<double> randN; // Gaussian functor
@@ -201,7 +198,6 @@ double Utilities::GaussKLDivergence(std::vector<double> tempmean1, Matrix3d cova
     double thirdPart    = (mean2-mean1).transpose()*covar2.inverse()*(mean2-mean1);
     return KL*(firstPart + secondPart+ thirdPart);
 }
-
 double Utilities::Wasserstein(std::vector<double> tempmean1, Matrix3d covar1, std::vector<double> tempmean2, Matrix3d covar2 ){
     Vector3d mean1(3);
     mean1(0) = tempmean1[0];
@@ -257,7 +253,6 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float
      distances.push_back(compar_hell);
      return distances;
 }
-
 float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
      float sum1 = 0,sum2 = 0;
      for(int i=0;i<mat1->rows;i++){

@@ -31,9 +31,3 @@ The file path is specified in the config file
 #Output
 
 The project outputs in file specified in config file the clusters found on every sample of every pixel.
-
-#Attention
-
-The files are still modified daily, so any weird behaviour might be due to development issues.
-
-

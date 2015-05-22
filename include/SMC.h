@@ -29,10 +29,6 @@ using namespace Eigen;
     }
 
 #endif
-
-
-
-
 class SMC
 {
     private:
