@@ -10,8 +10,35 @@
 using namespace std;
 using namespace Eigen;
 
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
+
+  #include <windows.h>
+
+  inline void delay( unsigned long ms )
+    {
+    Sleep( ms );
+    }
+
+#else  /* presume POSIX */
+
+  #include <unistd.h>
+
+  inline void delay( unsigned long ms )
+    {
+    usleep( ms * 1000 );
+    }
+
+#endif
+
+
+
+
 class SMC
 {
+    private:
+        const static int CRP = 1;
+        const static int timeOffset = 1;
+        const static unsigned long delaytime = 1;
     public:
         SMC();
         virtual ~SMC();
@@ -38,13 +65,18 @@ class SMC
                 exponential = stat.exponential;
             }
             friend ostream& operator<<(ostream& out ,const SufficientStatistics& rhs){
-                //out << "========Start of SS print======"<< endl;
-                //out <<" Mean statistics";
-                out << rhs.mean[0] << " " << rhs.mean[1] << " " << rhs.mean[2] << endl;
-                out << "-" << endl;
+                out << "====="<< endl;
+                //out <<" Mean statistics " << endl;
+                out << rhs.mean[0] << "," << rhs.mean[1] << "," << rhs.mean[2] << endl;
+                //out << "-" << endl;
                 //out << "Covariance statistics" << endl;
-                out << rhs.covar << endl;
-                out << "+" << endl;
+                for( int i = 0 ; i < rhs.covar.rows(); i ++){
+                    for( int j = 0 ; j < rhs.covar.cols(); j ++){
+                        out << rhs.covar(i,j) ;
+                        out << "," ;
+                    }
+                }
+                out << endl;
                 //out << endl;
                 //for(unsigned int i =0 ; i< rhs.categorical.size();i++)
                     //out << rhs.categorical[i] << ",";
@@ -57,12 +89,12 @@ class SMC
         struct Params{
             std::vector<double> position = decltype(position)(3,0);
             int   cloudInstances, auxiliaryNum , colourBin , cBin1, cBin2, cBin3, colourBins = 3;
-            double crp, del, nu0, kappa0, gamma_alpha0, gamma_beta0 , exp_lambda0 =1;
+            double  crp, del, nu0, kappa0, gamma_alpha0, gamma_beta0 , exp_lambda0 =1;
             RowVector3d  mu0 = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
-                crp = 3 ; del = .7;auxiliaryNum = 10;
+                crp = CRP ; del = .7;auxiliaryNum = 10;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma
@@ -73,6 +105,7 @@ class SMC
             friend ostream& operator<<(ostream& out ,const Params& rhs){
                 out << "----------------Params printing-------------------" << endl;
                 out << " mu " << rhs.mu0 << endl;
+                out << " nu " << rhs.nu0 << endl;
                 out << " tau " << rhs.tau0 << endl;
                 out << " q0 " << rhs.q0 << endl;
                 out << " kappa0 " << rhs.kappa0 << endl;
@@ -153,7 +186,8 @@ class SMC
                                        SMC::Params params);
         double getPosteriorAssignments(SMC::StateProgression * currState,\
                                        int currTime,\
-                                       vector< vector<double> > * cloudData);
+                                       vector< vector<double> > * cloudData,\
+                                       SMC::Params par);
 
         SMC::Params calculatePosteriorParams( int currTime,\
                                       SMC::StateProgression * currState,\
@@ -167,9 +201,6 @@ class SMC
                                       int curDataPoint);
         int numOfLandmarks;
     protected:
-    private:
-        const static int CRP = 3;
-        const static int timeOffset = 1;
 
 };
 

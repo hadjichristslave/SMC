@@ -20,51 +20,66 @@
 #include "marray.hxx"
 
 using namespace std;
+
+void extractDistances(Landmark landmark1 , Landmark landmark2 , Utilities ut){
+        cout << ut.Wasserstein(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
+        cout << ut.GaussKLDivergence(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
+        cout << ut.ExpKLDivergence(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
+        cout << ut.Expsquaredhellinger(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
+        float histogram1[ landmark1.distribution.categorical.size() ];
+        float histogram2[ landmark2.distribution.categorical.size() ];
+        for (unsigned int o=0;o<landmark2.distribution.categorical.size();o++){
+            histogram1[o] = landmark1.distribution.categorical[o]==0?.000001:landmark1.distribution.categorical[o];
+            histogram2[o] = landmark2.distribution.categorical[o]==0?.000001:landmark1.distribution.categorical[o];
+        }
+        vector<float> distances = ut.categoricalhistogramCompare(histogram1, histogram2, sizeof(histogram1)/sizeof(float));
+        for_each(distances.begin(), distances.end(), [] (float y) { cout << y << ",";});
+        cout << endl;
+}
+
 int main(int argc, char* argv[])
 {
 
     // Config file parsing
 
     int numOfParticles , numOfSamples;
+    const char *filepath = NULL;
     config_t cfg, *cf;
-    const char *base = NULL;
     cf = &cfg;
     config_init(cf);
     if (!config_read_file(cf, "config.cfg"))
         return(EXIT_FAILURE);
     config_lookup_int(cf, "particles" , &numOfParticles);
     config_lookup_int(cf, "samples" , &numOfSamples);
+    config_lookup_string(cf, "filepath" , &filepath);
     // Variable declaration
+
     SMC smc;
     Utilities ut;
-    vector< vector< vector< double > > > dataPoints  = ut.readFile("-----");
-    int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
 
+    vector< vector< vector< double > > > dataPoints  = ut.readFile("-----", filepath);
+    int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
     SMC::Params Baseparams;
     Baseparams.cloudInstances = dataPoints.size();
     vector < SMC::StateProgression > particles(numOfParticles, timeStates);
-
-    smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
-
-
+//
+    // Start of the method
 
     smc.init();
+    smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
+
     SMC::StateProgression temp = particles[0];
     Landmarks lands;
-    for(int i = 0;i< temp.stateProg.size();i++){
+    for(unsigned int i = 0;i< temp.stateProg.size();i++){
         Landmark land(smc.numOfLandmarks , temp.stateProg[i].back());
         smc.numOfLandmarks++;
         lands.addLandMark(land);
     }
-    cout << "number of landmarks " << lands.size() << endl;
-    for(int i=1;i<lands.size();i++){
-        SMC::SufficientStatistics landmark1 = lands.landmarks[i].distribution;
-        SMC::SufficientStatistics landmark2 = lands.landmarks[i-1].distribution;
-        cout << ut.Wasserstein(landmark1.mean, landmark1.covar, landmark2.mean, landmark2.covar) << endl;
+    for(unsigned int i=1;i<lands.size();i++){
+        //extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
     }
 
-    float currentHist[signatureLength];
-    for (int o=0;o<signatureLength;o++) currentHist[o] = fpfhs->points[i].histogram[o];
+
 
 
 /*    const size_t numberOfSamples = 100;

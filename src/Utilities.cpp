@@ -2,13 +2,13 @@
 Utilities::Utilities(){}
 Utilities::~Utilities(){}
 
-vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator){
+vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator, string filepath){
     vector< vector< vector<double> > > clouds;
     std::string delimiter = ",";
     std::string line;
     int currentCloud   = -1, currPointIndex = -1;
 
-    ifstream myfile ("/home/panos/Desktop/cloudData/subset.csv");
+    ifstream myfile (filepath);
     int lineCount = 0;
     if (myfile.is_open()){
         while ( getline (myfile,line) ){
@@ -39,9 +39,8 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator)
             clouds[currentCloud][currPointIndex].push_back( atof(line.c_str()));
         }
         myfile.close();
-    }else{
+    }else
         cout << " could not read data file";
-    }
     return clouds;
 }
 double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
@@ -55,19 +54,18 @@ double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3
     return pdf==0?.00000000000000001:pdf;
 }
 int Utilities::randcat( vector<double> * vec){
-    // GEt cumsum
-    for(int i =0;i<vec->size();i++) vec->at(i) += i>0?vec->at(i-1):0;
+    for(unsigned int i =0;i<vec->size();i++) vec->at(i) += i>0?vec->at(i-1):0;
     double r = ((double) rand() / (RAND_MAX));
-    for(int i=0;i< vec->size();i++) if( vec->at(i) >= r) return i;
+    for(unsigned int i=0;i< vec->size();i++) if( vec->at(i) >= r) return i>=vec->size()?i-1:i;
+    return 0;
 }
 Eigen::MatrixXd Utilities::sampleMultinomial(vector<double> probabilities, int samples){
     // Return samples number of items from a multinomial with probabilities vector defining the probability of samplign each item
     MatrixXd mat(samples, probabilities.size());
     vector<double> cumsum =probabilities;
-    for(int j=1; j<cumsum.size(); ++j)  cumsum[j] += cumsum[j-1];
+    for(unsigned int j=1; j<cumsum.size(); ++j)  cumsum[j] += cumsum[j-1];
 
     for(int i=0;i< samples; i++){
-        double r = ((double) rand() / (RAND_MAX));
         int sample = randcat( & cumsum);
         Eigen::RowVectorXd tempVec;
         tempVec.resize(cumsum.size());
@@ -93,9 +91,10 @@ double Utilities::exppdf(double x , double lambda){
 }
 double Utilities::catpdf(int index , vector<double>  probabilities){
     double sum = 0;
+    vector<double> norms(probabilities.size());
     for_each(probabilities.begin(), probabilities.end(), [&sum] (double y) mutable { sum +=y; });
-    for_each(probabilities.begin(), probabilities.end(), [&sum] (double y) mutable { y /= sum; });
-    return probabilities[index];
+    for(unsigned int i =0;i<probabilities.size();i++) norms[i] = probabilities[i]/sum;
+    return norms[index];
 }
 double Utilities::gammarnd(double alpha, double beta){
     const gsl_rng_type * T;
@@ -116,7 +115,7 @@ RowVectorXd Utilities::dirrnd(RowVectorXd q0){
 }
 Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int df){
     Matrix3d normTransform(dimensionality, dimensionality);
-    LLT<Eigen::Matrix3d> cholSolver(tau);
+    LLT<Eigen::Matrix3d> cholSolver(tau.inverse());
     if (cholSolver.info()==Eigen::Success)
         normTransform = cholSolver.matrixL();
     else{
@@ -139,7 +138,7 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
         for(int i=0;i<tempMat.rows();i++)
             for(int j=0;j<tempMat.cols();j++)
                 if(i>j) tempMat(i,j) = d(gen);
-        tempMat = normTransform * tempMat;
+        tempMat = normTransform.transpose() * tempMat;
         Eigen::Matrix3d wishartstuff= tempMat * tempMat.transpose();
         wishartstuff = wishartstuff.array().inverse();
         return wishartstuff;
@@ -147,8 +146,9 @@ Matrix3d Utilities::iwishrnd( Matrix3d tau, double nu, int dimensionality , int 
         MatrixXd tempMat(df, dimensionality);
         for(int i=0;i<tempMat.rows();i++)
             for(int j=0;j<tempMat.cols();j++)
-                tempMat(i,j) = d(gen)*sizeOfMat;
-         Eigen::MatrixXd tempwishartstuff(tempMat * normTransform);
+                tempMat(i,j) = d(gen);
+         MatrixXd tempMat2 = tempMat * normTransform;
+         Eigen::MatrixXd tempwishartstuff(tempMat2.transpose() * tempMat2);
          Eigen::Matrix3d wishartstuff(tempwishartstuff.transpose()* tempwishartstuff);
          return wishartstuff.inverse();
     }
@@ -159,7 +159,17 @@ Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::Matrix
     Eigen::internal::scalar_normal_dist_op<double>::rng.seed(1); // Seed the rng
     Eigen::MatrixXd normTransform(dimensionality,dimensionality);
     Eigen::LLT<Eigen::MatrixXd> cholSolver(covar);
-    normTransform = cholSolver.matrixL();
+    if (cholSolver.info()==Eigen::Success)
+            normTransform = cholSolver.matrixL();
+    else {
+        Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> eigenSolver(covar);
+        normTransform = eigenSolver.eigenvectors()
+                   * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
+    }
+
+    for(int i =0;i< normTransform.rows();i++)
+        for(int j =0;j<normTransform.cols();j++)
+            normTransform(i,j) = normTransform(i,j)==normTransform(i,j)?normTransform(i,j):0;
     MatrixXd samplez = (normTransform * MatrixXd::NullaryExpr(dimensionality,samples,randN)).colwise() + mean;
     return samplez;
 }
@@ -209,13 +219,12 @@ double Utilities::Wasserstein(std::vector<double> tempmean1, Matrix3d covar1, st
     first           = first - second;
     return diff.array().square().sum() + first.trace();
 }
-std::vector<float>  Utilities::categoricalhistogramCompare( float histA[signatureLength], float histB[signatureLength]){
-     const int N = sizeof(histA) / sizeof(int);
+std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float histB[], int N){
      float maxA = *std::max_element(histA, histA+N);
      float maxB = *std::max_element(histB, histB+N);
-     cv::Mat M1 = cv::Mat(1,signatureLength, cv::DataType<float>::type , histA);
-     cv::Mat M2 = cv::Mat(1,signatureLength, cv::DataType<float>::type , histB);
-     int histSize = signatureLength;
+     cv::Mat M1 = cv::Mat(1,N, cv::DataType<float>::type , histA);
+     cv::Mat M2 = cv::Mat(1,N, cv::DataType<float>::type , histB);
+     int histSize = N;
      float rangeA[] = {0, maxA+1};//ranges are exclusive hence + 1
      float rangeB[] = {0, maxB+1};// see above
      const float* histRangeA = {rangeA};
@@ -228,8 +237,8 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[signatur
      cv::calcHist(&M2, 1, 0, cv::Mat(), a2_hist, 1, &histSize, &histRangeB, uniform, accumulate );
      normalize(a1_hist, a1_hist,  0, 1, CV_MINMAX);
      normalize(a2_hist, a2_hist,  0, 1, CV_MINMAX);
-     cv::Mat sig1(signatureLength ,2, cv::DataType<float>::type);
-     cv::Mat sig2(signatureLength ,2, cv::DataType<float>::type);
+     cv::Mat sig1(N, 2, cv::DataType<float>::type);
+     cv::Mat sig2(N, 2, cv::DataType<float>::type);
      for(int i=0;i<histSize;i++){
          float binval = a1_hist.at<float>(i);
          sig1.at< float >(i, 0) = binval;
@@ -241,8 +250,7 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[signatur
      float emd           = cv::EMD(sig1, sig2, CV_DIST_L2);
      float compar_hell   = (float)cv::compareHist(a1_hist, a2_hist, CV_COMP_HELLINGER );
      // WARNING!!! KLDivergence changegs the values of the histograms so it should be called last.
-     float kld =  KLDivergence( &a1_hist, &a2_hist);
-
+     float kld =  categoricalKLDivergence( &a1_hist, &a2_hist);
      vector<float> distances;
      distances.push_back(kld);
      distances.push_back(emd);
@@ -251,7 +259,7 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[signatur
 }
 
 float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
-     float sum1   0,sum2 = 0;
+     float sum1 = 0,sum2 = 0;
      for(int i=0;i<mat1->rows;i++){
         sum1 += mat1->at<float>(i,0);
         sum2 += mat2->at<float>(i,0);
@@ -269,13 +277,3 @@ float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
          }
      return result;
  }
-void Utilities::normalizeVec( vector< int > inputVec){
-   float sum = 0;
-   for(int i = 0; i < inputVec.size(); i++) sum+= inputVec[i];
-   float normalized;
-   for(int i=0;i< inputVec.size(); i++)
-       normalized = (float)inputVec[i]/sum;
-}
-
-
-

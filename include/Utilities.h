@@ -16,7 +16,6 @@
 #include <gsl/gsl_randist.h>
 #include <opencv2/opencv.hpp>
 
-
 using namespace std;
 using namespace boost::math;
 using namespace Eigen;
@@ -50,7 +49,7 @@ class Utilities{
         Utilities();
         virtual ~Utilities();
         //Read a file that has a specific number of dimensions for each attribute
-        virtual vector < vector < vector<double> > >  readFile(string CloudSeperator);
+        virtual vector < vector < vector<double> > >  readFile(string CloudSeperator, string filepath);
         double multivariateNormalPDF(Vector3d instance, Vector3d mu, Matrix3d covar, int dimensionality);
         Eigen::MatrixXd sampleMultivariateNormal( Eigen::VectorXd mean, Eigen::MatrixXd covar, int numOfSamples, int dimensionality);
         Eigen::MatrixXd sampleMultinomial(vector<double> probabilities, int samples);
@@ -68,9 +67,8 @@ class Utilities{
         double GaussKLDivergence(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
         double Wasserstein(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
         // Categorical distributino distances
-        std::vector<float>  categoricalhistogramCompare( float histA[signatureLength], float histB[signatureLength]);
+        std::vector<float>  categoricalhistogramCompare( float histA[], float histB[] , int N);
         float categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2);
-        void normalizeVec( vector< int > inputVec);
     protected:
     private:
 };
