@@ -48,9 +48,9 @@ The files are still modified daily, so any weird behaviour might be due to devel
 #Results
 
 If the input is a point cloud the resulting clustering will look like this:
-![alt tag](master/images/initialCluster.png)
+![alt tag](images/initialCluster.png)
 
-![](https://github.com/github/hadjichristslave/SMC/master/images/initialCluster.png)
+![](https://github.com/github/hadjichristslave/SMC/images/initialCluster.png)
 
 The cluster concentration on the part of the point cloud that represents the chair is noticeable.
 
