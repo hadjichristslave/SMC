@@ -163,7 +163,6 @@ Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::Matrix
         normTransform = eigenSolver.eigenvectors()
                    * eigenSolver.eigenvalues().cwiseSqrt().asDiagonal();
     }
-
     for(int i =0;i< normTransform.rows();i++)
         for(int j =0;j<normTransform.cols();j++)
             normTransform(i,j) = normTransform(i,j)==normTransform(i,j)?normTransform(i,j):0;
@@ -175,7 +174,7 @@ Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::Matrix
 double Utilities::Expsquaredhellinger(double lambda1, double lambda2){
     if(lambda1 ==0 && lambda2 == 0) return 10000000;
     if(lambda1+lambda2<0)          return 10000000;
-    return 1-(2*sqrt(lambda1+ lambda2))/(lambda1 + lambda2);
+    return 1-(2*sqrt(lambda1+lambda2))/(lambda1+lambda2);
 }
 // KL divergence as given in wiki
 double Utilities::ExpKLDivergence(double lambda1, double lambda2){

@@ -37,7 +37,6 @@ Linker options are
 -lopencv_imgproc
 
 
-
 #Output
 
 The project outputs in file specified in config file the clusters found on every sample of every pixel.
@@ -46,4 +45,11 @@ The project outputs in file specified in config file the clusters found on every
 
 The files are still modified daily, so any weird behaviour might be due to development issues.
 
+#Results
+
+If the input is a point cloud the resulting clustering will look like this:
+
+![](https://github.com/github/hadjichristslave/SMC/master/images/initialCluster.png)
+
+The cluster concentration on the part of the point cloud that represents the chair is noticeable.
 

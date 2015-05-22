@@ -22,9 +22,13 @@
 using namespace std;
 
 void extractDistances(Landmark landmark1 , Landmark landmark2 , Utilities ut){
+        cout << "wasser " << endl;
         cout << ut.Wasserstein(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
+        cout << "gauskld" << endl;
         cout << ut.GaussKLDivergence(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
+        cout << "expkld " << endl;
         cout << ut.ExpKLDivergence(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
+        cout << " exphellinger " << endl;
         cout << ut.Expsquaredhellinger(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
         float histogram1[ landmark1.distribution.categorical.size() ];
         float histogram2[ landmark2.distribution.categorical.size() ];
@@ -62,21 +66,22 @@ int main(int argc, char* argv[])
     SMC::Params Baseparams;
     Baseparams.cloudInstances = dataPoints.size();
     vector < SMC::StateProgression > particles(numOfParticles, timeStates);
-//
-    // Start of the method
-
+    // Initialize the method
     smc.init();
+    //Get the clusters
     smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
 
+    //Compare and decide on whether you have new landmarks or not.
     SMC::StateProgression temp = particles[0];
     Landmarks lands;
-    for(unsigned int i = 0;i< temp.stateProg.size();i++){
-        Landmark land(smc.numOfLandmarks , temp.stateProg[i].back());
+    for(unsigned int i = 0;i< temp.stateProg[0].size();i++){
+        Landmark land(smc.numOfLandmarks , temp.stateProg[0][i]);
         smc.numOfLandmarks++;
         lands.addLandMark(land);
     }
     for(unsigned int i=1;i<lands.size();i++){
-        //extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
+        cout << " new distance pair " << endl;
+        extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
     }
 
 

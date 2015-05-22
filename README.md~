@@ -29,13 +29,12 @@ The file path is specified in the config file
 
 Linker options are
 
- --lconfig++
+-lconfig++
 -lgsl
 -lgslcblas
 -lopencv_core
 -lopencv_highgui
 -lopencv_imgproc
-
 
 
 #Output
@@ -45,5 +44,11 @@ The project outputs in file specified in config file the clusters found on every
 #Attention
 
 The files are still modified daily, so any weird behaviour might be due to development issues.
+
+#Results
+
+If the input is a point cloud the resulting clustering will look like
+
+![](https://github.com/github/hadjichristslave/SMC/master/images/initialCluster.png)
 
 
