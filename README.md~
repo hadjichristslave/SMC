@@ -47,8 +47,9 @@ The files are still modified daily, so any weird behaviour might be due to devel
 
 #Results
 
-If the input is a point cloud the resulting clustering will look like
+If the input is a point cloud the resulting clustering will look like this:
 
 ![](https://github.com/github/hadjichristslave/SMC/master/images/initialCluster.png)
 
+The cluster concentration on the part of the point cloud that represents the chair is noticeable.
 
