@@ -27,6 +27,16 @@ The colour spectrum is discretized in bins and colour counts of the neighbor pix
 //Todo, dynamic number of colour bins
 The file path is specified in the config file
 
+Linker options are
+
+ --lconfig++
+ --lgsl
+ --lgslcblas
+ --lopencv_core
+ --lopencv_highgui
+ --lopencv_imgproc
+
+
 
 #Output
 
