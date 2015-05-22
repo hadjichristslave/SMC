@@ -45,3 +45,8 @@ void DBWrapper::insertLandmark(SMC::SufficientStatistics dist){
             cmd.bind(place,dist.categorical[jk]);
         cmd.execute();
 }
+vector<Landmark> DBWrapper::getCurrentLandmarks(){
+    sqlite3pp::database db("landmarks.db");
+    sqlite3pp::query qry(db, "SELECT id, name, phone FROM contacts");
+
+}

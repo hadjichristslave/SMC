@@ -1,7 +1,7 @@
 #ifndef DBWRAPPER_H
 #define DBWRAPPER_H
-#include "../sqlite3pp.h"
-#include "../sqlite3ppext.h"
+#include "sqlite3pp.h"
+#include "sqlite3ppext.h"
 #include "SMC.h"
 #include "Landmark.h"
 
@@ -14,7 +14,7 @@ class DBWrapper
         virtual ~DBWrapper();
         void ifNotExistscreateDB();
         void insertLandmark(SMC::SufficientStatistics dist);
-
+        vector<Landmark> getCurrentLandmarks();
         string database;
     protected:
     private:
