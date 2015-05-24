@@ -18,7 +18,7 @@ class DBWrapper
         DBWrapper(string db);
         virtual ~DBWrapper();
         void ifNotExistscreateDB();
-        void insertLandmark(SMC::SufficientStatistics dist);
+        void insertLandmark(SMC::SufficientStatistics * dist);
         Landmark getLandmark(int LandId);
         Landmarks getCurrentLandmarks();
 

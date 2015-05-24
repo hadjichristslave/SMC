@@ -12,7 +12,7 @@ class Landmarks
         virtual ~Landmarks();
         vector<Landmark> landmarks;
         void addLandMark( Landmark land);
-        vector<double> extractDistances(Landmark landmark1 , Landmark landmark2 , Utilities ut);
+        vector< vector< double > > extractDistances(Landmark * observation , Utilities * ut);
         unsigned int size();
         void print(int landmarkIndex);
     protected:

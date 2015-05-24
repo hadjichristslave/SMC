@@ -15,6 +15,8 @@
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 #include <opencv2/opencv.hpp>
+#include "decision-trees.hxx"
+#include "marray.hxx"
 
 using namespace std;
 using namespace boost::math;
@@ -67,8 +69,9 @@ class Utilities{
         double GaussKLDivergence(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
         double Wasserstein(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
         // Categorical distributino distances
-        std::vector<float>  categoricalhistogramCompare( float histA[], float histB[] , int N);
+        vector<float>  categoricalhistogramCompare( float histA[], float histB[] , int N);
         float categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2);
+        vector<double> observationProbabilities(vector< vector< double > > * distanceFeatures);
     protected:
     private:
 };

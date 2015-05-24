@@ -14,11 +14,24 @@
 #include <random>
 #include "Landmark.h"
 #include "Landmarks.h"
-#include "decision-trees.hxx"
-#include "marray.hxx"
+
 #include "DBWrapper.h"
 using namespace std;
 
+
+template <typename T>
+vector<size_t> sort_indexes(const vector<T> &v) {
+
+  // initialize original index locations
+  vector<size_t> idx(v.size());
+  for (size_t i = 0; i != idx.size(); ++i) idx[i] = i;
+
+  // sort indexes based on comparing values in v
+  sort(idx.begin(), idx.end(),
+       [&v](size_t i1, size_t i2) {return v[i1] > v[i2];});
+
+  return idx;
+}
 int main(int argc, char* argv[])
 {
 
@@ -49,7 +62,7 @@ int main(int argc, char* argv[])
     // Initialize the method
     smc.init();
     //Get the clusters
-    smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
+    smc.infer( &particles, & dataPoints, Baseparams, numOfParticles , numOfSamples);
     //Compare and decide on whether you have new landmarks or not.
     SMC::StateProgression temp = particles[0];
     Landmarks observations;
@@ -58,56 +71,29 @@ int main(int argc, char* argv[])
         smc.numOfLandmarks++;
         observations.addLandMark(land);
     }
-    Landmarks landmarks = dbwr.getCurrentLandmarks();
+    Landmarks landmarks =  dbwr.getCurrentLandmarks();
     //Save landmarks to db
+    vector<double> current_observations;
     for(unsigned int i=1;i<observations.size();i++){
-        //cout << " new distance pair " << endl;
-        SMC::SufficientStatistics dist = observations.landmarks[i].distribution;
-        //dbwr.insertLandmark(dist);
-        //extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
-    }
-
-
-
-
-
-/*    const size_t numberOfSamples = 100;
-    const size_t numberOfFeatures = 2;
-
-    // define random feature matrix
-    std::default_random_engine RandomNumberGenerator;
-    typedef double Feature;
-    std::uniform_real_distribution<double> randomDistribution(0.0, 1.0);
-    const size_t shape[] = {numberOfSamples, numberOfFeatures};
-    andres::Marray<Feature> features(shape, shape + 2);
-    for(size_t sample = 0; sample < numberOfSamples; ++sample)
-    for(size_t feature = 0; feature < numberOfFeatures; ++feature) {
-        features(sample, feature) = randomDistribution(RandomNumberGenerator);
-    }
-
-    // define labels
-    typedef unsigned char Label;
-    andres::Marray<Label> labels(shape, shape + 1);
-    for(size_t sample = 0; sample < numberOfSamples; ++sample) {
-        if((features(sample, 0) <= 0.5 && features(sample, 1) <= 0.5)
-        || (features(sample, 0) > 0.5 && features(sample, 1) > 0.5)) {
-            labels(sample) = 0;
+        vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
+        vector<double> probabilities = ut.observationProbabilities(& distanceFeatures);
+        for(auto i: sort_indexes(probabilities)){
+            //if probability is larger than .9 then we have a match
+            if( probabilities[i]>.9){
+                //do stuff so that the landmark is registered
+                current_observations.push_back(i);
+                break;
+            }else{
+                dbwr.insertLandmark(& observations.landmarks[i].distribution);
+                current_observations.push_back(i);
+                landmarks =  dbwr.getCurrentLandmarks();
+                break;
+            }
         }
-        else {
-            labels(sample) = 1;
-        }
+        //;
+
     }
 
-    // learn decision forest
-    typedef double Probability;
-    andres::ml::DecisionForest<Feature, Label, Probability> decisionForest;
-    const size_t numberOfDecisionTrees = 10;
-    decisionForest.learn(features, labels, numberOfDecisionTrees);
 
-    // predict probabilities for every label and every training sample
-    andres::Marray<Probability> probabilities(shape, shape + 2);
-    decisionForest.predict(features, probabilities);
-    // TODO: test formally
-*/
     return 0;
 }

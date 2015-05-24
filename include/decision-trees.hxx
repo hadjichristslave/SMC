@@ -184,7 +184,7 @@ public:
     void clear();
     size_t size() const;
     const DecisionTreeType& decisionTree(const size_t) const;
-    void predict(const andres::View<Feature>&, andres::Marray<Probability>&) const;
+    std::vector<double> predict(const andres::View<Feature>&, andres::Marray<Probability>&) const;
     void learn(const andres::View<Feature>&, const andres::View<Label>&,
         const size_t = 255);
     template<class RandomEngine>
@@ -534,7 +534,7 @@ DecisionNode<FEATURE, LABEL>::sampleSubsetWithoutReplacement(
     }
 
     // draw "subsetSize" indices without replacement
-    #pragma omp critical
+
     for(size_t j = 0; j < subsetSize; ++j) {
         std::uniform_int_distribution<size_t> distribution(0, size - j - 1);
         const size_t index = distribution(randomEngine);
@@ -820,7 +820,6 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::learn(
     clear();
     decisionTrees_.resize(numberOfDecisionTrees);
 
-    #pragma omp parallel for schedule(guided)
     for(ptrdiff_t treeIndex = 0; treeIndex < static_cast<ptrdiff_t>(decisionTrees_.size()); ++treeIndex) {
         std::vector<size_t> sampleIndices(numberOfSamples);
         sampleBootstrap(numberOfSamples, sampleIndices, randomEngine);
@@ -834,7 +833,7 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::learn(
 /// \param labelProbabilities A matrix of probabilities in which every rows corresponds to a sample and every column corresponds to a label.
 ///
 template<class FEATURE, class LABEL, class PROBABILITY>
-inline void
+inline std::vector<double>
 DecisionForest<FEATURE, LABEL, PROBABILITY>::predict(
     const andres::View<Feature>& features,
     andres::Marray<Probability>& labelProbabilities
@@ -852,7 +851,7 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::predict(
     const size_t numberOfSamples = features.shape(0);
     const size_t numberOfFeatures = features.shape(1);
     std::fill(labelProbabilities.begin(), labelProbabilities.end(), Probability());
-    #pragma omp parallel for schedule(dynamic)
+
     for(ptrdiff_t treeIndex = 0; treeIndex < static_cast<ptrdiff_t>(decisionTrees_.size()); ++treeIndex) {
         std::vector<Label> labels(numberOfSamples);
         const DecisionTreeType& decisionTree = decisionTrees_[treeIndex];
@@ -862,13 +861,15 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::predict(
             if(label >= labelProbabilities.shape(1)) {
                 throw std::runtime_error("labelProbabilities.shape(1) does not match the number of labels.");
             }
-            #pragma omp atomic
             ++labelProbabilities(sampleIndex, label);
         }
     }
-    #pragma omp parallel for
-    for(ptrdiff_t j = 0; j < static_cast<ptrdiff_t>(labelProbabilities.size()); ++j)
+    std::vector<double> probs(labelProbabilities.size());
+    for(ptrdiff_t j = 0; j < static_cast<ptrdiff_t>(labelProbabilities.size()); ++j){
         labelProbabilities(j) /= decisionTrees_.size();
+        probs[j]               = labelProbabilities(j);
+    }
+    return probs;
 }
 
 /// Returns a decision tree.
@@ -893,7 +894,6 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::sampleBootstrap(
     RandomEngine& randomEngine
 ) {
     indices.resize(size);
-    #pragma omp critical
     for(size_t j = 0; j < size; ++j) {
         std::uniform_int_distribution<size_t> distribution(0, size - 1);
         indices[j] = distribution(randomEngine);

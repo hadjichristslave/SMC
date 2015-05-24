@@ -127,11 +127,11 @@ class SMC
         Utilities ut;
 
         const void infer( vector< SMC::StateProgression > * particles, \
-                          vector < vector < vector<double> > > cloudData, \
+                          vector < vector < vector<double> > > * cloudData, \
                           SMC::Params params, int numOfParticles,\
                           int numOfSamples);
         const void sample(  SMC::StateProgression  * currState, \
-                                vector< vector<double> >cloudInstance, \
+                                vector< vector<double> > * cloudInstance, \
                                 SMC::Params params, \
                                 int currentTime,
                                 int currentSample, \
@@ -148,7 +148,7 @@ class SMC
         const void removeEmptyStates(SMC::StateProgression * state, int currTime);
 
         const void resample(         vector< SMC::StateProgression > * particles, \
-                                     vector < vector<double> > cloudData, \
+                                     vector < vector<double> > * cloudData, \
                                      SMC::Params params,
                                      int currTime,
                                      int numOfParticles);
