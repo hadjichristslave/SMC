@@ -271,22 +271,24 @@ float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
      return result;
  }
 vector<double> Utilities::observationProbabilities(vector< vector< double > > * distanceFeatures){
-    const size_t numberOfSamples = distanceFeatures->at(0).size();
+    vector<double> foo;
+    if( distanceFeatures->size() ==0)
+        return foo;
+    const size_t numberOfSamples = distanceFeatures->size();
     const size_t numberOfFeatures = 40;
+    cout << numberOfSamples << endl;
     // define random feature matrix
     typedef double Feature;
     const size_t shape[] = {numberOfSamples, numberOfFeatures};
     andres::Marray<Feature> features(shape, shape + 2);
     for(size_t sample = 0; sample < numberOfSamples; ++sample)
-    for(size_t feature = 0; feature < numberOfFeatures; ++feature) {
+    for(size_t feature = 0; feature < numberOfFeatures; ++feature)
         features(sample, feature) = distanceFeatures->at(sample)[feature];
-    }
     // define labels
     // Two labels since we want if it's a landmark or not.
     typedef unsigned char Label;
     andres::Marray<Label> labels(shape, shape + 1);
     for(size_t sample = 0; sample < numberOfSamples; ++sample) {
-
         if(features(sample,13) < .0003)                                   labels(sample) = 1;
         if(features(sample, 0) <= 0.5 && features(sample, 1) <= 0.5)      labels(sample) = 1;
         else                                                              labels(sample) = 0;

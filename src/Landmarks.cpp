@@ -22,10 +22,10 @@ void Landmarks::print(int landmarkIndex){
 vector< vector< double > >  Landmarks::extractDistances(Landmark * observation , Utilities * ut){
         vector< double > currDist;
         vector< vector< double > > distances;
-        // Gaussian distances
         for(unsigned int i=0;i< landmarks.size();i++){
             distances.push_back(currDist);
             Landmark landmark = landmarks[i];
+            // Gaussian distances
             distances[i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar, landmark.distribution.mean, landmark.distribution.covar));
             distances[i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar, landmark.distribution.mean, landmark.distribution.covar));
             // exponential distances
