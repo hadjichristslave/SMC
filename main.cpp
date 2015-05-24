@@ -58,11 +58,11 @@ int main(int argc, char* argv[])
         smc.numOfLandmarks++;
         observations.addLandMark(land);
     }
-    landmarks = dbwr.getCurrentLandmarks();
+    Landmarks landmarks = dbwr.getCurrentLandmarks();
     //Save landmarks to db
-    for(unsigned int i=1;i<lands.size();i++){
+    for(unsigned int i=1;i<observations.size();i++){
         //cout << " new distance pair " << endl;
-        SMC::SufficientStatistics dist = lands.landmarks[i].distribution;
+        SMC::SufficientStatistics dist = observations.landmarks[i].distribution;
         //dbwr.insertLandmark(dist);
         //extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
     }

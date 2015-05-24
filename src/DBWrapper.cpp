@@ -20,7 +20,7 @@ void DBWrapper::ifNotExistscreateDB(){
     double, bin20 double, bin21 double, bin22 double, bin23 double, bin24 double, bin25 double, bin26 double);");
 }
 void DBWrapper::insertLandmark(SMC::SufficientStatistics dist){
-    sqlite3pp::database db("landmarks.db");
+    sqlite3pp::database db(database.c_str());
     sqlite3pp::command cmd(
         db, "INSERT INTO landmarks(x , y , z , \
             covar11 , covar12 , covar13 ,\
@@ -46,7 +46,7 @@ void DBWrapper::insertLandmark(SMC::SufficientStatistics dist){
         cmd.execute();
 }
 Landmark DBWrapper::getLandmark(int LandId){
-    sqlite3pp::database db("landmarks.db");
+    sqlite3pp::database db(database.c_str());
     string query = "SELECT * FROM landmarks where id="+SSTR(LandId);
     sqlite3pp::query qry(db, query.c_str());
     if(qry.column_count() ==0){
@@ -103,7 +103,7 @@ Landmark DBWrapper::getLandmark(int LandId){
 }
 Landmarks DBWrapper::getCurrentLandmarks(){
     Landmarks landmarks;
-    sqlite3pp::database db("landmarks.db");
+    sqlite3pp::database db(database.c_str());
     sqlite3pp::query qry(db, "SELECT * FROM landmarks");
 
     for (int i = 0; i < qry.column_count(); ++i) {

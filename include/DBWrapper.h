@@ -4,6 +4,7 @@
 #include "sqlite3ppext.h"
 #include "SMC.h"
 #include "Landmark.h"
+#include "Landmarks.h"
 
 #define SSTR( x ) dynamic_cast< std::ostringstream & >( \
         ( std::ostringstream() << std::dec << x ) ).str()
