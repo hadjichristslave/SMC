@@ -387,8 +387,8 @@ DecisionNode<FEATURE, LABEL>::learn(
     numbersOfLabels[0].reserve(10); // expensive!
     numbersOfLabels[1].reserve(10); // expensive!
     double optimalSumOfGiniCoefficients = std::numeric_limits<double>::infinity();
-    size_t optimalFeatureIndex;
-    size_t optimalThresholdIndex;
+    size_t optimalFeatureIndex   =0;
+    size_t optimalThresholdIndex =0;
     Feature optimalThreshold;
     for(size_t j = 0; j < numberOfFeaturesToBeAssessed; ++j) {
         const size_t fi = featureIndices[j];
@@ -431,7 +431,7 @@ DecisionNode<FEATURE, LABEL>::learn(
         // assess all relevant splits wrt fi-th feature
         size_t thresholdIndex = sampleIndexBegin;
         for(;;) {
-            const size_t thresholdIndexOld = thresholdIndex;
+            //const size_t thresholdIndexOld = thresholdIndex;
 
             // skip samples with identical feature value
             while(thresholdIndex + 1 < sampleIndexEnd
@@ -849,7 +849,7 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::predict(
     }
 
     const size_t numberOfSamples = features.shape(0);
-    const size_t numberOfFeatures = features.shape(1);
+    //const size_t numberOfFeatures = features.shape(1);
     std::fill(labelProbabilities.begin(), labelProbabilities.end(), Probability());
 
     for(ptrdiff_t treeIndex = 0; treeIndex < static_cast<ptrdiff_t>(decisionTrees_.size()); ++treeIndex) {

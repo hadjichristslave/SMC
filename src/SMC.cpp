@@ -41,7 +41,7 @@ const void SMC::removeEmptyStates(SMC::StateProgression * state, int currTime){
     for(unsigned int i =0 ;i<sums.size();i++){
         if(sums[i]>0){
             for(unsigned int j =0;j<state->assignments.size();j++)
-                state->assignments[j]        =  (state->assignments[j]==i)?counter:state->assignments[j];
+                state->assignments[j]        =  ((unsigned int)state->assignments[j]==i)?counter:state->assignments[j];
             // change the index of a cluster to the reduced one
             state->stateProg[currTime][counter]          = state->stateProg[currTime][i];
             state->clusterSizes[counter]                 = state->clusterSizes[i];
@@ -200,7 +200,7 @@ const void SMC::resample( vector< SMC::StateProgression > * particles, \
                           int currTime,\
                           int numOfParticles){
     vector<double> weights(particles->size());
-    for(unsigned int i =0 ; i< numOfParticles; i ++ )
+    for(int i =0 ; i< numOfParticles; i ++ )
         weights[i] = computeWeights(& particles->at(i) , currTime , cloudData , params);
     double sum = 0;
     for_each( weights.begin(), weights.end(), [&sum] (double y) mutable { sum+=y; });

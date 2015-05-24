@@ -79,16 +79,25 @@ int main(int argc, char* argv[]){
     }
     // Get landmarks currently in the database
     Landmarks landmarks =  dbwr.getCurrentLandmarks();
+    cout <<  " Landmarks size i s "  << landmarks.size() << endl;
 
     vector<double> current_observations;
     for(unsigned int i=1;i<observations.size();i++){
+        cout << "i here" << endl;
         // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
         // Get the probability of being the same instance as that given landmark
         vector<double> probabilities = ut.observationProbabilities(& distanceFeatures);
-        for(auto i: sort_indexes(probabilities)){
+
+        if(landmarks.size()==0){
+            dbwr.insertLandmark(& observations.landmarks[i].distribution);
+            current_observations.push_back(observations.size()-1);
+            landmarks =  dbwr.getCurrentLandmarks();
+            continue;
+        }
+        for(auto ij: sort_indexes(probabilities)){
             //if probability is larger than .9 then we have a match
-            if( probabilities[i]>landmarkThreshold){
+            if( probabilities[ij]>landmarkThreshold){
                 // Landmark is registered as currently detected
                 current_observations.push_back(i);
                 break;

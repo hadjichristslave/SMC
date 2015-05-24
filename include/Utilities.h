@@ -2,16 +2,13 @@
 #define UTILITIES_H
 #include <vector>
 #include <math.h>
-#include <cmath>
 #include <random>
-#include <string>
 #include <iostream>
 #include <fstream>
 #include <eigen3/Eigen/Dense>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/math/distributions/normal.hpp>
-#include <boost/math/distributions/exponential.hpp>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 #include <opencv2/opencv.hpp>
@@ -29,15 +26,11 @@ namespace Eigen {
         {
           static boost::mt19937 rng;    // The uniform pseudo-random algorithm
           mutable boost::normal_distribution<Scalar> norm;  // The gaussian combinator
-
           EIGEN_EMPTY_STRUCT_CTOR(scalar_normal_dist_op)
-
           template<typename Index>
           inline const Scalar operator() (Index, Index = 0) const { return norm(rng); }
         };
-
         template<typename Scalar> boost::mt19937 scalar_normal_dist_op<Scalar>::rng;
-
         template<typename Scalar>
         struct functor_traits<scalar_normal_dist_op<Scalar> >{
             enum{

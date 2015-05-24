@@ -1,11 +1,6 @@
 #ifndef SMC_H
 #define SMC_H
-#include <eigen3/Eigen/Dense>
 #include "Utilities.h"
-#include <iostream>
-#include <fstream>
-#include <gsl/gsl_rng.h>
-#include <gsl/gsl_randist.h>
 
 using namespace std;
 using namespace Eigen;
