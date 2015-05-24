@@ -52,19 +52,21 @@ int main(int argc, char* argv[])
     smc.infer( &particles, dataPoints, Baseparams, numOfParticles , numOfSamples);
     //Compare and decide on whether you have new landmarks or not.
     SMC::StateProgression temp = particles[0];
-    Landmarks lands;
+    Landmarks observations;
     for(unsigned int i = 0;i< temp.stateProg[0].size();i++){
         Landmark land(smc.numOfLandmarks , temp.stateProg[0][i]);
         smc.numOfLandmarks++;
-        lands.addLandMark(land);
+        observations.addLandMark(land);
     }
+    landmarks = dbwr.getCurrentLandmarks();
     //Save landmarks to db
     for(unsigned int i=1;i<lands.size();i++){
         //cout << " new distance pair " << endl;
         SMC::SufficientStatistics dist = lands.landmarks[i].distribution;
-        dbwr.insertLandmark(dist);
+        //dbwr.insertLandmark(dist);
         //extractDistances(lands.landmarks[i], lands.landmarks[i-1], ut);
     }
+
 
 
 

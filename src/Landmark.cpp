@@ -1,10 +1,13 @@
 #include "Landmark.h"
 
+Landmark::Landmark(){
+    uuid = 0;
+}
+
 Landmark::Landmark(int LandId , SMC::SufficientStatistics stats){
     uuid = LandId;
     distribution.copy(stats);
 }
-
 Landmark::~Landmark()
 {
     //dtor

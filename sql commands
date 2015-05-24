@@ -2,3 +2,13 @@ sql table
 
 create table landmarks(x double, y double, z double, kl double, emd double, hellinger double, bin0 double, bin2 double, bin3 double, bin4 double, bin5 double, bin6 double, bin7 double, bin8 double, bin9 double, bin10 double, bin11 double, bin12 double, bin13 double, bin14 double, bin15 double, bin16 double, bin17 double, bin18 double, bin19 double, bin20 double, bin21 double, bin22 double, bin23 double, bin24 double, bin25 double, bin26 double)
 
+
+create table landmarks(id integer primary key autoincrement, x double, y double, z double, \
+    covar11 double, covar12 double, covar13 double,\
+    covar21 double, covar22 double, covar23 double,\
+    covar31 double, covar32 double, covar33 double,\
+    exponentialLambda double,\
+    bin0 double, bin2 double, bin3 double, bin4 double, bin5 double, bin6 \
+    double, bin7 double, bin8 double, bin9 double, bin10 double, bin11 double, bin12 double, \
+    bin13 double, bin14 double, bin15 double, bin16 double, bin17 double, bin18 double, bin19 \
+    double, bin20 double, bin21 double, bin22 double, bin23 double, bin24 double, bin25 double, bin26 double);

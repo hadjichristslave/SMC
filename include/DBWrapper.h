@@ -5,6 +5,10 @@
 #include "SMC.h"
 #include "Landmark.h"
 
+#define SSTR( x ) dynamic_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
+
+
 using namespace std;
 class DBWrapper
 {
@@ -14,7 +18,9 @@ class DBWrapper
         virtual ~DBWrapper();
         void ifNotExistscreateDB();
         void insertLandmark(SMC::SufficientStatistics dist);
-        vector<Landmark> getCurrentLandmarks();
+        Landmark getLandmark(int LandId);
+        Landmarks getCurrentLandmarks();
+
         string database;
     protected:
     private:
