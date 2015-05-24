@@ -1,13 +1,15 @@
 #ifndef LANDMARK_H
 #define LANDMARK_H
-#include "SMC.h"
+#include "Structures.h"
+
+using namespace Structures;
 
 class Landmark
 {
     public:
         int uuid;
-        SMC::SufficientStatistics distribution;
-        Landmark(int LandId , SMC::SufficientStatistics stats);
+        SufficientStatistics distribution;
+        Landmark(int LandId , SufficientStatistics stats);
         Landmark();
 
         virtual ~Landmark();

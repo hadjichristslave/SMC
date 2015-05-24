@@ -1,35 +1,24 @@
 #include <iostream>
-#include <string>
 #include <stdlib.h>
-#include <stdio.h>
-#include <sstream>
 #include <libconfig.h>
-#include <algorithm>
 #include <vector>
-#include "SMC.h"
+
 #include "Utilities.h"
-
-#include <stdexcept>
-#include <vector>
-#include <random>
-#include "Landmark.h"
 #include "Landmarks.h"
-
 #include "DBWrapper.h"
-using namespace std;
 
+
+using namespace std;
+using namespace Structures;
 
 template <typename T>
 vector<size_t> sort_indexes(const vector<T> &v) {
-
   // initialize original index locations
   vector<size_t> idx(v.size());
   for (size_t i = 0; i != idx.size(); ++i) idx[i] = i;
-
   // sort indexes based on comparing values in v
   sort(idx.begin(), idx.end(),
        [&v](size_t i1, size_t i2) {return v[i1] > v[i2];});
-
   return idx;
 }
 int main(int argc, char* argv[]){
@@ -61,16 +50,16 @@ int main(int argc, char* argv[]){
     // All different points in time of our pointclouds.
     int timeStates = dataPoints.size();
     // Define the base params size
-    SMC::Params Baseparams;
-    Baseparams.cloudInstances = dataPoints.size();
+    Params baseparams;
+    baseparams.cloudInstances = dataPoints.size();
     // Create as many particles as config file defines
-    vector < SMC::StateProgression > particles(numOfParticles, timeStates);
+    vector < StateProgression > particles(numOfParticles, timeStates);
     // Initialize the method
     smc.init();
     // Cluster the elements
-    smc.infer( &particles, & dataPoints, Baseparams, numOfParticles , numOfSamples);
+    smc.infer( &particles, & dataPoints, baseparams, numOfParticles , numOfSamples);
     //Get the clusters output. Single particle or a mixture can be used. Only particle 1 is used here
-    SMC::StateProgression temp = particles[0];
+    StateProgression temp = particles[0];
     Landmarks observations;
     for(unsigned int i = 0;i< temp.stateProg[0].size();i++){
         Landmark land(smc.numOfLandmarks , temp.stateProg[0][i]);
@@ -83,7 +72,6 @@ int main(int argc, char* argv[]){
 
     vector<double> current_observations;
     for(unsigned int i=1;i<observations.size();i++){
-        cout << "i here" << endl;
         // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
         // Get the probability of being the same instance as that given landmark
@@ -111,7 +99,5 @@ int main(int argc, char* argv[]){
         }
         //;
     }
-
-
     return 0;
 }

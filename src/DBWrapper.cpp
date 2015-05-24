@@ -19,7 +19,7 @@ void DBWrapper::ifNotExistscreateDB(){
     bin13 double, bin14 double, bin15 double, bin16 double, bin17 double, bin18 double, bin19 \
     double, bin20 double, bin21 double, bin22 double, bin23 double, bin24 double, bin25 double, bin26 double);");
 }
-void DBWrapper::insertLandmark(SMC::SufficientStatistics * dist){
+void DBWrapper::insertLandmark(SufficientStatistics * dist){
     sqlite3pp::database db(database.c_str());
     sqlite3pp::command cmd(
         db, "INSERT INTO landmarks(x , y , z , \
@@ -55,7 +55,7 @@ Landmark DBWrapper::getLandmark(int LandId){
     }
     for (int i = 0; i < qry.column_count(); ++i) {
         int id=-1;
-        SMC::SufficientStatistics stats;
+        SufficientStatistics stats;
         stats.categorical.resize(27);
         for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
 
@@ -102,7 +102,7 @@ Landmarks DBWrapper::getCurrentLandmarks(){
 
     for (int i = 0; i < qry.column_count(); ++i) {
         int id=-1;
-        SMC::SufficientStatistics stats;
+        SufficientStatistics stats;
         stats.categorical.resize(27);
         for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
             std::tie(id, stats.mean[0],stats.mean[1],stats.mean[2])                             =\

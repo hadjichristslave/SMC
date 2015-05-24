@@ -4,7 +4,7 @@ Landmark::Landmark(){
     uuid = 0;
 }
 
-Landmark::Landmark(int LandId , SMC::SufficientStatistics stats){
+Landmark::Landmark(int LandId , SufficientStatistics stats){
     uuid = LandId;
     distribution.copy(stats);
 }

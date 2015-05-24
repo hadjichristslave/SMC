@@ -14,6 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include "decision-trees.hxx"
 #include "marray.hxx"
+#include  "Structures.h"
 
 using namespace std;
 using namespace boost::math;
