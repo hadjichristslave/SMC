@@ -20,10 +20,13 @@ void Landmarks::print(int landmarkIndex){
     landmarks[landmarkIndex].print();
 }
 std::vector<double>  Landmarks::extractDistances(Landmark landmark1 , Landmark landmark2 , Utilities ut){
-        cout << ut.Wasserstein(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
-        cout << ut.GaussKLDivergence(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar) << endl;
-        cout << ut.ExpKLDivergence(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
-        cout << ut.Expsquaredhellinger(landmark1.distribution.exponential, landmark2.distribution.exponential) << endl;
+        // Gaussian distances
+        ut.Wasserstein(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar);
+        ut.GaussKLDivergence(landmark1.distribution.mean, landmark1.distribution.covar, landmark2.distribution.mean, landmark2.distribution.covar);
+        // exponential distances
+        ut.ExpKLDivergence(landmark1.distribution.exponential, landmark2.distribution.exponential);
+        ut.Expsquaredhellinger(landmark1.distribution.exponential, landmark2.distribution.exponential);
+        //categorical distances
         float histogram1[ landmark1.distribution.categorical.size() ];
         float histogram2[ landmark2.distribution.categorical.size() ];
         for (unsigned int o=0;o<landmark2.distribution.categorical.size();o++){
