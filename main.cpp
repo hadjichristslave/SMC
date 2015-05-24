@@ -32,12 +32,10 @@ vector<size_t> sort_indexes(const vector<T> &v) {
 
   return idx;
 }
-int main(int argc, char* argv[])
-{
-
+int main(int argc, char* argv[]){
     // Config file parsing
-
     int numOfParticles , numOfSamples;
+    double landmarkThreshold;
     const char *filepath = NULL;
     const char *database = NULL;
     config_t cfg, *cf;
@@ -47,23 +45,31 @@ int main(int argc, char* argv[])
         return(EXIT_FAILURE);
     config_lookup_int(cf, "particles" , &numOfParticles);
     config_lookup_int(cf, "samples" , &numOfSamples);
+    config_lookup_float(cf, "landmarkThreshold" , &landmarkThreshold);
     config_lookup_string(cf, "filepath" , &filepath);
     config_lookup_string(cf, "database" , &database);
 
     // Variable declaration
+    //The database wrapper object
     DBWrapper dbwr(database);
+    // The smc sampler object
     SMC smc;
+    // Utilities object. Everything that does not fit something else just goes there
     Utilities ut;
+    //Data points, our cloud information goes here
     vector< vector< vector< double > > > dataPoints  = ut.readFile("-----", filepath);
-    int timeStates = dataPoints.size(); // All different points in time of our pointclouds.
+    // All different points in time of our pointclouds.
+    int timeStates = dataPoints.size();
+    // Define the base params size
     SMC::Params Baseparams;
     Baseparams.cloudInstances = dataPoints.size();
+    // Create as many particles as config file defines
     vector < SMC::StateProgression > particles(numOfParticles, timeStates);
     // Initialize the method
     smc.init();
-    //Get the clusters
+    // Cluster the elements
     smc.infer( &particles, & dataPoints, Baseparams, numOfParticles , numOfSamples);
-    //Compare and decide on whether you have new landmarks or not.
+    //Get the clusters output. Single particle or a mixture can be used. Only particle 1 is used here
     SMC::StateProgression temp = particles[0];
     Landmarks observations;
     for(unsigned int i = 0;i< temp.stateProg[0].size();i++){
@@ -71,27 +77,30 @@ int main(int argc, char* argv[])
         smc.numOfLandmarks++;
         observations.addLandMark(land);
     }
+    // Get landmarks currently in the database
     Landmarks landmarks =  dbwr.getCurrentLandmarks();
-    //Save landmarks to db
+
     vector<double> current_observations;
     for(unsigned int i=1;i<observations.size();i++){
+        // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
+        // Get the probability of being the same instance as that given landmark
         vector<double> probabilities = ut.observationProbabilities(& distanceFeatures);
         for(auto i: sort_indexes(probabilities)){
             //if probability is larger than .9 then we have a match
-            if( probabilities[i]>.9){
-                //do stuff so that the landmark is registered
+            if( probabilities[i]>landmarkThreshold){
+                // Landmark is registered as currently detected
                 current_observations.push_back(i);
                 break;
             }else{
+                // Insert the landmark, update landmark db, add new landmark id to the currently detected list
                 dbwr.insertLandmark(& observations.landmarks[i].distribution);
-                current_observations.push_back(i);
+                current_observations.push_back(observations.size()-1);
                 landmarks =  dbwr.getCurrentLandmarks();
                 break;
             }
         }
         //;
-
     }
 
 
