@@ -43,6 +43,13 @@ Linker options are
 
 The project outputs in file specified in config file the clusters found on every sample of every pixel.
 
+#Benchmark
+
+The sampler is quite fast.
+For 11K points in the cloud and a configuration of 20 samples and 3 particles it takes ~3s to output landmark ID's @ a Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz
+As is expected the weight calculations are quite expensive but they can be optimized even further.
+
+
 #Attention
 
 The files are still modified daily, so any weird behaviour might be due to development issues.

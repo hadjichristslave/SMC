@@ -1,12 +1,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <libconfig.h>
-#include <vector>
-
 #include "Utilities.h"
 #include "Landmarks.h"
 #include "DBWrapper.h"
-
 
 using namespace std;
 using namespace Structures;
@@ -71,12 +68,13 @@ int main(int argc, char* argv[]){
     cout <<  " Landmarks size i s "  << landmarks.size() << endl;
 
     vector<double> current_observations;
-    for(unsigned int i=1;i<observations.size();i++){
+    for(unsigned int i=0;i<observations.size();i++){
+        cout << " observations size is   " << observations.size() << endl;
         // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
         // Get the probability of being the same instance as that given landmark
         vector<double> probabilities = ut.observationProbabilities(& distanceFeatures);
-
+        cout << " stored landmarks size is   " << landmarks.size() << endl;
         if(landmarks.size()==0){
             dbwr.insertLandmark(& observations.landmarks[i].distribution);
             current_observations.push_back(observations.size()-1);
