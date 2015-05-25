@@ -91,7 +91,6 @@ int main(int argc, char* argv[]){
         }
         for(auto ij: sort_indexes(probabilities)){
             //if probability is larger than .9 then we have a matchs
-            cout << "ij with probability " << ij  << " with prob " << probabilities[ij] << " and database id " << landmarks.landmarks[ij].uuid << endl;
 
             if( probabilities[ij]>landmarkThreshold){
                 //Landmark is registered as currently detected
