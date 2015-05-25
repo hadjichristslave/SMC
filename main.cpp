@@ -64,7 +64,8 @@ int main(int argc, char* argv[]){
         observations.addLandMark(land);
     }
     // Get landmarks currently in the database
-    Landmarks landmarks =  dbwr.getCurrentLandmarks();
+    Landmarks                   landmarks   =  dbwr.getCurrentLandmarks();
+    vector< vector< double > >  trainingSet =  dbwr.getTrainingSet();
     int initialDbSize   = landmarks.size();
 
     vector<double> current_observations;
@@ -72,7 +73,9 @@ int main(int argc, char* argv[]){
         // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
         // Get the probability of being the same instance as that given landmark
-        vector<double> probabilities = ut.observationProbabilities(& distanceFeatures);
+        vector<double> probabilities = ut.observationProbabilities(& trainingSet, & distanceFeatures);
+        ut.normalizeVec(&probabilities);
+
         if(landmarks.size()==0){
             dbwr.insertLandmark(& observations.landmarks[i].distribution);
             current_observations.push_back(observations.size()-1);
@@ -81,12 +84,13 @@ int main(int argc, char* argv[]){
         }
         for(auto ij: sort_indexes(probabilities)){
             //if probability is larger than .9 then we have a match
-            if( probabilities[ij]>landmarkThreshold && 1!=1){
-                // Landmark is registered as currently detected
-                current_observations.push_back(i);
+            cout << "ij i s" << ij << " probability of ij i s "  << probabilities[ij];
+            if( probabilities[ij]>landmarkThreshold){
+                //Landmark is registered as currently detected
+                current_observations.push_back(ij);
                 break;
             }else{
-                // Insert the landmark, update landmark db, add new landmark id to the currently detected list
+                //Insert the landmark, update landmark db, add new landmark id to the currently detected list
                 dbwr.insertLandmark(& observations.landmarks[i].distribution);
                 current_observations.push_back(observations.size()-1);
                 landmarks =  dbwr.getCurrentLandmarks();
@@ -103,5 +107,6 @@ int main(int argc, char* argv[]){
             dbwr.insertLabeledDistances(distanceFeatures, i);
         }
     }
+    for_each(current_observations.begin(), current_observations.end(), [] (double y ){ cout << y << endl;});
     return 0;
 }

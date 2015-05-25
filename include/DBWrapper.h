@@ -23,6 +23,7 @@ class DBWrapper
         Landmark getLandmark(int LandId);
         Landmarks getCurrentLandmarks();
         void insertLabeledDistances(vector< vector< double > > distanceFeatures, int positiveLabel);
+        vector< vector< double > > getTrainingSet();
         string database;
     protected:
     private:

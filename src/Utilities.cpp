@@ -251,6 +251,12 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float
      distances.push_back(compar_hell);
      return distances;
 }
+void Utilities::normalizeVec(vector<double> * tes){
+    double sum = 0;
+    for_each(tes->begin(),tes->end(),[&sum](double d){ sum+=d;});
+    for(unsigned int i=0;i<tes->size();i++)
+        tes->at(i) /= sum;
+}
 float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
      float sum1 = 0,sum2 = 0;
      for(int i=0;i<mat1->rows;i++){
@@ -270,33 +276,94 @@ float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
          }
      return result;
  }
-vector<double> Utilities::observationProbabilities(vector< vector< double > > * distanceFeatures){
-    vector<double> foo;
+vector<double> Utilities::observationProbabilities(vector< vector< double > > * trainingSet, vector< vector< double > > * distanceFeatures){
+    vector<double> labelprobs;
     if( distanceFeatures->size() ==0)
-        return foo;
-    const size_t numberOfSamples = distanceFeatures->size();
+        return labelprobs;
+    const size_t numberOfSamples  = distanceFeatures->size();
+    const size_t numberOfExamples = trainingSet->size();
     const size_t numberOfFeatures = 7;
-    // define random feature matrix
+
     typedef double Feature;
     const size_t shape[] = {numberOfSamples, numberOfFeatures};
     andres::Marray<Feature> features(shape, shape + 2);
     for(size_t sample = 0; sample < numberOfSamples; ++sample)
-    for(size_t feature = 0; feature < numberOfFeatures; ++feature)
+    for(size_t feature = 0; feature < numberOfFeatures; ++feature){
         features(sample, feature) = distanceFeatures->at(sample)[feature];
+    }
+    const size_t shape2[] = {numberOfExamples, numberOfFeatures};
+    andres::Marray<Feature> training(shape2, shape2 + 2);
+    for(size_t sample = 0; sample < numberOfExamples; ++sample)
+    for(size_t feature = 0; feature < numberOfFeatures; ++feature){
+        //First index is auto increment id of db
+        training(sample, feature) = trainingSet->at(sample)[feature];
+    }
     // define labels
     // Two labels since we want if it's a landmark or not.
     typedef unsigned char Label;
+    andres::Marray<Label> labels(shape2, shape2 + 1);
+    for(size_t sample = 0; sample < numberOfExamples; ++sample)
+        labels(sample) = trainingSet->at(sample)[7];
+    // learn decision forest
+    typedef double Probability;
+    andres::ml::DecisionForest<Feature, Label, Probability> decisionForest;
+    const size_t numberOfDecisionTrees = 10;
+    decisionForest.learn(training, labels, numberOfDecisionTrees);
+    // predict probabilities for every label and every training sample
+    andres::Marray<Probability> probabilities(shape, shape + 2);
+    decisionForest.predict(features, probabilities);
+
+    for(size_t sample = 0; sample < numberOfSamples; ++sample){
+        // Only the 2nd element is given to the vector since it represents the probability
+        // Of being in label 2(0 indexing this is 1).
+        // Label 2 represents landmark related distances.
+        labelprobs.push_back(probabilities(sample, 1));
+    }
+    return labelprobs;
+}
+int Utilities::decisionTest(){
+    const size_t numberOfSamples = 10;
+    const size_t numberOfFeatures = 3;
+    // define random feature matrix
+    std::default_random_engine RandomNumberGenerator;
+    typedef double Feature;
+    std::uniform_real_distribution<double> randomDistribution(0.0, 1.0);
+    const size_t shape[] = {numberOfSamples, numberOfFeatures};
+    andres::Marray<Feature> features(shape, shape + 2);
+    andres::Marray<Feature> features2(shape, shape + 2);
+    for(size_t sample = 0; sample < numberOfSamples; ++sample)
+    for(size_t feature = 0; feature < numberOfFeatures; ++feature) {
+        features(sample, feature) = randomDistribution(RandomNumberGenerator);
+        features2(sample, feature) = randomDistribution(RandomNumberGenerator);
+    }
+
+    // define labels
+    typedef unsigned char Label;
     andres::Marray<Label> labels(shape, shape + 1);
     for(size_t sample = 0; sample < numberOfSamples; ++sample) {
-        if(features(sample, 0) <= 3 || features(sample, 1) <= 3)   labels(sample) = 1;
-        else                                                           labels(sample) = 0;
+        if((features(sample, 0) <= 0.5 && features(sample, 1) <= 0.5)
+        || (features(sample, 0) > 0.5 && features(sample, 1) > 0.5)) {
+            labels(sample) = 0;
+        }
+        else {
+            labels(sample) = 1;
+        }
     }
     // learn decision forest
     typedef double Probability;
     andres::ml::DecisionForest<Feature, Label, Probability> decisionForest;
     const size_t numberOfDecisionTrees = 10;
     decisionForest.learn(features, labels, numberOfDecisionTrees);
+
     // predict probabilities for every label and every training sample
     andres::Marray<Probability> probabilities(shape, shape + 2);
-    return decisionForest.predict(features, probabilities);
+    decisionForest.predict(features2, probabilities);
+    for(size_t sample = 0; sample < numberOfSamples; ++sample){
+        for(size_t feature = 0; feature < numberOfFeatures; ++feature)
+            cout << probabilities(sample, feature) << ",";
+        cout<< endl;
+    }
+
+    // TODO: test formally
+    return 0;
 }

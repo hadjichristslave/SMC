@@ -129,11 +129,30 @@ Landmarks DBWrapper::getCurrentLandmarks(){
         std::tie(id, stats.categorical[26])                                                 =\
         (*ij).get_columns<int , double>(0,40);
         Landmark land(id, stats);
-        cout << endl << stats << endl;
         landmarks.addLandMark(land);
     }
     return landmarks;
 }
+vector< vector< double > > DBWrapper::getTrainingSet(){
+    vector< vector< double > >  trainingSet;
+    Landmarks landmarks;
+    sqlite3pp::database db(database.c_str());
+    sqlite3pp::query qry(db, "SELECT * FROM distances");
+    for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
+        int id=-1;
+        vector<double> currentDist(8);
+        std::tie(id, currentDist[0], currentDist[1], currentDist[2])=\
+        (*ij).get_columns<int , double, double, double>(0,1,2,3);
+        std::tie(id, currentDist[3], currentDist[4], currentDist[5])=\
+        (*ij).get_columns<int , double, double, double>(0,4,5,6);
+        std::tie(id, currentDist[6], currentDist[7])=\
+        (*ij).get_columns<int , double, double>(0,7,8);
+        trainingSet.push_back(currentDist);
+    }
+    return trainingSet;
+}
+
+
 void DBWrapper::insertLabeledDistances(vector< vector< double > > distanceFeatures, int positiveLabel){
     sqlite3pp::database db(database.c_str());
     for( unsigned int i = 0; i < distanceFeatures.size();i++){

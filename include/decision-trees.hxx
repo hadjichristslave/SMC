@@ -184,7 +184,7 @@ public:
     void clear();
     size_t size() const;
     const DecisionTreeType& decisionTree(const size_t) const;
-    std::vector<double> predict(const andres::View<Feature>&, andres::Marray<Probability>&) const;
+    void predict(const andres::View<Feature>&, andres::Marray<Probability>&) const;
     void learn(const andres::View<Feature>&, const andres::View<Label>&,
         const size_t = 255);
     template<class RandomEngine>
@@ -833,7 +833,7 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::learn(
 /// \param labelProbabilities A matrix of probabilities in which every rows corresponds to a sample and every column corresponds to a label.
 ///
 template<class FEATURE, class LABEL, class PROBABILITY>
-inline std::vector<double>
+inline void
 DecisionForest<FEATURE, LABEL, PROBABILITY>::predict(
     const andres::View<Feature>& features,
     andres::Marray<Probability>& labelProbabilities
@@ -864,12 +864,9 @@ DecisionForest<FEATURE, LABEL, PROBABILITY>::predict(
             ++labelProbabilities(sampleIndex, label);
         }
     }
-    std::vector<double> probs(labelProbabilities.size());
-    for(ptrdiff_t j = 0; j < static_cast<ptrdiff_t>(labelProbabilities.size()); ++j){
+    for(ptrdiff_t j = 0; j < static_cast<ptrdiff_t>(labelProbabilities.size()); ++j)
         labelProbabilities(j) /= decisionTrees_.size();
-        probs[j]               = labelProbabilities(j);
-    }
-    return probs;
+
 }
 
 /// Returns a decision tree.
