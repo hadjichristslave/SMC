@@ -65,7 +65,6 @@ int main(int argc, char* argv[]){
     }
     // Get landmarks currently in the database
     Landmarks landmarks =  dbwr.getCurrentLandmarks();
-    cout <<  " Landmarks size i s "  << landmarks.size() << endl;
 
     vector<double> current_observations;
     for(unsigned int i=0;i<observations.size();i++){
