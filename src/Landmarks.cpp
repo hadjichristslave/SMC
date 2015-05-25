@@ -22,6 +22,8 @@ void Landmarks::print(int landmarkIndex){
 vector< vector< double > >  Landmarks::extractDistances(Landmark * observation , Utilities * ut){
         vector< double > currDist;
         vector< vector< double > > distances;
+        if( landmarks.size()==0)
+            return distances;
         for(unsigned int i=0;i< landmarks.size();i++){
             distances.push_back(currDist);
             Landmark landmark = landmarks[i];

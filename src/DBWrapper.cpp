@@ -139,6 +139,11 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
     sqlite3pp::database db(database.c_str());
     sqlite3pp::query qry(db, "SELECT * FROM distances");
     for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
+
+        if ( qry.begin() ==qry.end()){
+            cout<<" no training set found. Will create the training set afterwards";
+            break;
+        }
         int id=-1;
         vector<double> currentDist(8);
         std::tie(id, currentDist[0], currentDist[1], currentDist[2])=\

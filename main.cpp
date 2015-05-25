@@ -64,23 +64,29 @@ int main(int argc, char* argv[]){
         observations.addLandMark(land);
     }
     // Get landmarks currently in the database
+
     Landmarks                   landmarks   =  dbwr.getCurrentLandmarks();
     vector< vector< double > >  trainingSet =  dbwr.getTrainingSet();
-    int initialDbSize   = landmarks.size();
 
+    int initialDbSize   = landmarks.size();
     vector<double> current_observations;
     for(unsigned int i=0;i<observations.size();i++){
         // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
         // Get the probability of being the same instance as that given landmark
         vector<double> probabilities = ut.observationProbabilities(& trainingSet, & distanceFeatures);
-
         //Normalized quantities reduce the confidene interval < than .2 due to the large number of landmarks in the training set.
         //ut.normalizeVec(&probabilities);
         if(landmarks.size()==0){
             dbwr.insertLandmark(& observations.landmarks[i].distribution);
             current_observations.push_back(observations.size()-1);
-            landmarks =  dbwr.getCurrentLandmarks();
+            landmarks  =   dbwr.getCurrentLandmarks();
+            vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
+            vector<double> dat = distanceFeatures[0];
+            for_each(dat.begin(), dat.end(),[](double y) mutable{y +=1;});
+            distanceFeatures.push_back(dat);
+            dbwr.insertLabeledDistances(distanceFeatures, i);
+            trainingSet =  dbwr.getTrainingSet();
             continue;
         }
         for(auto ij: sort_indexes(probabilities)){
@@ -89,6 +95,7 @@ int main(int argc, char* argv[]){
 
             if( probabilities[ij]>landmarkThreshold){
                 //Landmark is registered as currently detected
+                cout << "Adding known landmark"<< endl;
                 current_observations.push_back(ij);
                 break;
             }else{
@@ -109,6 +116,5 @@ int main(int argc, char* argv[]){
             dbwr.insertLabeledDistances(distanceFeatures, i);
         }
     }
-    for_each(current_observations.begin(), current_observations.end(), [] (double y ){ cout << y << endl;});
     return 0;
 }
