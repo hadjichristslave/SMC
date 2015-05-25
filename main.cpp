@@ -74,8 +74,9 @@ int main(int argc, char* argv[]){
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
         // Get the probability of being the same instance as that given landmark
         vector<double> probabilities = ut.observationProbabilities(& trainingSet, & distanceFeatures);
-        ut.normalizeVec(&probabilities);
 
+        //Normalized quantities reduce the confidene interval < than .2 due to the large number of landmarks in the training set.
+        //ut.normalizeVec(&probabilities);
         if(landmarks.size()==0){
             dbwr.insertLandmark(& observations.landmarks[i].distribution);
             current_observations.push_back(observations.size()-1);
@@ -83,8 +84,9 @@ int main(int argc, char* argv[]){
             continue;
         }
         for(auto ij: sort_indexes(probabilities)){
-            //if probability is larger than .9 then we have a match
-            cout << "ij i s" << ij << " probability of ij i s "  << probabilities[ij];
+            //if probability is larger than .9 then we have a matchs
+            cout << "ij with probability " << ij  << " with prob " << probabilities[ij] << " and database id " << landmarks.landmarks[ij].uuid << endl;
+
             if( probabilities[ij]>landmarkThreshold){
                 //Landmark is registered as currently detected
                 current_observations.push_back(ij);
