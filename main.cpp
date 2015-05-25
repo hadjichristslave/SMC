@@ -65,7 +65,7 @@ int main(int argc, char* argv[]){
     }
     // Get landmarks currently in the database
     Landmarks landmarks =  dbwr.getCurrentLandmarks();
-    cout <<  " Landmarks size i s "  << landmarks.size() << endl;
+    int initialDbSize   = landmarks.size();
 
     vector<double> current_observations;
     for(unsigned int i=0;i<observations.size();i++){
@@ -94,6 +94,14 @@ int main(int argc, char* argv[]){
             }
         }
         //;
+    }
+    // if initial db size is zero create an initial training sample for the random forest
+    if(initialDbSize==0){
+        landmarks =  dbwr.getCurrentLandmarks();
+        for(unsigned int i=0;i<landmarks.size();i++){
+            vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& landmarks.landmarks[i],  & ut );
+            dbwr.insertLabeledDistances(distanceFeatures, i);
+        }
     }
     return 0;
 }

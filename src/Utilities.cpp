@@ -275,8 +275,7 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
     if( distanceFeatures->size() ==0)
         return foo;
     const size_t numberOfSamples = distanceFeatures->size();
-    const size_t numberOfFeatures = 40;
-    cout << numberOfSamples << endl;
+    const size_t numberOfFeatures = 7;
     // define random feature matrix
     typedef double Feature;
     const size_t shape[] = {numberOfSamples, numberOfFeatures};
@@ -289,9 +288,8 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
     typedef unsigned char Label;
     andres::Marray<Label> labels(shape, shape + 1);
     for(size_t sample = 0; sample < numberOfSamples; ++sample) {
-        if(features(sample,13) < .0003)                                   labels(sample) = 1;
-        if(features(sample, 0) <= 0.5 && features(sample, 1) <= 0.5)      labels(sample) = 1;
-        else                                                              labels(sample) = 0;
+        if(features(sample, 0) <= 3 || features(sample, 1) <= 3)   labels(sample) = 1;
+        else                                                           labels(sample) = 0;
     }
     // learn decision forest
     typedef double Probability;

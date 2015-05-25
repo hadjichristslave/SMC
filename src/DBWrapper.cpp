@@ -18,6 +18,9 @@ void DBWrapper::ifNotExistscreateDB(){
     double, bin7 double, bin8 double, bin9 double, bin10 double, bin11 double, bin12 double, \
     bin13 double, bin14 double, bin15 double, bin16 double, bin17 double, bin18 double, bin19 \
     double, bin20 double, bin21 double, bin22 double, bin23 double, bin24 double, bin25 double, bin26 double);");
+    db.execute("create table distances(id integer primary key autoincrement,\
+     feature1 double, feature2 double ,feature3 double, feature4 double,\
+     feature5 double, feature6 double, feature7 double, label integer)");
 }
 void DBWrapper::insertLandmark(SufficientStatistics * dist){
     sqlite3pp::database db(database.c_str());
@@ -130,4 +133,20 @@ Landmarks DBWrapper::getCurrentLandmarks(){
         landmarks.addLandMark(land);
     }
     return landmarks;
+}
+void DBWrapper::insertLabeledDistances(vector< vector< double > > distanceFeatures, int positiveLabel){
+    sqlite3pp::database db(database.c_str());
+    for( unsigned int i = 0; i < distanceFeatures.size();i++){
+        sqlite3pp::command cmd(
+            db, "INSERT INTO distances(feature1,\
+                feature2, feature3, feature4, feature5,\
+                feature6, feature7, label)\
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            int place = 1;
+            for(unsigned int j = 0; j < distanceFeatures[i].size();j++)
+                cmd.bind(place++, distanceFeatures[i][j]);
+            int label = positiveLabel==i?1:0;
+            cmd.bind(place++ , label);
+            cmd.execute();
+    }
 }
