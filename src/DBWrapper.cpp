@@ -138,8 +138,8 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
     vector< vector< double > >  trainingSet;
     Landmarks landmarks;
     sqlite3pp::database db(database.c_str());
-    sqlite3pp::query qry(db, "SELECT distinct * FROM distances2");
-    int counter = 0;
+    sqlite3pp::query qry(db,  "SELECT * FROM distances where label=1 limit 10");
+    sqlite3pp::query qry2(db, "SELECT * FROM distances where label=0 limit 10");
     for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
         int id=-1;
         vector<double> currentDist(8);
@@ -151,8 +151,6 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
         (*ij).get_columns<int , double, double>(0,7,8);
         trainingSet.push_back(currentDist);
     }
-    /*sqlite3pp::query qry2(db, "SELECT distinct * FROM distances where label=0 limit 10");
-    counter = 0;
     for(sqlite3pp::query::iterator ij = qry2.begin();ij != qry2.end();++ij){
         int id=-1;
         vector<double> currentDist(8);
@@ -163,7 +161,7 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
         std::tie(id, currentDist[6], currentDist[7])=\
         (*ij).get_columns<int , double, double>(0,7,8);
         trainingSet.push_back(currentDist);
-    }*/
+    }
     return trainingSet;
 }
 

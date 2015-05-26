@@ -80,12 +80,10 @@ int main(int argc, char* argv[]){
     //Get the clusters output. Single particle or a mixture can be used. Only particle 1 is used here
 
     Landmarks observations;
-    for( unsigned int j = 0 ; j <particles.size(); j++)
-        for(unsigned int i = 0;i< particles[j].stateProg[0].size();i++){
-            Landmark land(smc.numOfLandmarks , particles[j].stateProg[0][i]);
-            smc.numOfLandmarks++;
+    for(unsigned int i = 0;i< particles[0].stateProg[0].size();i++){
+            Landmark land(smc.numOfLandmarks , particles[0].stateProg[0][i]);
             observations.addLandMark(land);
-        }
+    }
     // Get landmarks currently in the database
     cout << "Retrieving landmarks and trainign set"  << endl;
     start = omp_get_wtime();
@@ -93,6 +91,12 @@ int main(int argc, char* argv[]){
     Landmarks                   landmarks   =  dbwr.getCurrentLandmarks();
     vector< vector< double > >  trainingSet =  dbwr.getTrainingSet();
     ut.decisionTrain(& trainingSet);
+
+    //for(unsigned int i=0;i<landmarks.size();i++){
+        //vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& landmarks.landmarks[i],  & ut );
+        //dbwr.insertLabeledDistances(distanceFeatures, i);
+    //}
+    //return 0;
 
     end = omp_get_wtime();
     cout << "Landmarks and db retireved and trained in "  << end-start << " s" << endl;
@@ -113,23 +117,25 @@ int main(int argc, char* argv[]){
         }
         // For every landmark calculate its distances with stored landmarks
         vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut );
-
         // Get the probability of being the same instance as that given landmark
+
         vector<double> probabilities = ut.observationProbabilities(& distanceFeatures);
-        //for_each(probabilities.begin(), probabilities.end(),[](double y) {cout << y << ",";});
-        cout << endl;
+
         //Normalized quantities reduce the confidene interval < than .2 due to the large number of landmarks in the training set.
         //ut.normalizeVec(&probabilities);
         for(auto ij: sort_indexes(probabilities)){
-            cout << probabilities[ij] << ",";
-        }cout << endl;
-        for(auto ij: sort_indexes(probabilities)){
+            cout << "Top probability" << probabilities[ij]<< endl;
+            //if(probabilities[ij]<.1)
+                //cout << observations.landmarks[i].distribution;
+
             //if probability is larger than .9 then we have a matchs
             if( probabilities[ij]>landmarkThreshold){
                 //Landmark is registered as currently detected
                 current_observations.push_back(ij);
                 break;
             }else{
+                //for_each(probabilities.begin(),probabilities.end(),[](double y){ cout << y <<","; });
+                //cout << endl;
                 //Insert the landmark, update landmark db, add new landmark id to the currently detected list
                 dbwr.insertLandmark(& observations.landmarks[i].distribution);
                 current_observations.push_back(observations.size()-1);
@@ -140,7 +146,7 @@ int main(int argc, char* argv[]){
         //;
     }
     end = omp_get_wtime();
-    cout << "Landmarks classified in "  << end-start << " s"<<  endl;
+    cout << "Landmarks classified in "  << end-start <<" s"<<  endl;
 
     // if initial db size is zero create an initial training sample for the random forest
     // For now, I assume the training db was populated

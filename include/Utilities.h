@@ -12,13 +12,23 @@
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_randist.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/ml/ml.hpp>
 #include "decision-trees.hxx"
 #include "marray.hxx"
 #include  "Structures.h"
 
+
+#define NUMBER_OF_TRAINING_SAMPLES 3823
+#define ATTRIBUTES_PER_SAMPLE 64
+#define NUMBER_OF_TESTING_SAMPLES 1797
+
+#define NUMBER_OF_CLASSES 10
+
+
 using namespace std;
 using namespace boost::math;
 using namespace Eigen;
+using namespace cv;
 
 namespace Eigen {
     namespace internal {
@@ -69,6 +79,7 @@ class Utilities{
         int decisionTrain(vector< vector< double > > * trainingSet);
         void normalizeVec(vector<double> * tes);
         andres::ml::DecisionForest<double, unsigned char, double> decisionForest;
+        void randfor();
     protected:
     private:
 };

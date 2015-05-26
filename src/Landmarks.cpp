@@ -28,11 +28,15 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
             distances.push_back(currDist);
             Landmark landmark = landmarks[i];
             // Gaussian distances
-            distances[i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar, landmark.distribution.mean, landmark.distribution.covar));
-            distances[i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar, landmark.distribution.mean, landmark.distribution.covar));
+            distances[i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
+             landmark.distribution.mean, landmark.distribution.covar));
+            distances[i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
+             landmark.distribution.mean, landmark.distribution.covar));
             // exponential distances
-            distances[i].push_back(ut->ExpKLDivergence(observation->distribution.exponential, landmark.distribution.exponential));
-            distances[i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential, landmark.distribution.exponential));
+            distances[i].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
+             landmark.distribution.exponential));
+            distances[i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
+             landmark.distribution.exponential));
             //categorical distances
             float histogram1[ observation->distribution.categorical.size() ];
             float histogram2[ landmark.distribution.categorical.size() ];
