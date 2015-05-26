@@ -65,9 +65,10 @@ class Utilities{
         // Categorical distributino distances
         vector<float>  categoricalhistogramCompare( float histA[], float histB[] , int N);
         float categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2);
-        vector<double> observationProbabilities(vector< vector< double > > * trainingSet, vector< vector< double > > * distanceFeatures);
-        int decisionTest();
+        vector<double> observationProbabilities(vector< vector< double > > * distanceFeatures);
+        int decisionTrain(vector< vector< double > > * trainingSet);
         void normalizeVec(vector<double> * tes);
+        andres::ml::DecisionForest<double, unsigned char, double> decisionForest;
     protected:
     private:
 };

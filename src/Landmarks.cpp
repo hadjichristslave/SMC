@@ -44,5 +44,31 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
             vector<double> catddistances(catfdistances.begin() , catfdistances.end());
             distances[i].insert(distances[i].end(), catddistances.begin(), catddistances.end());
         }
+        normalizeFeatures(&distances);
         return distances;
+}
+//NOrmalize gaussian distances using formula
+// feature = feature-dev/mean
+void Landmarks::normalizeFeatures(vector <vector <double > > * features){
+    double WassersteinSum =0;
+    double gausKLSum      =0;
+
+    for (int i = 0;i< features->size();i++){
+        WassersteinSum += features->at(i)[0];
+        gausKLSum      += features->at(i)[1];
+    }
+    double WassersteinAvg  = WassersteinSum/features->size();
+    double gausKLAvg       = gausKLSum/features->size();
+
+    double WassersteinStd = 0;
+    double gausKLStd      = 0;
+
+    for (int i =0;i< features->size();i++){
+        WassersteinStd += pow(features->at(i)[0]-WassersteinAvg,2);
+        gausKLStd      += pow(features->at(i)[1]-gausKLAvg     ,2);
+    }
+    for (int i =0;i< features->size();i++){
+        features->at(i)[0] = (features->at(i)[0]-WassersteinAvg)/WassersteinStd;
+        features->at(i)[1] = (features->at(i)[1]-gausKLAvg)/gausKLStd;
+    }
 }

@@ -77,7 +77,7 @@ const void SMC::sample(StateProgression  * currState, \
                     pr.mean[0]     = tempMean(0);
                     pr.mean[1]     = tempMean(1);
                     pr.mean[2]     = tempMean(2);
-                    pr.exponential = ut.gammarnd(params.gamma_alpha0  , params.gamma_beta0);
+                    pr.exponential = ut.gammarnd(par.gamma_alpha0  , par.gamma_beta0);
                     RowVectorXd temp(ut.dirrnd(params.q0));
                     pr.categorical.resize(temp.cols());
                     for(int ii=0;ii<temp.cols(); ii++) pr.categorical[ii] = temp(ii);
@@ -164,7 +164,7 @@ const void SMC::newCluster(StateProgression * currState, \
     pr.mean[1]  = pointInstance[1];
     pr.mean[2]  = pointInstance[2];
     pr.covar = ut.iwishrnd(params.tau0, params.nu0, 3, params.nu0);
-    pr.exponential = ut.gammarnd(params.gamma_alpha0  , params.gamma_beta0);
+    pr.exponential = ut.gammarnd(params.gamma_alpha0+1  , params.gamma_beta0+ pointInstance[3]+pointInstance[4]+pointInstance[5]);
     currState->stateProg[currentTime].push_back(pr);
 }
 Params SMC::updateParams(MatrixXd data, Params params , int colourbins){

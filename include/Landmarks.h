@@ -4,6 +4,7 @@
 #include "Utilities.h"
 
 
+
 using namespace std;
 class Landmarks
 {
@@ -15,6 +16,7 @@ class Landmarks
         vector< vector< double > > extractDistances(Landmark * observation , Utilities * ut);
         unsigned int size();
         void print(int landmarkIndex);
+        void normalizeFeatures(vector <vector< double > > * features);
     protected:
     private:
 };

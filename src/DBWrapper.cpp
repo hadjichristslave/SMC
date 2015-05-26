@@ -134,16 +134,13 @@ Landmarks DBWrapper::getCurrentLandmarks(){
     return landmarks;
 }
 vector< vector< double > > DBWrapper::getTrainingSet(){
+    //Retrieve 20 and 20 samples for the training
     vector< vector< double > >  trainingSet;
     Landmarks landmarks;
     sqlite3pp::database db(database.c_str());
-    sqlite3pp::query qry(db, "SELECT * FROM distances");
+    sqlite3pp::query qry(db, "SELECT distinct * FROM distances2");
+    int counter = 0;
     for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
-
-        if ( qry.begin() ==qry.end()){
-            cout<<" no training set found. Will create the training set afterwards";
-            break;
-        }
         int id=-1;
         vector<double> currentDist(8);
         std::tie(id, currentDist[0], currentDist[1], currentDist[2])=\
@@ -154,6 +151,19 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
         (*ij).get_columns<int , double, double>(0,7,8);
         trainingSet.push_back(currentDist);
     }
+    /*sqlite3pp::query qry2(db, "SELECT distinct * FROM distances where label=0 limit 10");
+    counter = 0;
+    for(sqlite3pp::query::iterator ij = qry2.begin();ij != qry2.end();++ij){
+        int id=-1;
+        vector<double> currentDist(8);
+        std::tie(id, currentDist[0], currentDist[1], currentDist[2])=\
+        (*ij).get_columns<int , double, double, double>(0,1,2,3);
+        std::tie(id, currentDist[3], currentDist[4], currentDist[5])=\
+        (*ij).get_columns<int , double, double, double>(0,4,5,6);
+        std::tie(id, currentDist[6], currentDist[7])=\
+        (*ij).get_columns<int , double, double>(0,7,8);
+        trainingSet.push_back(currentDist);
+    }*/
     return trainingSet;
 }
 
