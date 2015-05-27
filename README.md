@@ -5,8 +5,14 @@ The sampler is based on the paper as found in http://jmlr.org/proceedings/papers
 
 The model is similar to that as the sampler is created to cluster point clouds rather than pixels.
 
+#Random forest
+
+The model output from the sampler is given as input to a random forest decision tree.
+The outcome of this tree is what the algorithm perceives as what we are currently seing through our kinect sensors.
+
 #Dependencies
 
+PCL point cloud operations library
 Eigen
 OpenCV
 Libconfig
@@ -37,6 +43,11 @@ Linker options are
 -lopencv_highgui
 -lopencv_imgproc
 -lsqlite3
+
+#External packages used
+
+sqlite3pp- boost free version (source found @ github: https://github.com/hadjichristslave/sqlite3pp)
+random forest by bjorn andres( Source found @ github: https://github.com/bjoern-andres/random-forest)
 
 
 #Output
