@@ -281,7 +281,7 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
     if( distanceFeatures->size() ==0)
         return labelprobs;
     const size_t numberOfSamples  = distanceFeatures->size();
-    const size_t numberOfFeatures = 3;
+    const size_t numberOfFeatures = 4;
 
     typedef double Feature;
     const size_t shape[] = {numberOfSamples, numberOfFeatures};
@@ -290,7 +290,7 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
         features(sample, 0) = distanceFeatures->at(sample)[0];
         features(sample, 1) = distanceFeatures->at(sample)[1];
         features(sample, 2) = distanceFeatures->at(sample)[4];
-        //features(sample, 3) = distanceFeatures->at(sample)[5];
+        features(sample, 3) = distanceFeatures->at(sample)[2];
         //features(sample, 4) = distanceFeatures->at(sample)[6];
         //features(sample, feature) = distanceFeatures->at(sample)[feature];
     }
@@ -305,7 +305,7 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
 }
 int Utilities::decisionTrain(vector< vector< double > > * trainingSet){
     const size_t numberOfExamples = trainingSet->size();
-    const size_t numberOfFeatures = 3;
+    const size_t numberOfFeatures = 4;
 
     typedef double Feature;
     const size_t shape2[] = {numberOfExamples, numberOfFeatures};
@@ -314,7 +314,7 @@ int Utilities::decisionTrain(vector< vector< double > > * trainingSet){
         training(sample, 0) = trainingSet->at(sample)[0];
         training(sample, 1) = trainingSet->at(sample)[1];
         training(sample, 2) = trainingSet->at(sample)[4];
-        //training(sample, 3) = trainingSet->at(sample)[5];
+        training(sample, 3) = trainingSet->at(sample)[2];
         //training(sample, 4) = trainingSet->at(sample)[6];
     }
 
