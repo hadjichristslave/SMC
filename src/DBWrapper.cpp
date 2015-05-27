@@ -21,6 +21,9 @@ void DBWrapper::ifNotExistscreateDB(){
     db.execute("create table distances(id integer primary key autoincrement,\
      feature1 double, feature2 double ,feature3 double, feature4 double,\
      feature5 double, feature6 double, feature7 double, label integer)");
+    db.execute("create table distances(id integer primary key autoincrement,\
+     feature1 double, feature2 double ,feature3 double, feature4 double,\
+     feature5 double, feature6 double, feature7 double, label integer)");
 }
 void DBWrapper::insertLandmark(SufficientStatistics * dist){
     sqlite3pp::database db(database.c_str());
