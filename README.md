@@ -12,7 +12,7 @@ The outcome of this tree is what the algorithm perceives as what we are currentl
 
 #Dependencies
 
-*PCL point cloud operations library
+PCL point cloud operations library
 
 Eigen
 
@@ -20,7 +20,7 @@ OpenCV
 
 Libconfig
 
-Sqlite3(3 is important)*
+Sqlite3(3 is important)
 
 The project It is compiled using -std=c++11 flag
 
@@ -40,7 +40,7 @@ The file path is specified in the config file
 
 Linker options are
 
-*-lconfig++
+-lconfig++
 
 -lgsl
 
@@ -53,7 +53,7 @@ Linker options are
 -lopencv_imgproc
 
 -lsqlite3
-*
+
 #External packages used
 
 **sqlite3pp** *boost free version (source found @ github: https://github.com/hadjichristslave/sqlite3pp)*
