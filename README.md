@@ -1,9 +1,18 @@
+# Feature matching pipeline
+
+This is a feature matching pipeline I implement as my master thesis project.
+
+The basic idea is to take a point cloud and create a compresed representation of its structure.
+
+Compression is one of the two basic issues of long term mapping and tackling it is an initial step to having robots that are constantly mapping an area.
+
+The pipeline consists of two basic pillars. The SMC sampler and the Random forest classifier.
+
 # SMC
 
 Sequential monte carlo method for dependent Dirichlet process.
-The sampler is based on the paper as found in http://jmlr.org/proceedings/papers/v33/neiswanger14.pdf.
+The definition of the sampler as well as the theory it extends are described in detail in my thesis report found in my repository.
 
-The model is similar to that as the sampler is created to cluster point clouds rather than pixels.
 
 #Random forest
 
@@ -23,25 +32,6 @@ Libconfig
 Sqlite3(3 is important)
 
 The project It is compiled using -std=c++11 flag
-
-#How to use
-
-Main.cpp expects input in a csv file of format:
-
-*x,y,z,Kullback-leibler,EMD,Hellinger,Bin0-Bin26*
-
-X,Y,Z represent the positional information
-
-KL,EMD,Hellinger the distance distribution between a point and its K nearest neighbors.
-
-The colour spectrum is discretized in bins and colour counts of the neighbor pixels are passed as input.
-
-For more information on the theory behind the sampler check [this](http://people.ee.duke.edu/~lcarin/Yunchen8.15.2014.pdf presentation) and the related paper.
-
-A random forest decision layer is added to classify if every cluster is an object the model has encountered before.
-
-That way matching in the distribution space is done. The main motivation is to use this layer in the landmark detection phase of SLAM methods. It will greatly reduce the dimensionality of point clouds as it introduces an very extensive reprentation of a point cloud.
-
 
 #Linker options are
 
@@ -65,12 +55,21 @@ That way matching in the distribution space is done. The main motivation is to u
 
 **random forest** *by bjorn andres( Source found @ github: https://github.com/bjoern-andres/random-forest)*
 
+#How it works
 
-#Output
+Main.cpp expects input in a csv file of format:
 
-The random forest returns the distributions currently being observed in the point cloud.
+*x,y,z,Kullback-leibler,EMD,Hellinger,Bin0-Bin26*
 
-Past distributions are stored in a sqlite3 database in the local system. If a new distribution is observed, it is being added in the database. For now I think it is not possible to automatically add a training set, therefore one labeled manually is given to the method.
+x,y,z represent the positional information
+
+KL,EMD,Hellinger the distance distribution between a point and its K nearest neighbors.
+
+The colour spectrum is discretized in bins and colour counts of the neighbor pixels are passed as input.
+
+A random forest decision layer is added to classify if every cluster is an object the model has encountered before.
+
+That way matching in the distribution space is done. The main motivation is to use this layer in the landmark detection phase of SLAM methods. It will greatly reduce the dimensionality of point clouds as it introduces an very extensive reprentation of a point cloud.
 
 #Benchmark
 
@@ -83,9 +82,11 @@ The classification when no new landmarks are given takes less than .01 sec.
 If new landmarks are added extra time is needed for the DB operations.
 It usually takes less than 1sec to complete its operations.
 
-#Attention
+#Output
 
-The files are still modified daily, so any weird behaviour might be due to development issues.
+The random forest returns the distributions currently being observed in the point cloud.
+
+Past distributions are stored in a sqlite3 database in the local system. If a new distribution is observed, it is being added in the database. For now I think it is not possible to automatically add a training set, therefore one labeled manually is given to the method.
 
 #Results
 
@@ -116,5 +117,8 @@ The label is done manually before hand, and the output of the method is shown in
 
 The chair structure is clearly captured as well as some abstractions of the environment.
 
+#Attention
+
+The files are still modified daily, so any weird behaviour might be due to development issues.
 
 
