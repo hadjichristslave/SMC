@@ -26,7 +26,7 @@ The project It is compiled using -std=c++11 flag
 
 #How to use
 
-Main.cpp expects input in a file of format:
+Main.cpp expects input in a csv file of format:
 
 *x,y,z,Kullback-leibler,EMD,Hellinger,Bin0-Bin26*
 
@@ -42,10 +42,8 @@ A random forest decision layer is added to classify if every cluster is an objec
 
 That way matching in the distribution space is done. The main motivation is to use this layer in the landmark detection phase of SLAM methods. It will greatly reduce the dimensionality of point clouds as it introduces an very extensive reprentation of a point cloud.
 
-//Todo, dynamic number of colour bins
-The file path is specified in the config file
 
-Linker options are
+#Linker options are
 
 -lconfig++
 
@@ -70,7 +68,9 @@ Linker options are
 
 #Output
 
-The project outputs in file specified in config file the clusters found on every sample of every pixel.
+The random forest returns the distributions currently being observed in the point cloud.
+
+Past distributions are stored in a sqlite3 database in the local system. If a new distribution is observed, it is being added in the database. For now I think it is not possible to automatically add a training set, therefore one labeled manually is given to the method.
 
 #Benchmark
 
@@ -78,6 +78,10 @@ The sampler is quite fast.
 For 11K points in the cloud and a configuration of 20 samples and 3 particles it takes ~3s to output landmark ID's @ a Intel(R) Core(TM) i5-3210M CPU @ 2.50GHz
 As is expected the weight calculations are quite expensive but they can be optimized even further.
 
+The random forest is also fast.
+The classification when no new landmarks are given takes less than .01 sec.
+If new landmarks are added extra time is needed for the DB operations.
+It usually takes less than 1sec to complete its operations.
 
 #Attention
 
