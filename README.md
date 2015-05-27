@@ -28,12 +28,19 @@ The project It is compiled using -std=c++11 flag
 
 Main.cpp expects input in a file of format:
 
-x,y,z,Kullback-leibler,EMD,Hellinger,Bin0,Bin1,Bin2,Bin3,Bin4,Bin5,Bin6,Bin7,Bin8,Bin9,Bin10,Bin11,Bin12,Bin13,Bin14,Bin15,Bin16,Bin17,Bin18,Bin19,Bin20,Bin21,Bin22,Bin23,Bin24,Bin25,Bin26
+*x,y,z,Kullback-leibler,EMD,Hellinger,Bin0-Bin26*
 
 X,Y,Z represent the positional information
+
 KL,EMD,Hellinger the distance distribution between a point and its K nearest neighbors.
 
 The colour spectrum is discretized in bins and colour counts of the neighbor pixels are passed as input.
+
+For more information on the theory behind the sampler check [this](http://people.ee.duke.edu/~lcarin/Yunchen8.15.2014.pdf presentation) and the related paper.
+
+A random forest decision layer is added to classify if every cluster is an object the model has encountered before.
+
+That way matching in the distribution space is done. The main motivation is to use this layer in the landmark detection phase of SLAM methods. It will greatly reduce the dimensionality of point clouds as it introduces an very extensive reprentation of a point cloud.
 
 //Todo, dynamic number of colour bins
 The file path is specified in the config file
