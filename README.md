@@ -112,7 +112,7 @@ More specifically:
      > Hellinger
 
 The label is done manually before hand, and the output of the method is shown in the following figure.
-![alt tag](images/landmarkClassification.png)
+![alt tag](images/landmarkClasification.png)
 
 The chair structure is clearly captured as well as some abstractions of the environment.
 
