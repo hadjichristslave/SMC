@@ -67,6 +67,8 @@ KL,EMD,Hellinger the distance distribution between a point and its K nearest nei
 
 The colour spectrum is discretized in bins and colour counts of the neighbor pixels are passed as input.
 
+A Dependent Dirichlet process is used to cluster the points of the environment.
+
 A random forest decision layer is added to classify if every cluster is an object the model has encountered before.
 
 That way matching in the distribution space is done. The main motivation is to use this layer in the landmark detection phase of SLAM methods. It will greatly reduce the dimensionality of point clouds as it introduces an very extensive reprentation of a point cloud.
