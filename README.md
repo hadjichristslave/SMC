@@ -89,12 +89,32 @@ The files are still modified daily, so any weird behaviour might be due to devel
 
 #Results
 
-If the input is a point cloud the resulting clustering will look like this:
-![alt tag](images/initialCluster.png)
+For an initial image as shown in the first picture, two are the major steps that will take place in this method.
+![alt tag](images/initial.png)
 
-![](https://github.com/github/hadjichristslave/SMC/images/initialCluster.png)
-
+Firstly, a clustering that will output the clusters of the data. The output of an SMC sampler looks as follows
+![alt tag](images/clustering.png)
 The cluster concentration on the part of the point cloud that represents the chair is noticeable.
+
+Now this output is taken as input to the random forest method. The features taken into account are the distances among their respective distributions.
+
+More specifically:
+
+ * Gaussians
+     > Wasserstein
+     > KL divergence
+ * Exponential 
+     > KL divergence
+     > Squared Hellinger
+ * Categorical
+     > EMD
+     > KL
+     > Hellinger
+
+The label is done manually before hand, and the output of the method is shown in the following figure.
+![alt tag](images/landmarkClassification.png)
+
+The chair structure is clearly captured as well as some abstractions of the environment.
 
 
 

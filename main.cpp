@@ -94,6 +94,7 @@ int main(int argc, char* argv[]){
 
     //for(unsigned int i=0;i<landmarks.size();i++){
         //vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& landmarks.landmarks[i],  & ut );
+        //cout <<"distance fieatureas size" << distanceFeatures.size() << endl;
         //dbwr.insertLabeledDistances(distanceFeatures, i);
     //}
     //return 0;

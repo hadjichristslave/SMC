@@ -26,16 +26,25 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
             return distances;
         for(unsigned int i=0;i< landmarks.size();i++){
             distances.push_back(currDist);
+            distances.push_back(currDist);
             Landmark landmark = landmarks[i];
             // Gaussian distances
-            distances[i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
+            distances[2*i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
              landmark.distribution.mean, landmark.distribution.covar));
-            distances[i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
+            distances[2*i+1].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
+             landmark.distribution.mean, landmark.distribution.covar)+40);
+            distances[2*i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
              landmark.distribution.mean, landmark.distribution.covar));
+            distances[2*i+1].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
+             landmark.distribution.mean, landmark.distribution.covar)+40);
             // exponential distances
-            distances[i].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
+            distances[2*i].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
              landmark.distribution.exponential));
-            distances[i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
+            distances[2*i+1].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
+             landmark.distribution.exponential));
+            distances[2*i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
+             landmark.distribution.exponential));
+            distances[2*i+1].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
              landmark.distribution.exponential));
             //categorical distances
             float histogram1[ observation->distribution.categorical.size() ];
@@ -46,7 +55,8 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
             }
             vector<float> catfdistances = ut->categoricalhistogramCompare(histogram1, histogram2, sizeof(histogram1)/sizeof(float));
             vector<double> catddistances(catfdistances.begin() , catfdistances.end());
-            distances[i].insert(distances[i].end(), catddistances.begin(), catddistances.end());
+            distances[2*i].insert(distances[2*i].end(), catddistances.begin(), catddistances.end());
+            distances[2*i+1].insert(distances[2*i+1].end(), catddistances.begin(), catddistances.end());
         }
         normalizeFeatures(&distances);
         return distances;

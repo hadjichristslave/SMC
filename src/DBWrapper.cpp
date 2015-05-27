@@ -138,8 +138,8 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
     vector< vector< double > >  trainingSet;
     Landmarks landmarks;
     sqlite3pp::database db(database.c_str());
-    sqlite3pp::query qry(db,  "SELECT * FROM distances where label=1 limit 10");
-    sqlite3pp::query qry2(db, "SELECT * FROM distances where label=0 limit 10");
+    sqlite3pp::query qry(db,  "SELECT * FROM distances2 where label=1 limit 20");
+    sqlite3pp::query qry2(db, "SELECT * FROM distances2 where label=0 limit 20");
     for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
         int id=-1;
         vector<double> currentDist(8);
@@ -170,14 +170,14 @@ void DBWrapper::insertLabeledDistances(vector< vector< double > > distanceFeatur
     sqlite3pp::database db(database.c_str());
     for( unsigned int i = 0; i < distanceFeatures.size();i++){
         sqlite3pp::command cmd(
-            db, "INSERT INTO distances(feature1,\
+            db, "INSERT INTO distances2(feature1,\
                 feature2, feature3, feature4, feature5,\
                 feature6, feature7, label)\
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             int place = 1;
             for(unsigned int j = 0; j < distanceFeatures[i].size();j++)
                 cmd.bind(place++, distanceFeatures[i][j]);
-            int label = positiveLabel==i?1:0;
+            int label = (2*positiveLabel==i || 2*positiveLabel==i-1 )?1:0;
             cmd.bind(place++ , label);
             cmd.execute();
     }
