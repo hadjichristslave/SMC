@@ -16,7 +16,6 @@ class Landmarks
         vector< vector< double > > extractDistances(Landmark * observation , Utilities * ut, double threshold1, double threshold2);
         unsigned int size();
         void print(int landmarkIndex);
-        void normalizeFeatures(vector <vector< double > > * features);
     protected:
     private:
 };

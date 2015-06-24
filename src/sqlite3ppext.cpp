@@ -65,20 +65,6 @@ namespace sqlite3pp
     {
     }
 
-    int context::args_count() const
-    {
-      return nargs_;
-    }
-
-    int context::args_bytes(int idx) const
-    {
-      return sqlite3_value_bytes(values_[idx]);
-    }
-
-    int context::args_type(int idx) const
-    {
-      return sqlite3_value_type(values_[idx]);
-    }
 
     int context::get(int idx, int) const
     {

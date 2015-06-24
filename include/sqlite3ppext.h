@@ -82,10 +82,6 @@ namespace sqlite3pp
      public:
       explicit context(sqlite3_context* ctx, int nargs = 0, sqlite3_value** values = nullptr);
 
-      int args_count() const;
-      int args_bytes(int idx) const;
-      int args_type(int idx) const;
-
       template <class T> T get(int idx) const {
         return get(idx, T());
       }

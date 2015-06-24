@@ -1,76 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <results>
-    <error file="include/marray.hxx" line="6276" id="uselessAssignmentPtrArg" severity="style" msg="Assignment of function parameter has no effect outside the function." />
-    <error file="include/marray.hxx" line="6311" id="uselessAssignmentPtrArg" severity="style" msg="Assignment of function parameter has no effect outside the function." />
-    <error file="include/marray.hxx" line="6349" id="uselessAssignmentPtrArg" severity="style" msg="Assignment of function parameter has no effect outside the function." />
-    <error file="include/marray.hxx" line="6350" id="uselessAssignmentPtrArg" severity="style" msg="Assignment of function parameter has no effect outside the function." />
-    <error file="include/Structures.h" line="17" id="uninitMemberVar" severity="style" msg="Member variable &apos;SufficientStatistics::exponential&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="63" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::cloudInstances&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="63" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::colourBin&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::cloudInstances&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::auxiliaryNum&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::colourBin&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::cBin1&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::cBin2&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::cBin3&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::del&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::nu0&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::kappa0&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::gamma_alpha0&apos; is not initialized in the constructor." />
-    <error file="include/Structures.h" line="71" id="uninitMemberVar" severity="style" msg="Member variable &apos;Params::gamma_beta0&apos; is not initialized in the constructor." />
-    <error file="include/Point.h" line="23" id="uninitMemberVar" severity="style" msg="Member variable &apos;Point::KLDist&apos; is not initialized in the constructor." />
-    <error file="include/Point.h" line="23" id="uninitMemberVar" severity="style" msg="Member variable &apos;Point::EMD&apos; is not initialized in the constructor." />
-    <error file="main.cpp" line="70" id="redundantAssignment" severity="style" msg="Variable &apos;end&apos; is reassigned a value before the old one has been used." />
-    <error file="main.cpp" line="73" id="redundantAssignment" severity="style" msg="Variable &apos;start&apos; is reassigned a value before the old one has been used." />
-    <error file="main.cpp" line="70" id="unreadVariable" severity="style" msg="Variable &apos;end&apos; is assigned a value that is never used." />
-    <error file="main.cpp" line="105" id="unreadVariable" severity="style" msg="Variable &apos;initialDbSize&apos; is assigned a value that is never used." />
-    <error file="src/Landmark.cpp" line="3" id="uninitMemberVar" severity="style" msg="Member variable &apos;Landmark::initialId&apos; is not initialized in the constructor." />
-    <error file="src/SMC.cpp" line="269" id="unreadVariable" severity="style" msg="Variable &apos;pointInstance&apos; is assigned a value that is never used." />
-    <error file="src/SMC.cpp" line="2" id="uninitMemberVar" severity="style" msg="Member variable &apos;SMC::numOfLandmarks&apos; is not initialized in the constructor." />
     <error file="src/Utilities.cpp" line="9" id="variableScope" severity="style" msg="The scope of the variable &apos;currentCloud&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:&#x0A;void f(int x)&#x0A;{&#x0A;    int i = 0;&#x0A;    if (x) {&#x0A;        // it&apos;s safe to move &apos;int i = 0;&apos; here&#x0A;        for (int n = 0; n &lt; 10; ++n) {&#x0A;            // it is possible but not safe to move &apos;int i = 0;&apos; here&#x0A;            do_something(&amp;i);&#x0A;        }&#x0A;    }&#x0A;}&#x0A;When you see this message it is always safe to reduce the variable scope 1 level." />
     <error file="src/Utilities.cpp" line="9" id="variableScope" severity="style" msg="The scope of the variable &apos;currPointIndex&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:&#x0A;void f(int x)&#x0A;{&#x0A;    int i = 0;&#x0A;    if (x) {&#x0A;        // it&apos;s safe to move &apos;int i = 0;&apos; here&#x0A;        for (int n = 0; n &lt; 10; ++n) {&#x0A;            // it is possible but not safe to move &apos;int i = 0;&apos; here&#x0A;            do_something(&amp;i);&#x0A;        }&#x0A;    }&#x0A;}&#x0A;When you see this message it is always safe to reduce the variable scope 1 level." />
     <error file="src/Utilities.cpp" line="11" id="variableScope" severity="style" msg="The scope of the variable &apos;lineCount&apos; can be reduced. Warning: Be careful when fixing this message, especially when there are inner loops. Here is an example where cppcheck will write that the scope for &apos;i&apos; can be reduced:&#x0A;void f(int x)&#x0A;{&#x0A;    int i = 0;&#x0A;    if (x) {&#x0A;        // it&apos;s safe to move &apos;int i = 0;&apos; here&#x0A;        for (int n = 0; n &lt; 10; ++n) {&#x0A;            // it is possible but not safe to move &apos;int i = 0;&apos; here&#x0A;            do_something(&amp;i);&#x0A;        }&#x0A;    }&#x0A;}&#x0A;When you see this message it is always safe to reduce the variable scope 1 level." />
-    <error file="src/Utilities.cpp" line="227" id="unreadVariable" severity="style" msg="Variable &apos;uniform&apos; is assigned a value that is never used." />
-    <error file="src/Utilities.cpp" line="228" id="unreadVariable" severity="style" msg="Variable &apos;accumulate&apos; is assigned a value that is never used." />
-    <error file="src/Utilities.cpp" line="271" id="unreadVariable" severity="style" msg="Variable &apos;temp1&apos; is assigned a value that is never used." />
-    <error file="src/Utilities.cpp" line="272" id="unreadVariable" severity="style" msg="Variable &apos;temp2&apos; is assigned a value that is never used." />
-    <error file="src/sqlite3pp.cpp" line="205" id="exceptThrowInDestructor" severity="error" msg="Exception thrown in destructor." />
-    <error file="src/sqlite3pp.cpp" line="510" id="exceptThrowInDestructor" severity="error" msg="Exception thrown in destructor." />
+    <error file="src/Utilities.cpp" line="230" id="unreadVariable" severity="style" msg="Variable &apos;sum1&apos; is assigned a value that is never used." />
+    <error file="src/Utilities.cpp" line="231" id="unreadVariable" severity="style" msg="Variable &apos;sum2&apos; is assigned a value that is never used." />
+    <error file="src/sqlite3pp.cpp" line="170" id="exceptThrowInDestructor" severity="error" msg="Exception thrown in destructor." />
+    <error file="src/sqlite3pp.cpp" line="475" id="exceptThrowInDestructor" severity="error" msg="Exception thrown in destructor." />
     <error file="src/sqlite3ppext.cpp" line="73" id="unusedFunction" severity="style" msg="The function &apos;args_bytes&apos; is never used." />
     <error file="src/sqlite3ppext.cpp" line="68" id="unusedFunction" severity="style" msg="The function &apos;args_count&apos; is never used." />
     <error file="src/sqlite3ppext.cpp" line="78" id="unusedFunction" severity="style" msg="The function &apos;args_type&apos; is never used." />
     <error file="src/sqlite3pp.cpp" line="101" id="unusedFunction" severity="style" msg="The function &apos;attach&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="473" id="unusedFunction" severity="style" msg="The function &apos;column_count&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="483" id="unusedFunction" severity="style" msg="The function &apos;column_decltype&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="478" id="unusedFunction" severity="style" msg="The function &apos;column_name&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="514" id="unusedFunction" severity="style" msg="The function &apos;commit&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="61" id="unusedFunction" severity="style" msg="The function &apos;authorizer_impl&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="37" id="unusedFunction" severity="style" msg="The function &apos;busy_handler_impl&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="438" id="unusedFunction" severity="style" msg="The function &apos;column_count&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="448" id="unusedFunction" severity="style" msg="The function &apos;column_decltype&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="443" id="unusedFunction" severity="style" msg="The function &apos;column_name&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="479" id="unusedFunction" severity="style" msg="The function &apos;commit&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="43" id="unusedFunction" severity="style" msg="The function &apos;commit_hook_impl&apos; is never used." />
     <error file="src/sqlite3ppext.cpp" line="179" id="unusedFunction" severity="style" msg="The function &apos;create&apos; is never used." />
-    <error file="src/Utilities.cpp" line="310" id="unusedFunction" severity="style" msg="The function &apos;decisionTrain&apos; is never used." />
     <error file="src/sqlite3pp.cpp" line="106" id="unusedFunction" severity="style" msg="The function &apos;detach&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="156" id="unusedFunction" severity="style" msg="The function &apos;enable_extended_result_codes&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="146" id="unusedFunction" severity="style" msg="The function &apos;enable_foreign_keys&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="151" id="unusedFunction" severity="style" msg="The function &apos;enable_triggers&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="161" id="unusedFunction" severity="style" msg="The function &apos;error_code&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="166" id="unusedFunction" severity="style" msg="The function &apos;error_msg&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="347" id="unusedFunction" severity="style" msg="The function &apos;execute_all&apos; is never used." />
-    <error file="src/Landmark.cpp" line="16" id="unusedFunction" severity="style" msg="The function &apos;getId&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="126" id="unusedFunction" severity="style" msg="The function &apos;enable_extended_result_codes&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="116" id="unusedFunction" severity="style" msg="The function &apos;enable_foreign_keys&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="121" id="unusedFunction" severity="style" msg="The function &apos;enable_triggers&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="131" id="unusedFunction" severity="style" msg="The function &apos;error_code&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="136" id="unusedFunction" severity="style" msg="The function &apos;error_msg&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="312" id="unusedFunction" severity="style" msg="The function &apos;execute_all&apos; is never used." />
     <error file="src/DBWrapper.cpp" line="55" id="unusedFunction" severity="style" msg="The function &apos;getLandmark&apos; is never used." />
-    <error file="src/DBWrapper.cpp" line="172" id="unusedFunction" severity="style" msg="The function &apos;insertLabeledDistances&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="141" id="unusedFunction" severity="style" msg="The function &apos;last_insert_rowid&apos; is never used." />
-    <error file="src/Landmarks.cpp" line="63" id="unusedFunction" severity="style" msg="The function &apos;normalizeFeatures&apos; is never used." />
-    <error file="src/Utilities.cpp" line="256" id="unusedFunction" severity="style" msg="The function &apos;normalizeVec&apos; is never used." />
-    <error file="include/Point.h" line="26" id="unusedFunction" severity="style" msg="The function &apos;printDistances&apos; is never used." />
-    <error file="src/Utilities.cpp" line="338" id="unusedFunction" severity="style" msg="The function &apos;randfor&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="244" id="unusedFunction" severity="style" msg="The function &apos;reset&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="111" id="unusedFunction" severity="style" msg="The function &apos;last_insert_rowid&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="209" id="unusedFunction" severity="style" msg="The function &apos;reset&apos; is never used." />
     <error file="src/sqlite3ppext.cpp" line="155" id="unusedFunction" severity="style" msg="The function &apos;result_copy&apos; is never used." />
     <error file="src/sqlite3ppext.cpp" line="160" id="unusedFunction" severity="style" msg="The function &apos;result_error&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="522" id="unusedFunction" severity="style" msg="The function &apos;rollback&apos; is never used." />
-    <error file="src/Landmark.cpp" line="19" id="unusedFunction" severity="style" msg="The function &apos;setId&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="135" id="unusedFunction" severity="style" msg="The function &apos;set_authorize_handler&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="111" id="unusedFunction" severity="style" msg="The function &apos;set_busy_handler&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="186" id="unusedFunction" severity="style" msg="The function &apos;set_busy_timeout&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="117" id="unusedFunction" severity="style" msg="The function &apos;set_commit_handler&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="123" id="unusedFunction" severity="style" msg="The function &apos;set_rollback_handler&apos; is never used." />
-    <error file="src/sqlite3pp.cpp" line="129" id="unusedFunction" severity="style" msg="The function &apos;set_update_handler&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="487" id="unusedFunction" severity="style" msg="The function &apos;rollback&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="49" id="unusedFunction" severity="style" msg="The function &apos;rollback_hook_impl&apos; is never used." />
+    <error file="src/sqlite3pp.cpp" line="55" id="unusedFunction" severity="style" msg="The function &apos;update_hook_impl&apos; is never used." />
     <error id="missingInclude" severity="style" msg="Cppcheck cannot find all the include files. Cppcheck can check the code without the include files found. But the results will probably be more accurate if all the include files are found. Please check your project&apos;s include directories and add all of them as include directories for Cppcheck. To see what files Cppcheck cannot find use --check-config." />
 </results>

@@ -1,11 +1,12 @@
 #include "Landmark.h"
 
 Landmark::Landmark(){
-    uuid = 0;
+    setId(0);
+    initialId = 0;
 }
 
 Landmark::Landmark(int LandId , SufficientStatistics stats, int initialIdz){
-    uuid = LandId;
+    setId(uuid);
     distribution.copy(stats);
     initialId = initialIdz;
 }

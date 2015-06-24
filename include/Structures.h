@@ -15,6 +15,7 @@ namespace Structures {
         vector<double>      categorical;
         double              exponential;
         SufficientStatistics(vector<double> pointInstance , int begin){
+            exponential = 0 ;
             double sum = 0;
             for(unsigned int i =begin; i < pointInstance.size(); i++){
                 categorical.push_back(pointInstance[i]);
@@ -55,7 +56,7 @@ namespace Structures {
         };
         struct Params{
             std::vector<double> position = decltype(position)(3,0);
-            int  auxiliaryNum , colourBin , colourBins = 3;
+            int  auxiliaryNum , colourBins = 3;
             double  crp, del, nu0, kappa0, gamma_alpha0, gamma_beta0 , exp_lambda0 =1;
             RowVector3d  mu0 = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);

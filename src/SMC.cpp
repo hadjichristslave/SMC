@@ -1,5 +1,5 @@
 #include "SMC.h"
-SMC::SMC(){}
+SMC::SMC(){ numOfLandmarks = 0;}
 SMC::~SMC(){}
 
 const void SMC::init(){ numOfLandmarks = 0; }
@@ -266,7 +266,6 @@ double SMC::getJointProbAssig(StateProgression * currState , int currTime, vecto
     int dataSize = cloudData->size();
     RowVectorXd probAssig_i(dataSize);
     for(int i=0;i<dataSize;i++){
-        vector<double> pointInstance = cloudData->at(i);
         std::vector<double> sizes(0);
         if(currState->stateProg[currTime].size() >0)
             for(unsigned int kk =0; kk< currState->clusterSizes.size(); kk++)

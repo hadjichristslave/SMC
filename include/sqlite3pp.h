@@ -78,7 +78,6 @@ namespace sqlite3pp
     int connect(char const* dbname, int flags, const char* vfs = nullptr);
     int disconnect();
 
-    int attach(char const* dbname, char const* name);
     int detach(char const* name);
 
     long long int last_insert_rowid() const;
@@ -93,13 +92,6 @@ namespace sqlite3pp
     int execute(char const* sql);
     int executef(char const* sql, ...);
 
-    int set_busy_timeout(int ms);
-
-    void set_busy_handler(busy_handler h);
-    void set_commit_handler(commit_handler h);
-    void set_rollback_handler(rollback_handler h);
-    void set_update_handler(update_handler h);
-    void set_authorize_handler(authorize_handler h);
 
    private:
     sqlite3* db_;

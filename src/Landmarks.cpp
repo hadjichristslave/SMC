@@ -39,10 +39,6 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
              landmark.distribution.exponential));
             distances[i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
              landmark.distribution.exponential));
-            //categorical distances
-            //cout << " observation vs landmark" <<endl;
-            //cout << observation->distribution;
-            //cout << landmark.distribution;
             float histogram1[ observation->distribution.categorical.size() ];
             float histogram2[ landmark.distribution.categorical.size() ];
             for (unsigned int o=0;o<landmark.distribution.categorical.size();o++){
@@ -51,35 +47,7 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
             }
             vector<float> catfdistances = ut->categoricalhistogramCompare(histogram1, histogram2, sizeof(histogram1)/sizeof(float));
             vector<double> catddistances(catfdistances.begin() , catfdistances.end());
-            //for_each(catddistances.begin(),catddistances.end(),[](double y) {cout << y << ",";});
-            //cout<<endl;
             distances[i].insert(distances[i].end(), catddistances.begin(), catddistances.end());
         }
-        //normalizeFeatures(&distances);
         return distances;
-}
-//NOrmalize gaussian distances using formula
-// feature = feature-dev/mean
-void Landmarks::normalizeFeatures(vector <vector <double > > * features){
-    double WassersteinSum =0;
-    double gausKLSum      =0;
-
-    for (int i = 0;i< features->size();i++){
-        WassersteinSum += features->at(i)[0];
-        gausKLSum      += features->at(i)[1];
-    }
-    double WassersteinAvg  = WassersteinSum/features->size();
-    double gausKLAvg       = gausKLSum/features->size();
-
-    double WassersteinStd = 0;
-    double gausKLStd      = 0;
-
-    for (int i =0;i< features->size();i++){
-        WassersteinStd += pow(features->at(i)[0]-WassersteinAvg,2);
-        gausKLStd      += pow(features->at(i)[1]-gausKLAvg     ,2);
-    }
-    for (int i =0;i< features->size();i++){
-        features->at(i)[0] = (features->at(i)[0]-WassersteinAvg)/WassersteinStd;
-        features->at(i)[1] = (features->at(i)[1]-gausKLAvg)/gausKLStd;
-    }
 }

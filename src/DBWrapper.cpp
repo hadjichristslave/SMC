@@ -51,50 +51,6 @@ void DBWrapper::insertLandmark(SufficientStatistics * dist){
             cmd.bind(place,dist->categorical[jk]);
         cmd.execute();
 }
-//Retrieve landmark with ID id. Id's are considered unique
-Landmark DBWrapper::getLandmark(int LandId){
-    sqlite3pp::database db(database.c_str());
-    string query = "SELECT * FROM landmarks where id="+SSTR(LandId);
-    sqlite3pp::query qry(db, query.c_str());
-    for(sqlite3pp::query::iterator ij = qry.begin();ij != qry.end();++ij){
-        int id=-1;
-        SufficientStatistics stats;
-        stats.categorical.resize(27);
-        std::tie(id, stats.mean[0],stats.mean[1],stats.mean[2])                             =\
-        (*ij).get_columns<int , double, double, double>(0,1,2,3);
-        std::tie(id, stats.covar(0,0), stats.covar(0,1), stats.covar(0,2))                  =\
-        (*ij).get_columns<int , double, double, double>(0,4,5,6);
-        std::tie(id, stats.covar(1,0), stats.covar(1,1), stats.covar(2,2))                  =\
-        (*ij).get_columns<int , double, double, double>(0,7,8,9);
-        std::tie(id, stats.covar(2,0), stats.covar(2,1), stats.covar(2,2))                  =\
-        (*ij).get_columns<int , double, double, double>(0,10,11,12);
-        std::tie(id, stats.exponential, stats.categorical[0], stats.categorical[1])         =\
-        (*ij).get_columns<int , double, double, double>(0,13,14,15);
-        std::tie(id, stats.categorical[2], stats.categorical[3], stats.categorical[4])      =\
-        (*ij).get_columns<int , double, double, double>(0,16,17,18);
-        std::tie(id, stats.categorical[5], stats.categorical[6], stats.categorical[7])      =\
-        (*ij).get_columns<int , double, double, double>(0,19,20,21);
-        std::tie(id, stats.categorical[8], stats.categorical[9], stats.categorical[10])     =\
-        (*ij).get_columns<int , double, double, double>(0,22,23,24);
-        std::tie(id, stats.categorical[11], stats.categorical[12], stats.categorical[13])   =\
-        (*ij).get_columns<int , double, double, double>(0,25,26,27);
-        std::tie(id, stats.categorical[14], stats.categorical[15], stats.categorical[16])   =\
-        (*ij).get_columns<int , double, double, double>(0,28,29,30);
-        std::tie(id, stats.categorical[17], stats.categorical[18], stats.categorical[19])   =\
-        (*ij).get_columns<int , double, double, double>(0,31,32,33);
-        std::tie(id, stats.categorical[20], stats.categorical[21], stats.categorical[22])   =\
-        (*ij).get_columns<int , double, double, double>(0,34,35,36);
-        std::tie(id, stats.categorical[23], stats.categorical[24], stats.categorical[25])   =\
-        (*ij).get_columns<int , double, double, double>(0,37,38,39);
-        std::tie(id, stats.categorical[26])                                                 =\
-        (*ij).get_columns<int , double>(0,40);
-        Landmark land(id, stats,0);
-        return land;
-    }
-    //Case landmark id does not exist
-    Landmark land;
-    return  land;
-}
 Landmarks DBWrapper::getCurrentLandmarks(){
     Landmarks landmarks;
     sqlite3pp::database db(database.c_str());
@@ -166,22 +122,4 @@ vector< vector< double > > DBWrapper::getTrainingSet(){
         trainingSet.push_back(currentDist);
     }
     return trainingSet;
-}
-
-
-void DBWrapper::insertLabeledDistances(vector< vector< double > > distanceFeatures, int positiveLabel){
-    sqlite3pp::database db(database.c_str());
-    for( unsigned int i = 0; i < distanceFeatures.size();i++){
-        sqlite3pp::command cmd(
-            db, "INSERT INTO distances2(feature1,\
-                feature2, feature3, feature4, feature5,\
-                feature6, feature7, label)\
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            int place = 1;
-            for(unsigned int j = 0; j < distanceFeatures[i].size();j++)
-                cmd.bind(place++, distanceFeatures[i][j]);
-            int label = (2*positiveLabel==i || 2*positiveLabel==i-1 )?1:0;
-            cmd.bind(place++ , label);
-            cmd.execute();
-    }
 }
