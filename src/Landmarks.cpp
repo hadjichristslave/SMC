@@ -19,34 +19,30 @@ unsigned int  Landmarks::size(){
 void Landmarks::print(int landmarkIndex){
     landmarks[landmarkIndex].print();
 }
-vector< vector< double > >  Landmarks::extractDistances(Landmark * observation , Utilities * ut){
+vector< vector< double > >  Landmarks::extractDistances(Landmark * observation , Utilities * ut, double threshold1, double threshold2){
         vector< double > currDist;
         vector< vector< double > > distances;
         if( landmarks.size()==0)
             return distances;
         for(unsigned int i=0;i< landmarks.size();i++){
             distances.push_back(currDist);
-            distances.push_back(currDist);
+            //distances.push_back(currDist);
             Landmark landmark = landmarks[i];
             // Gaussian distances
-            distances[2*i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
-             landmark.distribution.mean, landmark.distribution.covar));
-            distances[2*i+1].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
-             landmark.distribution.mean, landmark.distribution.covar)+40);
-            distances[2*i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
-             landmark.distribution.mean, landmark.distribution.covar));
-            distances[2*i+1].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
-             landmark.distribution.mean, landmark.distribution.covar)+40);
+            distances[i].push_back(ut->Wasserstein(observation->distribution.mean, observation->distribution.covar,\
+             landmark.distribution.mean, landmark.distribution.covar)+ threshold1);
+
+            distances[i].push_back(ut->GaussKLDivergence(observation->distribution.mean, observation->distribution.covar,\
+             landmark.distribution.mean, landmark.distribution.covar)+threshold1);
             // exponential distances
-            distances[2*i].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
+            distances[i].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
              landmark.distribution.exponential));
-            distances[2*i+1].push_back(ut->ExpKLDivergence(observation->distribution.exponential,\
-             landmark.distribution.exponential));
-            distances[2*i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
-             landmark.distribution.exponential));
-            distances[2*i+1].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
+            distances[i].push_back(ut->Expsquaredhellinger(observation->distribution.exponential,\
              landmark.distribution.exponential));
             //categorical distances
+            //cout << " observation vs landmark" <<endl;
+            //cout << observation->distribution;
+            //cout << landmark.distribution;
             float histogram1[ observation->distribution.categorical.size() ];
             float histogram2[ landmark.distribution.categorical.size() ];
             for (unsigned int o=0;o<landmark.distribution.categorical.size();o++){
@@ -55,10 +51,11 @@ vector< vector< double > >  Landmarks::extractDistances(Landmark * observation ,
             }
             vector<float> catfdistances = ut->categoricalhistogramCompare(histogram1, histogram2, sizeof(histogram1)/sizeof(float));
             vector<double> catddistances(catfdistances.begin() , catfdistances.end());
-            distances[2*i].insert(distances[2*i].end(), catddistances.begin(), catddistances.end());
-            distances[2*i+1].insert(distances[2*i+1].end(), catddistances.begin(), catddistances.end());
+            //for_each(catddistances.begin(),catddistances.end(),[](double y) {cout << y << ",";});
+            //cout<<endl;
+            distances[i].insert(distances[i].end(), catddistances.begin(), catddistances.end());
         }
-        normalizeFeatures(&distances);
+        //normalizeFeatures(&distances);
         return distances;
 }
 //NOrmalize gaussian distances using formula

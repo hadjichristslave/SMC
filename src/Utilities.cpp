@@ -50,7 +50,7 @@ double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3
     RowVector3d tempDif  = difference * normTransform.transpose().inverse();
     double pdf = pow( (2*M_PI) , ((double)-dimensionality/2) ) * \
     exp(-tempDif.array().square().sum()/2)/normTransform.transpose().diagonal().prod();
-    return pdf==0?.00000000000000001:pdf;
+    return pdf==0?0.0000000000000001:pdf;
 }
 int Utilities::randcat( vector<double> * vec){
     for(unsigned int i =0;i<vec->size();i++) vec->at(i) += i>0?vec->at(i-1):0;
@@ -218,6 +218,7 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float
      float maxB = *std::max_element(histB, histB+N);
      cv::Mat M1 = cv::Mat(1,N, cv::DataType<float>::type , histA);
      cv::Mat M2 = cv::Mat(1,N, cv::DataType<float>::type , histB);
+     float kld  = categoricalKLDivergence( &M1  , &M2);
      int histSize = N;
      float rangeA[] = {0, maxA+1};//ranges are exclusive hence + 1
      float rangeB[] = {0, maxB+1};// see above
@@ -226,29 +227,30 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float
      bool uniform = true;
      bool accumulate = false;
      cv::Mat a1_hist, a2_hist;
-     // normalization means SQRT( sum(component*component)) = 1A
-     cv::calcHist(&M1, 1, 0, cv::Mat(), a1_hist, 1, &histSize, &histRangeA, uniform, accumulate );
-     cv::calcHist(&M2, 1, 0, cv::Mat(), a2_hist, 1, &histSize, &histRangeB, uniform, accumulate );
+     cv::calcHist(&M1, 1, 0, cv::Mat(), a1_hist, 1, &histSize, \
+     &histRangeA, true, true );
+     cv::calcHist(&M2, 1, 0, cv::Mat(), a2_hist, 1, &histSize, \
+     &histRangeB, true, true);
      normalize(a1_hist, a1_hist,  0, 1, CV_MINMAX);
      normalize(a2_hist, a2_hist,  0, 1, CV_MINMAX);
      cv::Mat sig1(N, 2, cv::DataType<float>::type);
      cv::Mat sig2(N, 2, cv::DataType<float>::type);
-     for(int i=0;i<histSize;i++){
+     for(int i=0;i<N;i++){
          float binval = a1_hist.at<float>(i);
          sig1.at< float >(i, 0) = binval;
          sig1.at< float >(i, 1) = i;
-         binval = a2_hist.at< float>(i);
-         sig2.at< float >(i, 0) = binval;
+         float binval2 = a2_hist.at< float>(i);
+         sig2.at< float >(i, 0) = binval2;
          sig2.at< float >(i, 1) = i;
      }
-     float emd           = cv::EMD(sig1, sig2, CV_DIST_L2);
-     float compar_hell   = (float)cv::compareHist(a1_hist, a2_hist, CV_COMP_HELLINGER );
-     // WARNING!!! KLDivergence changegs the values of the histograms so it should be called last.
-     float kld =  categoricalKLDivergence( &a1_hist, &a2_hist);
      vector<float> distances;
+     //float emd           = cv::EMD(sig1, sig2, CV_DIST_L2);
+     //float compar_hell   = (float)cv::compareHist(a1_hist, a2_hist, CV_COMP_HELLINGER );
+     //kld =  categoricalKLDivergence( &a1_hist, &a2_hist);
+     //vector<float> distances;
      distances.push_back(kld);
-     distances.push_back(emd);
-     distances.push_back(compar_hell);
+     distances.push_back(kld);
+     distances.push_back(kld);
      return distances;
 }
 void Utilities::normalizeVec(vector<double> * tes){
@@ -259,29 +261,31 @@ void Utilities::normalizeVec(vector<double> * tes){
 }
 float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
      float sum1 = 0,sum2 = 0;
-     for(int i=0;i<mat1->rows;i++){
-        sum1 += mat1->at<float>(i,0);
-        sum2 += mat2->at<float>(i,0);
+     for(int i=0;i<mat1->cols;i++){
+        sum1 += mat1->at<float>(0,i);
+        sum2 += mat2->at<float>(0,i);
      }
+     vector<float> temp1(mat1->cols);
+     vector<float> temp2(mat1->cols);
      for(int i=0;i<mat1->rows;i++){
-         mat1->at<float>(i,0) /= sum1;
-         mat2->at<float>(i,0) /= sum2;
+         temp1[i]  = mat1->at<float>(0,i) /sum1;
+         temp2[i]  = mat2->at<float>(0,i) /sum2;
      }
      float result = 0.;
-     for(int i=0;i< mat1->rows;i++)
-         if(  mat1->at<float>(0,i) !=0 ){
-            float ratio = mat1->at<float>(i,0)/ mat2->at<float>(0,i);
-             if(ratio>0 && ratio  != std::numeric_limits<float>::infinity() )
-                 result += mat1->at<float>(i,0) * log(ratio);
+     for(int i=0;i< mat1->cols;i++)
+         if(  mat1->at<float>(0,i) > 1e-06 || mat2->at<float>(0,i) > 1e-06 ){
+         //minimum for cv mat is 1e-06
+            float ratio = mat1->at<float>(0,i)/ mat2->at<float>(0,i);
+             result += mat1->at<float>(0,i) * log(ratio);
          }
      return result;
- }
+}
 vector<double> Utilities::observationProbabilities(vector< vector< double > > * distanceFeatures){
     vector<double> labelprobs;
     if( distanceFeatures->size() ==0)
         return labelprobs;
     const size_t numberOfSamples  = distanceFeatures->size();
-    const size_t numberOfFeatures = 4;
+    const size_t numberOfFeatures = 2;
 
     typedef double Feature;
     const size_t shape[] = {numberOfSamples, numberOfFeatures};
@@ -289,8 +293,8 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
     for(size_t sample = 0; sample < numberOfSamples; ++sample){
         features(sample, 0) = distanceFeatures->at(sample)[0];
         features(sample, 1) = distanceFeatures->at(sample)[1];
-        features(sample, 2) = distanceFeatures->at(sample)[4];
-        features(sample, 3) = distanceFeatures->at(sample)[2];
+        //features(sample, 2) = distanceFeatures->at(sample)[4];
+        //features(sample, 3) = distanceFeatures->at(sample)[2];
         //features(sample, 4) = distanceFeatures->at(sample)[6];
         //features(sample, feature) = distanceFeatures->at(sample)[feature];
     }
@@ -305,7 +309,7 @@ vector<double> Utilities::observationProbabilities(vector< vector< double > > * 
 }
 int Utilities::decisionTrain(vector< vector< double > > * trainingSet){
     const size_t numberOfExamples = trainingSet->size();
-    const size_t numberOfFeatures = 4;
+    const size_t numberOfFeatures = 2;
 
     typedef double Feature;
     const size_t shape2[] = {numberOfExamples, numberOfFeatures};
@@ -313,8 +317,8 @@ int Utilities::decisionTrain(vector< vector< double > > * trainingSet){
     for(size_t sample = 0; sample < numberOfExamples; ++sample){
         training(sample, 0) = trainingSet->at(sample)[0];
         training(sample, 1) = trainingSet->at(sample)[1];
-        training(sample, 2) = trainingSet->at(sample)[4];
-        training(sample, 3) = trainingSet->at(sample)[2];
+        //training(sample, 2) = trainingSet->at(sample)[4];
+        //training(sample, 3) = trainingSet->at(sample)[2];
         //training(sample, 4) = trainingSet->at(sample)[6];
     }
 

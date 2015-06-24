@@ -88,7 +88,7 @@ Landmark DBWrapper::getLandmark(int LandId){
         (*ij).get_columns<int , double, double, double>(0,37,38,39);
         std::tie(id, stats.categorical[26])                                                 =\
         (*ij).get_columns<int , double>(0,40);
-        Landmark land(id, stats);
+        Landmark land(id, stats,0);
         return land;
     }
     //Case landmark id does not exist
@@ -131,7 +131,7 @@ Landmarks DBWrapper::getCurrentLandmarks(){
         (*ij).get_columns<int , double, double, double>(0,37,38,39);
         std::tie(id, stats.categorical[26])                                                 =\
         (*ij).get_columns<int , double>(0,40);
-        Landmark land(id, stats);
+        Landmark land(id, stats,0);
         landmarks.addLandMark(land);
     }
     return landmarks;

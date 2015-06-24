@@ -108,21 +108,34 @@ const void SMC::sample(StateProgression  * currState, \
         RowVector3d instance(3);
         instance << pointInstance[0], pointInstance[1], pointInstance[2];
         for( int j =0 ; j<currentClusters; j++)
-             if(sizes[j]>0)
-                    clusterLogProb[j] = log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0, 3));
-             else   clusterLogProb[j] = -INFINITY;
+             if(sizes[j]>0){
+                Vector3d mean1(3);
+                mean1(0) = currState->stateProg[currentTime][j].mean[0];
+                mean1(1) = currState->stateProg[currentTime][j].mean[1];
+                mean1(2) = currState->stateProg[currentTime][j].mean[2];
+                clusterLogProb[j] = log(ut.multivariateNormalPDF(instance, mean1, currState->stateProg[currentTime][j].covar, 3));
+             }else   clusterLogProb[j] = -INFINITY;
 
-        clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0, 3)));
+        clusterLogProb.push_back(log(ut.multivariateNormalPDF(instance, params.mu0 , params.tau0*1.00e+20, 3)));
+        //for_each(clusterLogProb.begin(), clusterLogProb.end(), [] (double &y) { cout << y << ",";});
+        //cout << endl;
         //TODO Must add exponent here
         sum = 0;
         for(unsigned int ik=0;ik<clusterLogProb.size();ik++) {
             prob_assig[ik] = prob_assig[ik]* exp(clusterLogProb[ik]) * ut.exppdf(pointInstance[5] , params.exp_lambda0);
             sum +=prob_assig[ik];
-        }for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { y = y/sum;});
+        }
+        //for_each(prob_assig.begin(), prob_assig.end(), [] (double &y) { cout << y << ",";});
+        //cout << endl;
+        for_each(prob_assig.begin(), prob_assig.end(), [&sum] (double &y) mutable { y = y/sum;});
+        //cout << " --- " <<endl;
+        //for_each(prob_assig.begin(), prob_assig.end(), [] (double &y) { cout << y << ",";});
+        //cout << endl;
 
         int sample_k = -1;
         if(sum>0)  sample_k = ut.randcat( & prob_assig);
         else       sample_k = 0;
+
         currState->assignments[i] = sample_k;
         // K+ 1 because k is a cpp 0-index variable
         if( sample_k  == currentClusters){

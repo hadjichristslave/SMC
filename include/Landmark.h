@@ -7,9 +7,9 @@ using namespace Structures;
 class Landmark
 {
     public:
-        int uuid;
+        int uuid,initialId;
         SufficientStatistics distribution;
-        Landmark(int LandId , SufficientStatistics stats);
+        Landmark(int LandId , SufficientStatistics stats,int initialId);
         Landmark();
 
         virtual ~Landmark();

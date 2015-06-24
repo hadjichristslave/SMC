@@ -8,7 +8,7 @@
 using namespace std;
 using namespace Eigen;
 namespace Structures {
-    const double CRP=1;
+    const double CRP=.1;
     struct SufficientStatistics{
         std::vector<double> mean        = decltype(mean)(3,0);
         Matrix3d            covar       = MatrixXd::Identity(3,3);
@@ -32,22 +32,23 @@ namespace Structures {
         }
             friend ostream& operator<<(ostream& out ,const SufficientStatistics& rhs){
                 out << "====="<< endl;
-                //out <<" Mean statistics " << endl;
-                out << rhs.mean[0] << "," << rhs.mean[1] << "," << rhs.mean[2] << endl;
+                out <<" Mean statistics " << endl;
+                //out << rhs.mean[0] << "," << rhs.mean[1] << "," << rhs.mean[2] << endl;
                 //out << "-" << endl;
                 //out << "Covariance statistics" << endl;
                 for( int i = 0 ; i < rhs.covar.rows(); i ++){
                     for( int j = 0 ; j < rhs.covar.cols(); j ++){
-                        out << rhs.covar(i,j) ;
-                        out << "," ;
+                        //out << rhs.covar(i,j) ;
+                        //out << "," ;
                     }
                 }
                 out << endl;
                 //out << endl;
-                //for(unsigned int i =0 ; i< rhs.categorical.size();i++)
-                    //out << rhs.categorical[i] << ",";
-                //out << endl;
+                for(unsigned int i =0 ; i< rhs.categorical.size();i++)
+                    out << rhs.categorical[i] << ",";
+                out << endl;
                 //out << " Exponent" << rhs.exponential<< endl;
+                //out<< rhs.exponential<<endl;
                 //out << "==========End of SS print====="<< endl;
                 return out;
             }
@@ -60,7 +61,7 @@ namespace Structures {
             Matrix3d tau0 = MatrixXd::Identity(3,3);
             RowVectorXd q0 = RowVectorXd::Ones(1,colourBins*colourBins*colourBins);
             Params(void){
-                crp = CRP ; del = .7;auxiliaryNum = 10;
+                crp = CRP ; del = .7;auxiliaryNum = 20;
                 nu0 = 60; kappa0 = .05;
                 cBin1  = 1,cBin2 =1, cBin3  = 1;
                 // For my exponential alpha and beta are the parameters of the prior distribution Gamma

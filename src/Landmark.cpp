@@ -4,9 +4,10 @@ Landmark::Landmark(){
     uuid = 0;
 }
 
-Landmark::Landmark(int LandId , SufficientStatistics stats){
+Landmark::Landmark(int LandId , SufficientStatistics stats, int initialIdz){
     uuid = LandId;
     distribution.copy(stats);
+    initialId = initialIdz;
 }
 Landmark::~Landmark()
 {
