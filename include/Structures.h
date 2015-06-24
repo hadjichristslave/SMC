@@ -55,7 +55,7 @@ namespace Structures {
         };
         struct Params{
             std::vector<double> position = decltype(position)(3,0);
-            int   cloudInstances, auxiliaryNum , colourBin , cBin1, cBin2, cBin3, colourBins = 3;
+            int  auxiliaryNum , colourBin , colourBins = 3;
             double  crp, del, nu0, kappa0, gamma_alpha0, gamma_beta0 , exp_lambda0 =1;
             RowVector3d  mu0 = RowVector3d::Zero(1,3);
             Matrix3d tau0 = MatrixXd::Identity(3,3);
@@ -63,12 +63,13 @@ namespace Structures {
             Params(void){
                 crp = CRP ; del = .7;auxiliaryNum = 20;
                 nu0 = 60; kappa0 = .05;
-                cBin1  = 1,cBin2 =1, cBin3  = 1;
-                // For my exponential alpha and beta are the parameters of the prior distribution Gamma
-                // alpha is updated by the numver of observations whereas  beta by their sum
                 gamma_alpha0 = 1;  gamma_beta0 = 1;
             }
-            Params(double a) : crp(a){}
+            Params(double a) : crp(a){
+                crp = CRP ; del = .7;auxiliaryNum = 20;
+                nu0 = 60; kappa0 = .05;
+                gamma_alpha0 = 1;  gamma_beta0 = 1;
+            }
             friend ostream& operator<<(ostream& out ,const Params& rhs){
                 out << "----------------Params printing-------------------" << endl;
                 out << " mu " << rhs.mu0 << endl;

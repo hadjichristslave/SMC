@@ -60,7 +60,6 @@ int main(int argc, char* argv[]){
     // Define the base params size
 
     Params baseparams;
-    baseparams.cloudInstances = dataPoints.size();
     // Create as many particles as config file defines
     vector < StateProgression > particles(numOfParticles, timeStates);
     // Initialize the method
