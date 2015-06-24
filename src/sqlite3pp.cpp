@@ -27,47 +27,11 @@
 
 #include "sqlite3pp.h"
 
-namespace sqlite3pp
-{
+namespace sqlite3pp{
 
   null_type ignore;
-
-  namespace
-  {
-    int busy_handler_impl(void* p, int cnt)
-    {
-      auto h = static_cast<database::busy_handler*>(p);
-      return (*h)(cnt);
-    }
-
-    int commit_hook_impl(void* p)
-    {
-      auto h = static_cast<database::commit_handler*>(p);
-      return (*h)();
-    }
-
-    void rollback_hook_impl(void* p)
-    {
-      auto h = static_cast<database::rollback_handler*>(p);
-      (*h)();
-    }
-
-    void update_hook_impl(void* p, int opcode, char const* dbname, char const* tablename, long long int rowid)
-    {
-      auto h = static_cast<database::update_handler*>(p);
-      (*h)(opcode, dbname, tablename, rowid);
-    }
-
-    int authorizer_impl(void* p, int evcode, char const* p1, char const* p2, char const* dbname, char const* tvname)
-    {
-      auto h = static_cast<database::authorize_handler*>(p);
-      return (*h)(evcode, p1, p2, dbname, tvname);
-    }
-
-  } // namespace
-
-  database::database(char const* dbname, int flags, char const* vfs) : db_(nullptr)
-  {
+  namespace{} // namespace
+  database::database(char const* dbname, int flags, char const* vfs) : db_(nullptr) {
     if (dbname) {
       auto rc = connect(dbname, flags, vfs);
       if (rc != SQLITE_OK)
@@ -98,54 +62,12 @@ namespace sqlite3pp
     return rc;
   }
 
-  int database::detach(char const* name)
-  {
-    return executef("DETACH '%q'", name);
-  }
 
-  long long int database::last_insert_rowid() const
-  {
-    return sqlite3_last_insert_rowid(db_);
-  }
 
-  int database::enable_foreign_keys(bool enable)
-  {
-    return sqlite3_db_config(db_, SQLITE_DBCONFIG_ENABLE_FKEY, enable ? 1 : 0, nullptr);
-  }
-
-  int database::enable_triggers(bool enable)
-  {
-    return sqlite3_db_config(db_, SQLITE_DBCONFIG_ENABLE_TRIGGER, enable ? 1 : 0, nullptr);
-  }
-
-  int database::enable_extended_result_codes(bool enable)
-  {
-    return sqlite3_extended_result_codes(db_, enable ? 1 : 0);
-  }
-
-  int database::error_code() const
-  {
-    return sqlite3_errcode(db_);
-  }
-
-  char const* database::error_msg() const
-  {
-    return sqlite3_errmsg(db_);
-  }
 
   int database::execute(char const* sql)
   {
     return sqlite3_exec(db_, sql, 0, 0, 0);
-  }
-
-  int database::executef(char const* sql, ...)
-  {
-    va_list ap;
-    va_start(ap, sql);
-    std::shared_ptr<char> msql(sqlite3_vmprintf(sql, ap), sqlite3_free);
-    va_end(ap);
-
-    return execute(msql.get());
   }
 
 
@@ -201,10 +123,6 @@ namespace sqlite3pp
     return sqlite3_step(stmt_);
   }
 
-  int statement::reset()
-  {
-    return sqlite3_reset(stmt_);
-  }
 
   int statement::bind(int idx, int value)
   {
@@ -300,30 +218,6 @@ namespace sqlite3pp
   {
     auto rc = step();
     if (rc == SQLITE_DONE) rc = SQLITE_OK;
-
-    return rc;
-  }
-
-  int command::execute_all()
-  {
-    auto rc = execute();
-    if (rc != SQLITE_OK) return rc;
-
-    char const* sql = tail_;
-
-    while (std::strlen(sql) > 0) { // sqlite3_complete() is broken.
-      sqlite3_stmt* old_stmt = stmt_;
-
-      if ((rc = prepare_impl(sql)) != SQLITE_OK) return rc;
-
-      if ((rc = sqlite3_transfer_bindings(old_stmt, stmt_)) != SQLITE_OK) return rc;
-
-      finish_impl(old_stmt);
-
-      if ((rc = execute()) != SQLITE_OK) return rc;
-
-      sql = tail_;
-    }
 
     return rc;
   }
@@ -430,20 +324,8 @@ namespace sqlite3pp
   {
   }
 
-  int query::column_count() const
-  {
-    return sqlite3_column_count(stmt_);
-  }
 
-  char const* query::column_name(int idx) const
-  {
-    return sqlite3_column_name(stmt_, idx);
-  }
 
-  char const* query::column_decltype(int idx) const
-  {
-    return sqlite3_column_decltype(stmt_, idx);
-  }
 
 
   query::iterator query::begin()
@@ -457,11 +339,9 @@ namespace sqlite3pp
   }
 
 
-  transaction::transaction(database& db, bool fcommit, bool freserve) : db_(&db), fcommit_(fcommit)
-  {
+  transaction::transaction(database& db, bool fcommit, bool freserve) : db_(&db), fcommit_(fcommit){
     db_->execute(freserve ? "BEGIN IMMEDIATE" : "BEGIN");
   }
-
   transaction::~transaction()
   {
     if (db_) {
@@ -470,30 +350,6 @@ namespace sqlite3pp
 	throw database_error(*db_);
     }
   }
-
-  int transaction::commit()
-  {
-    auto db = db_;
-    db_ = nullptr;
-    int rc = db->execute("COMMIT");
-    return rc;
-  }
-
-  int transaction::rollback()
-  {
-    auto db = db_;
-    db_ = nullptr;
-    int rc = db->execute("ROLLBACK");
-    return rc;
-  }
-
-
-  database_error::database_error(char const* msg) : std::runtime_error(msg)
-  {
-  }
-
-  database_error::database_error(database& db) : std::runtime_error(sqlite3_errmsg(db.db_))
-  {
-  }
-
+  database_error::database_error(char const* msg) : std::runtime_error(msg) { }
+  database_error::database_error(database& db) : std::runtime_error(sqlite3_errmsg(db.db_)) { }
 } // namespace sqlite3pp

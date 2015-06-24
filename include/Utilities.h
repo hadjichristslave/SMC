@@ -14,14 +14,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/ml/ml.hpp>
 #include  "Structures.h"
-
-
-#define NUMBER_OF_TRAINING_SAMPLES 3823
-#define ATTRIBUTES_PER_SAMPLE 64
-#define NUMBER_OF_TESTING_SAMPLES 1797
-
-#define NUMBER_OF_CLASSES 10
-
+#include <map>
+#include <omp.h>
 
 using namespace std;
 using namespace boost::math;
@@ -70,7 +64,7 @@ class Utilities{
         // Gaussian distribution distances
         double GaussKLDivergence(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
         double Wasserstein(std::vector<double> mean1, Matrix3d covar1, std::vector<double> mean2, Matrix3d covar2 );
-        // Categorical distributino distances
+
         vector<float>  categoricalhistogramCompare( float histA[], float histB[] , int N);
         float categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2);
     protected:

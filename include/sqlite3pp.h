@@ -78,17 +78,6 @@ namespace sqlite3pp
     int connect(char const* dbname, int flags, const char* vfs = nullptr);
     int disconnect();
 
-    int detach(char const* name);
-
-    long long int last_insert_rowid() const;
-
-    int enable_foreign_keys(bool enable = true);
-    int enable_triggers(bool enable = true);
-    int enable_extended_result_codes(bool enable = true);
-
-    int error_code() const;
-    char const* error_msg() const;
-
     int execute(char const* sql);
     int executef(char const* sql, ...);
 
@@ -96,11 +85,9 @@ namespace sqlite3pp
    private:
     sqlite3* db_;
 
-    busy_handler bh_;
     commit_handler ch_;
     rollback_handler rh_;
     update_handler uh_;
-    authorize_handler ah_;
   };
 
   class database_error : public std::runtime_error
@@ -133,7 +120,6 @@ namespace sqlite3pp
     int bind(char const* name, null_type);
 
     int step();
-    int reset();
 
    protected:
     explicit statement(database& db, char const* stmt = nullptr);
@@ -254,11 +240,6 @@ namespace sqlite3pp
 
     explicit query(database& db, char const* stmt = nullptr);
 
-    int column_count() const;
-
-    char const* column_name(int idx) const;
-    char const* column_decltype(int idx) const;
-
     using iterator = query_iterator;
 
     iterator begin();
@@ -270,9 +251,6 @@ namespace sqlite3pp
    public:
     explicit transaction(database& db, bool fcommit = false, bool freserve = false);
     ~transaction();
-
-    int commit();
-    int rollback();
 
    private:
     database* db_;

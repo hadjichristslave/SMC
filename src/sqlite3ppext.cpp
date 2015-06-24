@@ -34,28 +34,6 @@ namespace sqlite3pp
     namespace
     {
 
-      void function_impl(sqlite3_context* ctx, int nargs, sqlite3_value** values)
-      {
-        auto f = static_cast<function::function_handler*>(sqlite3_user_data(ctx));
-        context c(ctx, nargs, values);
-        (*f)(c);
-      }
-
-      void step_impl(sqlite3_context* ctx, int nargs, sqlite3_value** values)
-      {
-        auto p = static_cast<std::pair<aggregate::pfunction_base, aggregate::pfunction_base>*>(sqlite3_user_data(ctx));
-        auto s = static_cast<aggregate::function_handler*>((*p).first.get());
-        context c(ctx, nargs, values);
-        ((function::function_handler&)*s)(c);
-      }
-
-      void finalize_impl(sqlite3_context* ctx)
-      {
-        auto p = static_cast<std::pair<aggregate::pfunction_base, aggregate::pfunction_base>*>(sqlite3_user_data(ctx));
-        auto f = static_cast<aggregate::function_handler*>((*p).second.get());
-        context c(ctx);
-        ((function::function_handler&)*f)(c);
-      }
 
     } // namespace
 
@@ -138,16 +116,6 @@ namespace sqlite3pp
       sqlite3_result_null(ctx_);
     }
 
-    void context::result_copy(int idx)
-    {
-      sqlite3_result_value(ctx_, values_[idx]);
-    }
-
-    void context::result_error(char const* msg)
-    {
-      sqlite3_result_error(ctx_, msg, std::strlen(msg));
-    }
-
     void* context::aggregate_data(int size)
     {
       return sqlite3_aggregate_context(ctx_, size);
@@ -162,21 +130,12 @@ namespace sqlite3pp
     {
     }
 
-    int function::create(char const* name, function_handler h, int nargs)
-    {
-      fh_[name] = pfunction_base(new function_handler(h));
-      return sqlite3_create_function(db_, name, nargs, SQLITE_UTF8, fh_[name].get(), function_impl, 0, 0);
-    }
+
 
     aggregate::aggregate(database& db) : db_(db.db_)
     {
     }
 
-    int aggregate::create(char const* name, function_handler s, function_handler f, int nargs)
-    {
-      ah_[name] = std::make_pair(pfunction_base(new function_handler(s)), pfunction_base(new function_handler(f)));
-      return sqlite3_create_function(db_, name, nargs, SQLITE_UTF8, &ah_[name], 0, step_impl, finalize_impl);
-    }
 
   } // namespace ext
 

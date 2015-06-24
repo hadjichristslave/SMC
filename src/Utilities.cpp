@@ -6,10 +6,12 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator,
     vector< vector< vector<double> > > clouds;
     std::string delimiter = ",";
     std::string line;
-    int currentCloud   = -1, currPointIndex = -1;
+
     ifstream myfile (filepath);
-    int lineCount = 0;
+
     if (myfile.is_open()){
+        int currentCloud   = -1, currPointIndex = -1;
+        int lineCount = 0;
         while ( getline (myfile,line) ){
             if(lineCount ==0){
                 lineCount++;
@@ -225,11 +227,6 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float
 }
 
 float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
-     float sum1 = 0,sum2 = 0;
-     for(int i=0;i<mat1->cols;i++){
-        sum1 += mat1->at<float>(0,i);
-        sum2 += mat2->at<float>(0,i);
-     }
      float result = 0.;
      for(int i=0;i< mat1->cols;i++)
          if(  mat1->at<float>(0,i) > 1e-06 || mat2->at<float>(0,i) > 1e-06 ){

@@ -4,22 +4,12 @@
 #include "Utilities.h"
 #include "Landmarks.h"
 #include "DBWrapper.h"
-#include <map>
-#include <omp.h>
+
 
 using namespace std;
 using namespace Structures;
 typedef vector< vector< vector< double > > > dataBuffer;
-template <typename T>
-vector<size_t> sort_indexes(const vector<T> &v) {
-  // initialize original index locations
-  vector<size_t> idx(v.size());
-  for (size_t i = 0; i != idx.size(); ++i) idx[i] = i;
-  // sort indexes based on comparing values in v
-  sort(idx.begin(), idx.end(),
-       [&v](size_t i1, size_t i2) {return v[i1] > v[i2];});
-  return idx;
-}
+
 int main(int argc, char* argv[]){
 
     int numOfParticles , numOfSamples;
@@ -36,8 +26,6 @@ int main(int argc, char* argv[]){
     config_lookup_float(cf, "landmarkThreshold" , &landmarkThreshold);
     config_lookup_string(cf, "filepath" , &filepath);
     config_lookup_string(cf, "database" , &database);
-
-
 
     DBWrapper dbwr(database);
     // The Sequential monte carlo sampler object
@@ -76,7 +64,7 @@ int main(int argc, char* argv[]){
             current_observations.push_back(0);
             continue;
         }
-        vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut,0 , 40 );
+        vector< vector< double > > distanceFeatures  = landmarks.extractDistances(& observations.landmarks[i],  & ut);
         bool found = false;
         for(unsigned int ijk = 0 ; ijk<distanceFeatures.size();ijk++){
             //cout << distanceFeatures[ijk][0] <<  " "  <<distanceFeatures[ijk][1] << endl;
@@ -90,25 +78,18 @@ int main(int argc, char* argv[]){
             }
         }
         if(found==false){
-                //cout << " adding a new landmark" <<endl;
                 dbwr.insertLandmark(& observations.landmarks[i].distribution);
                 current_observations.push_back(observations.size());
-                landmarks =  dbwr.getCurrentLandmarks();
+                landmarks = dbwr.getCurrentLandmarks();
                 landmark_associations.insert(std::make_pair(current_observations.back(), landmarks.landmarks.back().getId()));
         }
     }
     ofstream myfile;
     myfile.open ("/home/panos/Desktop/aggregated.txt",std::ofstream::out | std::ofstream::app);
     myfile << "[";
-
-
-    for(unsigned int i =0 ;i< dataPoints[0].size() ;i++){
+    for(unsigned int i =0 ;i< dataPoints[0].size() ;i++)
         myfile <<  dataPoints[0][i][0] << " " << dataPoints[0][i][1] << " " << dataPoints[0][i][2] << " " << landmark_associations[particles[0].assignments[i]]<< endl;
-    }
     myfile<< "]";
     myfile.close();
-    // if initial db size is zero create an initial training sample for the random forest
-    // For now, I assume the training db was populated
-    landmarks =  dbwr.getCurrentLandmarks();
     return 0;
 }

@@ -94,8 +94,6 @@ namespace sqlite3pp
       void result(void const* value, int n, bool fstatic = true);
       void result();
       void result(null_type);
-      void result_copy(int idx);
-      void result_error(char const* msg);
 
       void* aggregate_data(int size);
       int aggregate_count();
@@ -149,7 +147,6 @@ namespace sqlite3pp
 
       explicit function(database& db);
 
-      int create(char const* name, function_handler h, int nargs = 0);
 
       template <class F> int create(char const* name, std::function<F> h) {
         fh_[name] = std::shared_ptr<void>(new std::function<F>(h));
@@ -206,8 +203,6 @@ namespace sqlite3pp
       using pfunction_base = std::shared_ptr<void>;
 
       explicit aggregate(database& db);
-
-      int create(char const* name, function_handler s, function_handler f, int nargs = 1);
 
       template <class T, class... Ps>
       int create(char const* name) {
