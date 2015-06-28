@@ -337,8 +337,6 @@ namespace sqlite3pp{
   {
     return query_iterator();
   }
-
-
   transaction::transaction(database& db, bool fcommit, bool freserve) : db_(&db), fcommit_(fcommit){
     db_->execute(freserve ? "BEGIN IMMEDIATE" : "BEGIN");
   }

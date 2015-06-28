@@ -225,7 +225,6 @@ std::vector<float>  Utilities::categoricalhistogramCompare( float histA[], float
      distances.push_back(kld);
      return distances;
 }
-
 float Utilities::categoricalKLDivergence( cv::Mat * mat1, cv::Mat * mat2){
      float result = 0.;
      for(int i=0;i< mat1->cols;i++)

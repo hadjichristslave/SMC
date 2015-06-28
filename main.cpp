@@ -49,9 +49,8 @@ int main(int argc, char* argv[]){
             Landmark land(smc.numOfLandmarks , particles[0].stateProg[0][i],i);
             observations.addLandMark(land);
     }
-    //for(unsigned int i = 0;i< particles[0].assignments.size();i++)
-      //      cout  << dataPoints[0][i][0] << " " << dataPoints[0][i][1] << " " << dataPoints[0][i][2] << " " << particles[0].assignments[i] <<endl;
-    //cout << endl;
+    for(unsigned int i = 0;i< particles[0].assignments.size();i++)
+            cout  << dataPoints[0][i][0] << " " << dataPoints[0][i][1] << " " << dataPoints[0][i][2] << " " << particles[0].assignments[i] <<endl;
 
     Landmarks landmarks   =  dbwr.getCurrentLandmarks();
     vector<double> current_observations;
