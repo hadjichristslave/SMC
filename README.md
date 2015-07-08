@@ -88,7 +88,7 @@ Past distributions are stored in a sqlite3 database in the local system. If a ne
 
 
 The image shows what the sampler clusters as points in the cloud.
-![alt tag](images/posBound.png)
+![alt tag](images/posBound3.png)
 
 
 #Attention
