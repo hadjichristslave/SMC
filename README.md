@@ -28,32 +28,21 @@ In the decision layer the computations of landmark matching are performed
 #Dependencies
 
 PCL point cloud operations library
-
 Eigen
-
 OpenCV
-
 Libconfig
-
 Sqlite3(3 is important)
 
 The project It is compiled using -std=c++11 flag
 
 #Linker options are
 
--lconfig++,
--lgsl,
--lgslcblas,
--lopencv_core,
--lopencv_highgui,
--lopencv_imgproc,
--lsqlite3
+-lconfig++,-lgsl,-lgslcblas,-lopencv_core,-lopencv_highgui,-lopencv_imgproc,-lsqlite3
 
 #External packages used
 
 **sqlite3pp** *boost free version (source found @ github: https://github.com/hadjichristslave/sqlite3pp)*
 
-**random forest** *by bjorn andres( Source found @ github: https://github.com/bjoern-andres/random-forest)*
 
 #How it works
 

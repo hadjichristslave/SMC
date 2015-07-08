@@ -6,9 +6,7 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator,
     vector< vector< vector<double> > > clouds;
     std::string delimiter = ",";
     std::string line;
-
     ifstream myfile (filepath);
-
     if (myfile.is_open()){
         int currentCloud   = -1, currPointIndex = -1;
         int lineCount = 0;
@@ -40,8 +38,7 @@ vector < vector < vector<double> > >  Utilities::readFile(string CloudSeperator,
             clouds[currentCloud][currPointIndex].push_back( atof(line.c_str()));
         }
         myfile.close();
-    }else
-        cout << " could not read data file";
+    }else cout << " could not read data file";
     return clouds;
 }
 double Utilities::multivariateNormalPDF( Vector3d instance, Vector3d mu, Matrix3d covar , int dimensionality){
@@ -61,7 +58,6 @@ int Utilities::randcat( vector<double> * vec){
     return 0;
 }
 Eigen::MatrixXd Utilities::sampleMultinomial(vector<double> probabilities, int samples){
-    // Return samples number of items from a multinomial with probabilities vector defining the probability of samplign each item
     MatrixXd mat(samples, probabilities.size());
     vector<double> cumsum =probabilities;
     for(unsigned int j=1; j<cumsum.size(); ++j)  cumsum[j] += cumsum[j-1];
@@ -170,18 +166,14 @@ Eigen::MatrixXd Utilities::sampleMultivariateNormal(VectorXd mean, Eigen::Matrix
     MatrixXd samplez = (normTransform * MatrixXd::NullaryExpr(dimensionality,samples,randN)).colwise() + mean;
     return samplez;
 }
-//Exponential distribution distances
-// Squared hellinger distance as given in wiki
 double Utilities::Expsquaredhellinger(double lambda1, double lambda2){
     if(lambda1 ==0 && lambda2 == 0) return 10000000;
     if(lambda1+lambda2<0)          return 10000000;
     return 1-(2*sqrt(lambda1+lambda2))/(lambda1+lambda2);
 }
-// KL divergence as given in wiki
 double Utilities::ExpKLDivergence(double lambda1, double lambda2){
     return log(lambda1) - log(lambda2) + lambda1/lambda2  -1;
 }
-//KL divergence for gaussians as given in https://tgmstat.wordpress.com/2013/07/10/kullback-leibler-divergence/#ref5
 double Utilities::GaussKLDivergence(std::vector<double> tempmean1, Matrix3d covar1, std::vector<double> tempmean2, Matrix3d covar2 ){
     double KL = 0.5;
     Vector3d mean1(3);

@@ -13,7 +13,6 @@ class SMC
     public:
         SMC();
         virtual ~SMC();
-        const void init();
         Utilities ut;
 
         const void infer( vector< StateProgression > * particles, \

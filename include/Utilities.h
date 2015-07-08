@@ -15,7 +15,6 @@
 #include <opencv2/ml/ml.hpp>
 #include  "Structures.h"
 #include <map>
-#include <omp.h>
 
 using namespace std;
 using namespace boost::math;
