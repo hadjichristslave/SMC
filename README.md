@@ -84,4 +84,4 @@ Each cluster consists of a color(categorical), and angle(exponential) and a posi
 
 #Anything else
 
-Any further information can be found in my master thesis repository
+Any further information can be found in my master thesis repository. If something is missing send me an email.
