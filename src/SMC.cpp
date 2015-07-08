@@ -18,7 +18,7 @@ const void SMC::infer(vector< StateProgression >  * particles, \
                 for(int s=0;s< numOfSamples;s++){
                     sample( & particles->at(j), &cloudData->at(t), params, t,  s , cloudData->at(t).size());
                     ofstream myfile;
-                    myfile.open ("/home/panos/Desktop/example.txt",std::ofstream::out | std::ofstream::app);
+                    myfile.open ("/home/panos/Desktop/example.txt", std::ofstream::out | std::ofstream::app);
                     myfile << "-----" << endl;
                     for(unsigned int ij = 0; ij< particles->at(j).stateProg[t].size(); ij ++)
                         myfile << particles->at(j).stateProg[t][ij];
