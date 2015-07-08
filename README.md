@@ -90,9 +90,13 @@ Past distributions are stored in a sqlite3 database in the local system. If a ne
 The image shows what the sampler clusters as points in the cloud.
 ![alt tag](images/posBound3.png)
 
+Elements are decomposed to clusters with respect to the position, angle and color information they carry.
+
 
 #Attention
 
 The files are still modified daily, so any weird behaviour might be due to development issues.
 
+#Anything else
 
+Any further information can be found in my master thesis repository
