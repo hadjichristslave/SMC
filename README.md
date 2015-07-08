@@ -82,11 +82,6 @@ Elements are decomposed to clusters with respect to the position, angle and colo
 Each cluster consists of a color(categorical), and angle(exponential) and a position(gaussian) signature of the area it represents. An example signature can be seen in the following picture.
 ![alt_tag](images/coloursCorrect.png)
 
-
-#Attention
-
-The files are still modified daily, so any weird behaviour might be due to development issues.
-
 #Anything else
 
 Any further information can be found in my master thesis repository
