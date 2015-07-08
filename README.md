@@ -69,9 +69,7 @@ Generally, provided a good downsampling in the preprocessing, the sampler can be
 
 #Output
 
-The random forest returns the distributions currently being observed in the point cloud.
-
-Past distributions are stored in a sqlite3 database in the local system. If a new distribution is observed, it is being added in the database. For now I think it is not possible to automatically add a training set, therefore one labeled manually is given to the method.
+Past distributions are stored in a sqlite3 database in the local system. If a new distribution/landmark is observed, it is being added in the database. For now I think it is not possible to automatically add a training set, therefore one labeled manually is given to the method.
 
 #Results
 
@@ -80,6 +78,9 @@ The image shows what the sampler clusters as points in the cloud.
 ![alt tag](images/posBound3.png)
 
 Elements are decomposed to clusters with respect to the position, angle and color information they carry.
+
+Each cluster consists of a color(categorical), and angle(exponential) and a position(gaussian) signature of the area it represents. An example signature can be seen in the following picture.
+![alt_tag](images/coloursCorrect.png)
 
 
 #Attention
