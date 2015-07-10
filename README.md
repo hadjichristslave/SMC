@@ -74,12 +74,12 @@ Past distributions are stored in a sqlite3 database in the local system. If a ne
 #Results
 
 
-The image shows what the sampler clusters as points in the cloud.
+The image shows what the sampler clusters as points in the cloud. In the repository sampler reads the data from a file. If you want to pass your data, check positional info to see what type of file is expected.
 ![alt tag](images/posBound3.png)
 
 Elements are decomposed to clusters with respect to the position, angle and color information they carry.
 
-Each cluster consists of a color(categorical), and angle(exponential) and a position(gaussian) signature of the area it represents. An example signature can be seen in the following picture.
+Each cluster consists of a color(categorical), and angle(exponential) and a position(gaussian) signature of the area it represents. An example signature can be seen in:
 ![alt_tag](images/coloursCorrect.png)
 
 #Anything else
