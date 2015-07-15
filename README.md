@@ -1,4 +1,4 @@
-# Landmark matching pipepline.
+#Landmark matching pipepline.
 
 This pipeline is part of my master thesis and introduces a non-parametric Bayesian approach to the compression problem of long term SLAM.
 
@@ -84,4 +84,4 @@ Each cluster consists of a color(categorical), and angle(exponential) and a posi
 
 #Anything else
 
-Any further information can be found in my master thesis repository. If something is missing send me an email.
+Theoretical primer can be found in my master thesis paper folder. If something is missing send me an email.
