@@ -84,4 +84,4 @@ Each cluster consists of a color(categorical), and angle(exponential) and a posi
 
 #Anything else
 
-Theoretical primer can be found in my master thesis paper folder. If something is missing send me an email.
+Theoretical primer can be found in my master thesis paper folder. If something is missing send me an email to p.chatzichristodoulou (at) gmail (dot) com
