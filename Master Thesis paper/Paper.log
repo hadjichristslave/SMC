@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.9.7)  15 JUL 2015 12:30
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.9.7)  15 JUL 2015 12:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -214,8 +214,7 @@ Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \TX@delta=\dimen131
 \TX@cols=\count113
 \TX@ftn=\toks27
-)
-No file Paper.aux.
+) (./Paper.aux)
 \openout1 = `Paper.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
@@ -230,6 +229,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
 LaTeX Font Info:    ... okay on input line 41.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
 LaTeX Font Info:    ... okay on input line 41.
+
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count114
@@ -279,128 +279,15 @@ LaTeX Font Info:    ... okay on input line 41.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
-LaTeX Warning: Citation `probRobs' on page 1 undefined on input line 50.
-
-
-LaTeX Warning: Citation `ekf' on page 1 undefined on input line 50.
-
-
-LaTeX Warning: Citation `slam' on page 1 undefined on input line 50.
-
-
-LaTeX Warning: Citation `liflonglearning' on page 1 undefined on input line 51.
-
-
-
-LaTeX Warning: Citation `lifelongmaps' on page 1 undefined on input line 51.
-
-
-LaTeX Warning: Citation `aishalong' on page 1 undefined on input line 51.
-
-
-Overfull \hbox (0.83923pt too wide) in paragraph at lines 50--52
+Overfull \hbox (0.40872pt too wide) in paragraph at lines 50--52
 \OT1/cmr/m/n/10 Simultaneous lo-cal-iza-tion and map-ping is one of the fun-da-
 men-tal prob-lems of au-tonomous systems[[]].
  []
 
-
-LaTeX Warning: Citation `nonParam' on page 1 undefined on input line 55.
-
-
-LaTeX Warning: Reference `sec:literature' on page 1 undefined on input line 58.
-
-
-
-LaTeX Warning: Reference `sec:theory' on page 1 undefined on input line 58.
-
-
-LaTeX Warning: Reference `sec:model' on page 1 undefined on input line 58.
-
-
-LaTeX Warning: Reference `sec:results' on page 1 undefined on input line 58.
-
-
-LaTeX Warning: Reference `sec:discussion' on page 1 undefined on input line 58.
-
-
-
-LaTeX Warning: Citation `slam++' on page 1 undefined on input line 66.
-
-
-LaTeX Warning: Citation `objslam' on page 1 undefined on input line 67.
-
-
-LaTeX Warning: Citation `objectpointslam' on page 1 undefined on input line 68.
-
-
-
-LaTeX Warning: Citation `omnimaper' on page 1 undefined on input line 68.
-
-
-LaTeX Warning: Citation `objectDisc' on page 1 undefined on input line 69.
-
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-
-LaTeX Warning: Citation `pointSeg' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `pcl' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `planarSeg' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `planarSeg2' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `segOverview' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `smartSeg' on page 2 undefined on input line 73.
-
-
-LaTeX Warning: Citation `bayes:neal' on page 2 undefined on input line 77.
-
-
-LaTeX Warning: Citation `bayes:jordan' on page 2 undefined on input line 77.
-
-
-LaTeX Warning: Citation `bayes:smc' on page 2 undefined on input line 77.
-
-
-LaTeX Warning: Citation `corresp:first' on page 2 undefined on input line 81.
-
-
-LaTeX Warning: Citation `corres:sec' on page 2 undefined on input line 81.
-
-
-LaTeX Warning: Citation `corres:three' on page 2 undefined on input line 81.
-
-
-LaTeX Warning: Citation `corres:four' on page 2 undefined on input line 81.
-
-
-LaTeX Warning: Citation `caron' on page 2 undefined on input line 86.
-
-
-LaTeX Warning: Citation `antoniak' on page 2 undefined on input line 90.
-
-
-LaTeX Warning: Citation `theory:ddp' on page 2 undefined on input line 90.
-
-
-LaTeX Warning: Citation `caron' on page 2 undefined on input line 92.
-
-[2]
-
-LaTeX Warning: Citation `antoniak' on page 3 undefined on input line 114.
-
-
-LaTeX Warning: Reference `generalPolya' on page 3 undefined on input line 114.
-
-<pics/generalPolya.png, id=13, 806.01125pt x 826.08624pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+<pics/generalPolya.png, id=12, 806.01125pt x 826.08624pt>
 File: pics/generalPolya.png Graphic file (type png)
 
 <use pics/generalPolya.png>
@@ -416,13 +303,10 @@ Package wrapfig Warning: Stationary wrapfigure forced to float on input line 12
 7.
 
 
-LaTeX Warning: Reference `pipeline' on page 3 undefined on input line 129.
-
-
 Package wrapfig Warning: Collision between wrapping environments on input line 
 131.
 
-<pics/workflowSpec.png, id=15, 773.89125pt x 489.83pt>
+<pics/workflowSpec.png, id=14, 773.89125pt x 489.83pt>
 File: pics/workflowSpec.png Graphic file (type png)
 
 <use pics/workflowSpec.png>
@@ -437,26 +321,7 @@ Package wrapfig Warning: Stationary wrapfigure forced to float on input line 16
 Package wrapfig Warning: Stationary wrapfigure forced to float on input line 16
 4.
 
-
-LaTeX Warning: Citation `pcl' on page 3 undefined on input line 164.
-
-
-LaTeX Warning: Citation `objectpointslam' on page 3 undefined on input line 164
-.
-
-
-LaTeX Warning: Citation `fpfh' on page 3 undefined on input line 164.
-
-
-LaTeX Warning: Citation `smcddp' on page 3 undefined on input line 164.
-
-
-LaTeX Warning: Reference `pipeline' on page 3 undefined on input line 164.
-
 [3 <./pics/generalPolya.png>]
-
-LaTeX Warning: Reference `pcl:kl' on page 4 undefined on input line 187.
-
 <pics/Kullback-Leibler.png, id=31, 808.01875pt x 337.26pt>
 File: pics/Kullback-Leibler.png Graphic file (type png)
 
@@ -471,52 +336,7 @@ File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 210.
-
-
-LaTeX Warning: Citation `caron' on page 5 undefined on input line 217.
-
-
-LaTeX Warning: Citation `smc:theory' on page 5 undefined on input line 221.
-
-
-LaTeX Warning: Citation `doucet' on page 5 undefined on input line 241.
-
-[5]
-
-LaTeX Warning: Citation `compendium' on page 6 undefined on input line 285.
-
-
-LaTeX Warning: Citation `conjugate' on page 6 undefined on input line 311.
-
-
-LaTeX Warning: Reference `data:dist' on page 6 undefined on input line 333.
-
-[6]
-
-LaTeX Warning: Citation `RANSAC' on page 7 undefined on input line 349.
-
-
-LaTeX Warning: Citation `fpfh' on page 7 undefined on input line 350.
-
-
-LaTeX Warning: Reference `Q_filt' on page 7 undefined on input line 358.
-
-
-LaTeX Warning: Citation `smcddp' on page 7 undefined on input line 360.
-
-
-LaTeX Warning: Citation `sqlite' on page 7 undefined on input line 376.
-
-[7]
-
-LaTeX Warning: Citation `pcl' on page 8 undefined on input line 383.
-
-
-LaTeX Warning: Reference `pcl:clust' on page 8 undefined on input line 383.
-
-
-LaTeX Warning: Reference `pcl:clust' on page 8 undefined on input line 383.
-
+ [5] [6] [7]
 <pics/clusterings/coloursSource.png, id=48, 1606.0pt x 903.375pt>
 File: pics/clusterings/coloursSource.png Graphic file (type png)
 
@@ -533,10 +353,6 @@ Package pdftex.def Info: pics/clusterings/coloursCorrect.png used on input line
  389.
 (pdftex.def)             Requested size: 173.44534pt x 97.55202pt.
 
-
-LaTeX Warning: Reference `pcl:clust' on page 8 undefined on input line 395.
-
-
 Overfull \hbox (8.46619pt too wide) in alignment at lines 408--408
 [][][][][][][]
  []
@@ -545,12 +361,6 @@ Overfull \hbox (8.46619pt too wide) in alignment at lines 408--408
 Overfull \hbox (4.33382pt too wide) in paragraph at lines 408--410
  [] 
  []
-
-
-LaTeX Warning: Reference `dist' on page 8 undefined on input line 412.
-
-
-LaTeX Warning: Reference `pip:bounds' on page 8 undefined on input line 416.
 
 <pics/colorBound.png, id=50, 1606.0pt x 903.375pt>
 File: pics/colorBound.png Graphic file (type png)
@@ -581,26 +391,7 @@ Overfull \hbox (2.32428pt too wide) in paragraph at lines 419--426
  []
 
 [8 <./pics/clusterings/coloursSource.png> <./pics/clusterings/coloursCorrect.pn
-g>]
-
-LaTeX Warning: Reference `pip:bounds' on page 9 undefined on input line 428.
-
-
-LaTeX Warning: Reference `pip:bounds' on page 9 undefined on input line 428.
-
-
-LaTeX Warning: Reference `pip:bounds' on page 9 undefined on input line 428.
-
-
-LaTeX Warning: Reference `pip:bounds' on page 9 undefined on input line 428.
-
-
-LaTeX Warning: Reference `pip:bounds' on page 9 undefined on input line 428.
-
-
-LaTeX Warning: Reference `slam' on page 9 undefined on input line 434.
-
-<pics/slam110landmarks2.png, id=57, 1051.93pt x 911.405pt>
+g>] <pics/slam110landmarks2.png, id=57, 1051.93pt x 911.405pt>
 File: pics/slam110landmarks2.png Graphic file (type png)
 
 <use pics/slam110landmarks2.png>
@@ -617,9 +408,6 @@ Package pdftex.def Info: pics/memoryRequirements.png used on input line 440.
 
 Package wrapfig Warning: Stationary wrapfigure forced to float on input line 44
 8.
-
-
-LaTeX Warning: Reference `slam' on page 9 undefined on input line 450.
 
 [9 <./pics/colorBound.png> <./pics/colorBound2.png> <./pics/posBound.png> <./pi
 cs/posBound2.png> <./pics/slam110landmarks2.png> <./pics/memoryRequirements.png
@@ -639,41 +427,34 @@ Missing character: There is no Ã in font cmr10!
 Missing character: There is no œ in font cmr10!
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¼ in font cmr10!
- [12] (./Paper.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+ [12] (./Paper.aux) ) 
 Here is how much of TeX's memory you used:
- 3308 strings out of 495032
- 44308 string characters out of 6181719
- 114638 words of memory out of 5000000
+ 3310 strings out of 495032
+ 44328 string characters out of 6181719
+ 115038 words of memory out of 5000000
  6471 multiletter control sequences out of 15000+600000
  10457 words of font info for 38 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,16n,31p,1541b,301s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Paper.pdf (12 pages, 3240094 bytes).
+ 27i,16n,31p,1540b,301s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+bx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on Paper.pdf (12 pages, 3238951 bytes).
 PDF statistics:
  132 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
