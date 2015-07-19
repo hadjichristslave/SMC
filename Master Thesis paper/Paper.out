@@ -1,0 +1,26 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Literature review}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Object based slam}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Point Cloud Object clustering}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Non Parametric Bayesian methods}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Correspondence}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Theory background}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Generalized Polya's Urn}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Model definition}{}% 9
+\BOOKMARK [2][-]{subsection.4.1}{General pipeline}{section.4}% 10
+\BOOKMARK [2][-]{subsection.4.2}{The data distribution}{section.4}% 11
+\BOOKMARK [2][-]{subsection.4.3}{Sequential monte carlo sampler}{section.4}% 12
+\BOOKMARK [3][-]{subsubsection.4.3.1}{Gibbs updates}{subsection.4.3}% 13
+\BOOKMARK [3][-]{subsubsection.4.3.2}{Weight updates}{subsection.4.3}% 14
+\BOOKMARK [2][-]{subsection.4.4}{Decision Layer}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.5}{Complexity}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.6}{Landmark size}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{Results}{}% 18
+\BOOKMARK [2][-]{subsection.5.1}{Simple datasets}{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.2}{The decision layer}{section.5}% 20
+\BOOKMARK [2][-]{subsection.5.3}{EKF-slam experiments}{section.5}% 21
+\BOOKMARK [3][-]{subsubsection.5.3.1}{Decision layer}{subsection.5.3}% 22
+\BOOKMARK [3][-]{subsubsection.5.3.2}{Memory requirements}{subsection.5.3}% 23
+\BOOKMARK [2][-]{subsection.5.4}{Limits of the method}{section.5}% 24
+\BOOKMARK [3][-]{subsubsection.5.4.1}{Clustering layer}{subsection.5.4}% 25
+\BOOKMARK [1][-]{section.6}{Conclusion and future work}{}% 26

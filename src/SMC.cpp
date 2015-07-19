@@ -25,8 +25,9 @@ const void SMC::infer(vector< StateProgression >  * particles, \
     }
 }
 const void SMC::removeEmptyStates(StateProgression * state, int currTime){
-    vector< vector<int> > data = state->clusterSizes;
+    vector< vector<int> > data = state->clusterSizes; 
     vector< int > sums(data.size(),0);
+    cout << "" <<endl;
     for(unsigned int i = 0 ;i< data.size(); i++)
         for_each(data[i].begin(), data[i].end(), [&] (double y) mutable { sums[i] +=y;});
     int counter = 0;
