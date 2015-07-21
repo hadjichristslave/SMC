@@ -14,9 +14,9 @@
 \usepackage[a4paper, total={6in, 10in}]{geometry}
 
 
+
 \usepackage{tabularx}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
-
 
 % ADD THE FOLLOWING COUPLE LINES INTO YOUR PREAMBLE
 \let\OLDthebibliography\thebibliography
@@ -29,7 +29,7 @@
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
 
-\title{\vspace{-0.0cm}Building infinite maps}
+\title{\vspace{-2.0cm}Towards Bayesian lifelong learning in mapping}
 
 
 
@@ -50,9 +50,9 @@
 Simultaneous localization and mapping is one of the fundamental problems of autonomous systems\cite{probRobs}. In order for robots to be truly autonomous they have to be able to enter an environment and map its structure. To that direction, a lot of effort has been put in algorithms that are able to map static environments; with solutions like EKF-slam\cite{ekf} and FastSlam\cite{slam} we can now efficiently map such environments. 
 The logical extension to methods that can map static environments is methods that remove this restriction. The idea of lifelong robot learning was introduced as a general concept to the literature by Sebastian Thrun\cite{liflonglearning}. Konolige et al.\cite{lifelongmaps} specifically focus on lifelong learning in mapping. In the PhD thesis of Walcott\cite{aishalong} long term mapping methods are decomposed to 4 basic subproblems: the problem of being able to continuously incorporate new information, tracking the growing DPG, detecting changes and update the map online, being able to handle changes to the map as changes occur with the passage of time.
 
-The first two problems can be though of as compression problems as the map increases over time whereas the latter ones can be though of as dynamic environment problems. In this project the focus will be directed towards slam methods that use RGBD devices like Microsoft's Kinect to perform slam. The goal of this thesis is to introduce a novel approach to tackle the compression problem of long term mapping methods that use the Kinect devices while using Bayesian non parametric methods as the base of its solution.
+The first two problems can be though of as compression problems as the map increases over time whereas the latter ones can be though of as dynamic environment problems. In this project the focus will be directed towards slam methods that use RGBD devices like Microsoft's Kinect to perform slam. The goal of this thesis is to introduce a novel approach to tackle the compression problem of long term mapping methods that use the Kinect devices while using Bayesian non parametric methods as the base of the solution.
 
-Dirichlet processes and Dirichlet process mixture models\cite{nonParam} are the cornerstone of Bayesian non parametric statistics. The strength of those models lies in the fact that they allow the model's mixture components to grow as much as needed so as to best fit the data. The main motivation of this thesis is to integrate such methods to mapping algorithms as a means of creating compressed representations of the environment that also retain their expressivenesssso that they can be used as reference points when navigating through the environment. That would tackle the compression subproblem of long term mapping and would be a good first step towards a general Bayesian solution to the long term mapping problem.
+Dirichlet processes and Dirichlet process mixture models\cite{nonParam} are the cornerstone of Bayesian non parametric statistics. The strength of those models lies in the fact that they allow the model's mixture components to grow as much as needed so as to best fit the data. The main motivation of this thesis is to integrate such methods to mapping algorithms as a means of creating compressed representations of the environment that also retain enough expressivenes so that they can be used as reference points when navigating through the environment. That would tackle the compression subproblem of long term mapping and would be a solid first step towards a general Bayesian solution to the long term mapping problem.
 
 The rest of the paper is structured as follows. In Section \ref{sec:literature} relevant literature review will be reviewed, Section~\ref{sec:theory} will introduce the basic background theories of the model, Section~\ref{sec:model} will define the method presented in this paper, Section ~\ref{sec:results} will show experimental results of the method. Finally, conclusion and future directions are presented in Section ~\ref{sec:discussion}.
 %------------------------------------------------
@@ -65,7 +65,7 @@ Literature review will be focused on 4 related sub fields: Object based slam or 
 Salas-Moreno et al.\cite{slam++} define a method of performing object based slam for specific classes of objects. The objects are identified by camera that is on top of the robot. By having a model of pre-trained objects, slam can be performed on environments where the robot knows what objects to expect. 
 Castle et al. use object recognition to perform object based slam with the use of a hand-held cameras. Selvatici et al.\cite{objslam} use a similar approach while exploiting structural information such as object height and position within the room. That way a couch that is a large object situated in floor level is easier to be recognized.
 Choudhary et al.\cite{objectpointslam} use point clouds and an object database to match objects currently seen with known objects within their database. They use omnimaper\cite{omnimaper} as their mapping method and as a representation a combination of the downsampled  voxel grids with additional normal and curvature information.  Finally, all their operations are done in the non-planar components of the point cloud.
-Seongyong Koo et al.\cite{objectDisc} introduce a method of unsupervised object individuation from RGB-D image sequences. They cluster their initial cloud into candidate objects using Euclidean clustering and proceed to extract features like the Euclidian distance(L2) and the Kullback-Leibler distance between point cloud objects. They use IMFT to solve their tracking problem.
+Seongyong Koo et al.\cite{objectDisc} introduce a method of unsupervised object individuation from RGB-D image sequences. They cluster their initial cloud into candidate objects using Euclidean clustering and proceed to extract features like the Euclidean distance(L2) and the Kullback-Leibler distance between point cloud objects. They use IMFT to solve their tracking problem.
 
 \subsection{Point Cloud Object clustering}
 
@@ -73,7 +73,9 @@ Trevor et al.\cite{pointSeg} take positional information, Euclidean distances an
 
 \subsection{Non Parametric Bayesian methods}
 
-Dirichlet processes and Dirichlet process mixture models are the cornerstone of Bayesian non-parametric statistics. Radford M. Neal\cite{bayes:neal} with his paper regarding MCMC methods for Dirichlet process mixture models made the definitive step towards Dirichlet process mixture models(DPMM's) receiving a lot of attention. Variational inference for DPMM's, introduced by Jordan et al.\cite{bayes:jordan} introduces deterministic tools to perform inference and approximate the posterior distribution and marginals of a dataset. Both methods have strengths and weaknesses and many tools have been established by using the two approaches as their base. Particle filter approaches have also been established. Doucet et al.\cite{bayes:smc} introduce Sequential Monte Carlo as a fast way to approximate inference.
+Dirichlet processes and Dirichlet process mixture models are the cornerstone of Bayesian non-parametric statistics. Radford M. Neal\cite{bayes:neal} with his paper regarding MCMC methods for Dirichlet process mixture models made the definitive step towards Dirichlet process mixture models(DPMM's) receiving a lot of attention. Variational inference for DPMM's, introduced by Jordan et al.\cite{bayes:jordan} introduces deterministic tools to perform inference and approximate the posterior distribution and marginals of a dataset. Both methods have strengths and weaknesses and many tools have been established by using the two approaches as their base. Particle filter approaches of inference  have also been established with  Doucet et al.\cite{bayes:smc} introduce Sequential Monte Carlo as a fast way to approximate inference. For the purpose of this paper an SMC sampler will be defined in detail in the Model definition section.
+
+
 \subsection{Correspondence}
 
 Under the semantic slam context, correspondence refers to the problem of identifying objects as ones that have been encountered before during the mapping process. Towards that direction Cree et al.\cite{corresp:first} create a histogram of line segments of each landmark and compute their root mean square error. They then proceed to calculate their RGB signature to calculate the distance between different landmarks. Low et al.\cite{corres:sec} match Scale Invariant Feature Transform (SIFT) features, an approach which transforms image data into scale-invariant coordinates relative to local features. Lamon et al.\cite{corres:three} store a database of fingerprints which indicate the location in the robot's environment. The features are ordered and stored at a database at as they appear in the robot's immediate surroundings. A new fingerprint is computed for each new view and matched against existing ones. Finally, in Seghal et al.\cite{corres:four} an extension of SIFT descriptors to 3D data and point clouds is given.
@@ -85,7 +87,7 @@ The basic theory background regarding the sampler will be presented in this sect
 
 \subsection{Generalized Polya's Urn}
 
-Dirichlet process priors have been widely used in the literature as non parametric Bayesian tools to estimate the number of clusters in the data\cite{antoniak}. Dependent dirichlet processes extend those tools by allowing the clusters in the data to vary with some variance over time by introducing dependencies on the data which can be temporal, positional etc. The DDPs are a natural extension of the DP's in domains where data cannot be considered exchangeable. They where introduced by MacEachern\cite{theory:ddp} and have been widely used since. The main motivation behind using such tools is the inherent extension they provide to dynamic environments.
+Dirichlet process priors have been widely used in the literature as non parametric Bayesian tools to estimate the number of clusters in the data\cite{antoniak}. Dependent dirichlet processes extend those tools by allowing the clusters in the data to vary with some variance over time by introducing dependencies on the data which can be temporal, positional etc. The DDPs are a natural extension of the DP's in domains where data cannot be considered exchangeable. The main motivation behind using such tools is that they can naturally be extended to dynamic environments to tackle the dynamic part of the long term slam problem.
 
 A DDP also known as Generalized Polya Urn(GPU)\cite{caron} and has the property of randomly deleting partitions of clusters on every iteration. That way, it can cope with the variance of the data. The current notation defines the $n_{th}$ datapoint at time $t$,$x_{t,n}$ having an assignment $c_{t,n}$ at cluster $k \in \{1,2,..., K\} $. The size of cluster $k$ at time $t$ is defined as $s_t^k$. The GPU of this model at time $t$ can now be defined as:
 
@@ -95,7 +97,7 @@ A DDP also known as Generalized Polya Urn(GPU)\cite{caron} and has the property 
         \Procedure{GPU}{$pointCloud, t$}
 
         \For{\texttt{$k = 1,...K_{t-1,N_{t-1}}$}}
-        \State Draw $\Delta s_{t-1}^k \sim Binom(s_{t-1,N_{t-1}}^k, \rho) $ \Comment{Number of elements to delete}
+        \State Draw $\Delta s_{t-1}^k \sim Binom(s_{t-1,N_{t-1}}^k, \rho) $ 
         \State Set $s_{t,0}^{k} = s_{t-1,N_{t-1}}^{k} -\Delta s_{t-1}^k$
         \EndFor
         \For{\texttt{$n = 1,...N_t$}}
@@ -159,16 +161,19 @@ The general flow of operations that occur in the EKF module is presented in Fig.
 
 \textbf{Method input:} The method takes as input a point cloud as it is currently being read by the kinect sensor.
 
-\textbf{Lines 3-4:} The preprocessing the cloud is done in these steps. Feature extraction is done through the pcl\cite{pcl} library. A voxel grid is used to reduce the dataset size. A leaf size of approximately 3cm produces a good trade-off between precision and speed. The object representation used approach is similar to\cite{objectpointslam}. Instead of using the CSHOT descriptor, fpfh\cite{fpfh} histogram is used instead. A fast point feature histogram(fpfh) represents an angular signature between a point and its neighbors. The color signature of the cloud is being encoded with an approach similar to ~\cite{smcddp}. The color spectrum is discretized and what is extracted is the count of different color signatures between a point and its k nearest neighbors. Finally the position of every point is also given as input to the algorithm. The pipeline is presented in figure Fig.~\ref{pipeline}. What the preprocessing outputs is a vector of $\textbf{x} =(x_s, x_c, x_a)$ where $s$ represents the position, $c$ the color and $a$ the angle vector.
+\textbf{Lines 3-4:} The preprocessing the cloud is done in these steps. Feature extraction is done through the pcl\cite{pcl} library. A voxel grid is used to reduce the dataset size. A leaf size of approximately 3cm produces a good trade-off between precision and speed. The object representation used approach is similar to\cite{objectpointslam}. Instead of using the CSHOT descriptor, fpfh\cite{fpfh} histogram is used instead. A fast point feature histogram(fpfh) represents an angular signature between a point and its neighbors. The color signature of the cloud is being encoded with an approach similar to ~\cite{smcddp}. The color spectrum is discretized and what is extracted is the count of different color signatures between a point and its k nearest neighbors. Finally the position of every point is also given as input to the algorithm. The pipeline is presented in figure Fig.~\ref{pipeline}. What the preprocessing outputs is a vector of $\textbf{x} =(x_s, x_c, x_a)$ where $s$ represents the positioninformation of the point, $c$ the color information of the point's neighbors and $a$ the angle information of the point's neighbors.
 
-\textbf{Lines 5:} The clustering takes place in this line. The input of the method is the feature vector for every data point which is calculated in the previous steps. The clustering is done using the SMC sampler presented in the theory section. 
+\textbf{Lines 5:} The clustering takes place in this line. The input of the method is the feature vector for every data point which is calculated in the previous steps. The clustering is done using the SMC sampler presented in the model definition section. 
 
 \textbf{Lines 6-12:} The correspondence of previously seen landmarks to current observations is computed in lines 6-12. The calcBestSim function returns the landamrk with the highest similarity match with the landmarks already stored in the database.
 
 \textbf{Lines 15:} The algorithm returns the list of the landmarks the robot sees in this current time.
 
-Now that the basic theories are defined, the pipeline's components and its operating mechanisms can be presented.
-\subsection{The data distribution}
+Now that the basic theories are defined, the pipeline's components and its operating mechanisms can be presented in more detail.
+
+\subsection{The sampler}
+
+\subsubsection{The data distribution}
 \label{data:dist}
 
 Each point $x$ in the cloud is represented as a tuple $x =(x^s, x^a, x^c) $ where superscript $s$ represents spatial information, $a$ angle information, and $c$ color information. The method those features are extracted is explained in lines 3 and 4 in the general pipeline section. For the purpose of this project each point in the cloud is represented by vector of length 33 with the first three elements representing the space information, elements 4-6 angle information, and the rest color information.
@@ -176,13 +181,14 @@ Each point $x$ in the cloud is represented as a tuple $x =(x^s, x^a, x^c) $ wher
 The object model is a mixture of distributions over the data with each object being modeled as D($\theta_t^k$) where $\theta$ represents the parameters of object $k$ at time $t$. More specifically, each set \textbf{x} with $n$ datapoints at time $t$ is distributed as:
 $$ x_{t,n} \sim D(\theta_t^k) = Normal(x_{t,n}^s| \mu_t, \Sigma_t) Mult(x_{t,n}^c | \delta_t) Exp(x_{t,n}^a | \lambda_t) $$
 
-Where Normal is a three dimensional Gaussian distribution with mean $\mu$ and covariance $\Sigma$ representing the positional distribution of the data; Mult is a Categorical multinomial distribution with parameter vector $\delta$ representing the weights of the color distribution and Exp is an exponential with shape parameter $\lambda$ representing the angle distribution of the data within the cluster. The exponential distribution was chosen to model angular information after empiric evaluation showed that it would be a good fit for the angle signature distribution of the data. A typical angle signature distribution showing the exponential trend is shown in.~\ref{pcl:kl}.
-
 \begin{wrapfigure}{l}{0.25\textwidth}
     \centering
     \includegraphics[width=.25\textwidth]{Kullback-Leibler}
+    \caption{Exponential trend of distances}
     \label{pcl:kl}
 \end{wrapfigure}
+
+Where Normal is a three dimensional Gaussian distribution with mean $\mu$ and covariance $\Sigma$ representing the positional distribution of the data; Mult is a Categorical multinomial distribution with parameter vector $\delta$ representing the weights of the color distribution and Exp is an exponential with shape parameter $\lambda$ representing the angle distribution of the data within the cluster. The exponential distribution was chosen to model angular information after empiric evaluation showed that it would be a good fit for the angle signature distribution of the data. A typical angle signature distribution showing the exponential trend is shown in Fig.~\ref{pcl:kl}.
 
 
 Now that the distribution of the objects is defined, the progression of the sufficient statistics at time $t$ given $t-1$ given by:
@@ -228,7 +234,7 @@ $\theta_t^k \sim T(\theta_{t-1}^k) = T_2 \circ T_1(\theta_{t-1}^k)$ with:
 
 where $\mu_t, \Sigma_t, \delta_t,  \lambda_t$  are posterior parameters given the auxiliary variables $z$.
 
-\subsection{Sequential monte carlo sampler}
+\subsubsection{Sequential monte carlo sampler}
 
 Sequential monte carlo samplers for Dirichlet process mixture models where introduced by Doucet et al~\cite{doucet} and serve as fast alternative to MCMC and VI methods of performing posterior inference. Given the previous definitions, the sampler is now defined as:
 
@@ -300,7 +306,7 @@ The proposal distribution $Q_1$ is the probability of an assignment $c_{t,n}$ gi
     \end{equation}
 
 
-    Where $\overline{x}$ defines the sample mean for the elements assigned at cluster $c$, $s_{x}$ the sample variance and $N$ denotes the number of observations. The formulas for the updates can be found at the literature of cojugate priors like\cite{conjugate}.
+    Where $\overline{x}$ defines the sample mean for the elements assigned at cluster $c$, $s_{x}$ the sample variance and $N$ denotes the number of observations. The formulas for the updates can be found at the literature of cojugate priors like\cite{compendium}.
 
     \subsubsection{Weight updates}
 
@@ -361,7 +367,7 @@ The proposal distribution $Q_1$ is the probability of an assignment $c_{t,n}$ gi
 
     \subsection{Landmark size}
 
-    The basic block of this algorithm is a cluster containing an environment signature. In order to be able to compute how scalable the method is, the size of a single landmark will be computed. Each landmark is represented by a single row in an SQLite database. Each row consists of 32 real numbers and 1 auto increment integer. Given that SQLite databases assign the memory dynamically, the maximum amount of memory a cell can take will be calculated so that every other case is also included. According to the SQLite manual of datatypes~\cite{sqlite} a real value takes up to 8 bytes of memory. An auto increment integer takes up to 4 bytes of information, so the total number  of memory for a worst case scenario landmark is 260 bytes. This number can vary greatly over different environments and is a safe assumption to calculate the memory this method occupies.
+    The basic block of this algorithm is a cluster containing an environment signature. In order to be able to compute how scalable the method is, the size of a single landmark will be computed. Each landmark is represented by a single row in an SQLite database. Each row consists of 32 real numbers and 1 auto increment integer. Given that SQLite databases assign the memory dynamically, the maximum amount of memory a cell can take will be calculated so that every other case is also included. According to the SQLite manual of datatypes a real value takes up to 8 bytes of memory. An auto increment integer takes up to 4 bytes of information, so the total number  of memory for a worst case scenario landmark is 260 bytes. This number can vary greatly over different environments and is a safe assumption to calculate the memory this method occupies.
 
     \section{Results}
     \label{sec:results}
@@ -380,7 +386,7 @@ The proposal distribution $Q_1$ is the probability of an assignment $c_{t,n}$ gi
         \label{pcl:clust}
     \end{wrapfigure}
 
-    More specifically, the reduced point cloud is shown in the top left part. It is significantly smaller in size and this cloud along with all the meta-information needed to perform the clustering are given as input to the sampler. The sampler outputs a mixture of distributions that best fits the input data. The clustering output is shown in Fig.\ref{pcl:clust}(b) with the top right being the Gaussian distributions inferred, bottom left the exponential and bottom right the categorical representing the color information of the cloud. The height of the objects leads to distribution with high variance in the z axis. The sampler outputs 2 clusters for the data with each box being assigned separately. The color signature each cluster carries is correctly captured in the bottom right part of Fig.\ref{pcl:clust}(b). The two boxes are similar in size but their orientation is different and this slight difference is shown in the exponential part of the signature. The box is now captured as an environment signature that consists of a Gaussian, a Categorical, and an Exponential part.
+    More specifically, the reduced point cloud is shown in the top left part. It is significantly smaller in size and this cloud along with all the meta-information needed to perform the clustering are given as input to the sampler. The sampler outputs a mixture of distributions that best fits the input data. The clustering output is shown in Fig.\ref{pcl:clust}(b) with the top right being the Gaussian distributions inferred, bottom left the exponential and bottom right the categorical representing the color information of the cloud. The height of the objects leads to distribution with high variance in the z axis. The sampler outputs 2 clusters for the data with each box being assigned separately. The color signature each cluster carries is correctly captured in the bottom right part of Fig.\ref{pcl:clust}(b). The two boxes are similar in size but their orientation is different and this slight difference is shown in the exponential part of the signature. Each box is now captured as an environment signature that consists of a Gaussian, a Categorical, and an Exponential part.
 
 
     \begin{center}
@@ -399,9 +405,9 @@ The proposal distribution $Q_1$ is the probability of an assignment $c_{t,n}$ gi
 
     Table~\ref{dist} shows the distances between every cluster computed against the first. The Gaussian counterparts of the clusters have significant distances due to the distance every cluster has in space. On the other hand, the Distances between their Exponential parts are not that large and the overlap between the categorical singatures leads to medium distances in their Categorical counterparts. Those distances are the information that is being passed to the decision layer to match existing landmarks with new ones. 
 
-\subsection{Expresiveness and decision layer}
+    \subsection{Expresiveness and decision layer}
 
-After the clustering, the next sequence of operations in the pipeline has to do the comparison of clusters currently extracted with landmarks already stored in the database. The accuracy of the operations is dependent on the expressive power the signatures of the clusters carry and this is displayed in the examples presented here. The decision boundary of the pipeline can be decomposed into three basic parts; a positional, a color and an angular boundary. Figure[\ref{pip:bounds}] shows the behavior of the decision layer with respect to the Gaussian(positional) and Categorical(color) parts. 
+    Post clustering, of operations in the pipeline have to do the comparison of clusters currently extracted with landmarks already stored in the database. The accuracy of the operations is dependent on the expressiveness of the signatures the clusters carry and this is displayed in the examples presented in Fig.\ref{pip:bounds}. The decision boundary of the pipeline can be decomposed into three basic parts; a positional, a color and an angular boundary. Fig.\ref{pip:bounds} shows the behavior of the decision layer with respect to the Gaussian(positional) and Categorical(color) parts. 
 
     \begin{wrapfigure}{l}{0.65\textwidth}
         \begin{tabular}{cc}
@@ -410,13 +416,14 @@ After the clustering, the next sequence of operations in the pipeline has to do 
             \includegraphics[width=.3\textwidth]{posBound} &   \includegraphics[width=.3\textwidth]{posBound2} \\
             (c) Folder initial  & (d) Folder moved \\[6pt]
         \end{tabular}
+        \caption{Expresiveness \& decision bounds}
         \label{pip:bounds}
     \end{wrapfigure}
 
-    In Fig.\ref{pip:bounds}(a) the yellow folder allong with some of its environment to the left are being assigned to landmark with id 7386. The folder is then removed and a blue trashcan is put in its place. The folder and the trashcan are similar in size and due to that their Gaussian counterparts will not have large distances. Their main difference lies in the color signature they carry. Since the distance in their color is substantial, a new landmark with id 7412 is created to capture the change in the signature of the environment at that place of the map. The different landmark assigned to the cluster can be seen in Fig.\ref{pip:bounds}(b). In Fig.\ref{pip:bounds}(c) and(d) the positional decision boundary is displayed. In the initial position as shown in Fig.\ref{pip:bounds}(c) the yellow folder is assigned to the green landmark of the cloud. As the object is moved a different position in the cloud, it is being assigned to a different cluster. The reason the cluster is assigned to multiple landmarks is due to the fact that the folder is decomposed to several clusters and each one of them is being assigned to a different part of the cloud with respect to their position. This can be seen in Fig.\ref{pip:bounds}(c) where the bottom left of the folder is being assigned to the red cluster. Parameter tweaking is possible but the purpose of a general pipeline is to use as little parameter tweaking as possible so that the method is general and can easily be applied to a different scenarios.
+    In Fig.\ref{pip:bounds}(a) the yellow folder allong with some of its environment to the left are being assigned to landmark with id 7383. The folder is then removed and a blue trashcan is put in its place. The folder and the trashcan are similar in size and due to that their Gaussian counterparts will not have large distances. Their main difference lies in the color signature they carry. Since the distance in their color is substantial, a new landmark with id 7412 is created to capture the change in the signature of the environment at that place of the map. The different landmark assigned to the cluster can be seen in Fig.\ref{pip:bounds}(b). In Fig.\ref{pip:bounds}(c) and(d) the positional decision boundary is displayed. In the initial position as shown in Fig.\ref{pip:bounds}(c) the yellow folder is assigned to the green landmark of the cloud. As the object is moved a different position in the cloud, it is being assigned to a different cluster. The reason the cluster is assigned to multiple landmarks is due to the fact that the folder is decomposed to several clusters and each one of them is being assigned to a different part of the cloud with respect to their position. This can be seen in Fig.\ref{pip:bounds}(c) where the bottom left of the folder is being assigned to the red cluster. Parameter tweaking is possible but the purpose of a general pipeline is to use as little parameter tweaking as possible so that the method is general and can easily be applied to a different scenarios.
 
 
-The exponential part of the distribution is responsible for the angle signature elements within a cluster have. Practically, having a large amount of different angle distributions in a single cluster leads to objects that have texture and their surface is not smooth. Having a very strict limit in the angle distribution can lead to very small clusters and subsequently to a high amount of landmarks within the data. Using the data from the kinect camera, angle distributions are highly prone to high amounts of noise that is found in parts of the cloud that are near the end of Kinect sensor's range. Practical evaluation has shown that using an angle limit that is close to the average distance between angle signatures produces stable results and reasonably sized landmarks in the cloud.
+    The exponential part of the distribution is responsible for the angle signature elements within a cluster have. Practically, having a large amount of different angle distributions in a single cluster leads to objects that have texture and their surface is not smooth. Having a very strict limit in the angle distribution can lead to very small clusters and subsequently to a high amount of landmarks within the data. Using the data from the kinect camera, angle distributions are sensitive to noise that is found in parts of the cloud that are near the end of Kinect sensor's range. Practical evaluation has shown that using an angle limit that is close to the average distance between angle signatures produces stable results and reasonably sized landmarks in the cloud.
 
     \subsection{EKF-slam experiments}
 
@@ -430,40 +437,41 @@ The exponential part of the distribution is responsible for the angle signature 
             \includegraphics[width=.353\textwidth]{memoryRequirements} \\
             (b) Memory requirements \\[6pt]
         \end{tabular}
+        \caption{SLAM session and memory requirements}
         \label{slam}
     \end{wrapfigure}
 
-The compression that method introduces is not directly observable from the figure. As the environment is being reduced from a cloud to a landmarks, the memory needs change from using point clouds to using the landmarks extracted in those clouds. Since every landmark represents a signature of the environment at this particular point, the compression is done by reducing a high amount of points to that specific signature. The number of parameters needed to define the three distributions in the signature is all the information this method requires and hence the memory gains are substantial. The expresiveness of the distributions greatly affects the objects as well as object shapes that could be represented. Finally it is always possible to extend the method presented by adding new features and new priors to those features.
+    The compression that method introduces is not directly observable from the figure. As the environment is being reduced from a cloud to a landmarks, the memory needs change from using point clouds to using the landmarks extracted in those clouds. Since every landmark represents a signature of the environment at this particular point, the compression is done by reducing a high amount of points to that specific signature. The number of parameters needed to define the three distributions in the signature is all the information this method requires and hence the memory gains are substantial. The expresiveness of the distributions greatly affects the objects as well as object shapes that could be represented. Finally it is always possible to extend the method presented by adding new features and new priors to those features.
 
 
-\subsubsection{Memory requirements}
+    \subsection{Memory requirements}
 
-The memory requirements of the method is related to the $\alpha$ strength parameter of the sampler. As the $\alpha$ parameter increases, the sampler will output more clusters on every iteration. The higher amount the of cluster will result a higher amount of landmarks and, consequently, in larger memory requirements in the method. Fig.\ref{slam}(b) shows memory requirements as a function of strength parameter alpha.
+    The memory requirements of the method is related to the Dirichlet strength parameter $\alpha$ of the sampler. As the $\alpha$ parameter increases, the sampler will output more clusters on every iteration. The higher amount the of cluster will result a higher amount of landmarks and, consequently, in larger memory requirements in the method. Fig.\ref{slam}(b) shows memory requirements as a function of strength parameter alpha.
 
-    As it can be seen, the number of landmarks follows the logarithmic trend of the Dirichlet prior in relation to $\alpha$. Constantly Increasing the alpha value will not make the algorithm follow the logarithmic trend indefinitely. That is due to the fact that despite the alpha increase, the decision layer has an upper bound to the number of landmarks it can have and will eventually saturate. It must also be noted that as the alpha parameter is set to higher numbers, the sampler outputs more clusters making it a more accurate environment descriptor, but also takes more time, making it non feasible to use in real time scenarios. Values of alpha between 0 and 10 provide a robust and fast enough sampler that can be used in online mapping scenarios.
+    As it can be seen, the number of landmarks follows the logarithmic trend of the Dirichlet prior in relation to $\alpha$. Constantly increasing the alpha value will not make the algorithm follow the logarithmic trend indefinitely. That is due to the fact that despite the alpha increase, the decision layer has an upper bound to the number of landmarks it can have and will eventually saturate. It must also be noted that as the alpha parameter is set to higher numbers, the sampler outputs more clusters making it a more accurate environment descriptor, but also takes more time, making it non feasible to use in real time scenarios. Values of alpha between 0 and 10 provide a robust and fast enough sampler that can be used in online mapping scenarios.
 
     \subsection{Limits of the method}
 
-    Limits of the method exist in relation to the two basic layers of the pipeline. The clustering layer and the decision making part.
+    Limits of the method exist in relation to the two basic layers of the pipeline. The clustering layer and the decision making.
 
     \subsubsection{Clustering layer}
-
-    An important limit of the pipeline exists with respect to the Dirichlet hyper-parameter $\alpha$. During the clustering, choosing a correct value for the hyper-parameter $\alpha$ is very important in order to have optimal results. Having sampler run with a very low $\alpha$ can lead to the whole cloud being assigned a single cluster. Having every point in the cloud being part of the same cluster leads to a a significant amount of information loss as no environment specific information are incorporated to the cloud. Fig.[\ref{pip:limits}](a) shows the behaviour of the sampler for $\alpha$ values lower than 1. 
-
     \begin{wrapfigure}{l}{.6\textwidth}
         \begin{tabular}{cc}
             \includegraphics[width=.26\textwidth]{singlecluster} &  \includegraphics[width=.26\textwidth]{onlyclusters2} \\
             (a) Low $\alpha$ & (b) High $\alpha$ pipeline\\
         \end{tabular}
-        \caption{Pipeline diverging cases.}
+        \caption{Pipeline fail cases.}
         \label{pip:limits}
     \end{wrapfigure}
 
+    An important limit of the pipeline exists with respect to the Dirichlet hyper-parameter $\alpha$. During the clustering, choosing a correct value for the hyper-parameter $\alpha$ is very important in order to have optimal results. Having sampler run with a very low $\alpha$ can lead to the whole cloud being assigned a single cluster. Having every point in the cloud being part of the same cluster leads to a a significant amount of information loss as no environment specific information are incorporated to the cloud. Fig.[\ref{pip:limits}](a) shows the behaviour of the sampler for $\alpha$ values lower than 1. 
 
-    On the other hand, having a very large $\alpha$ can lead to a very large amount of clusters being output by the sampler every time. That can lead to a non-converging pipeline since every time a new landmark that does not fit the landmark database is output. This leads to many small clusters that contain a small number of points each. Furthermore, having a high value in the hyperparameter leads to a slower sampling procedure since the complexity of the sampler is $O(TKLSN)$ where $K$ is the number of clusters. Fig.[\ref{pcl:kl}](b) displays the behavior of the sampler for very large values $\alpha$. The spheres represent landmarks and it can be seen that most of the points in the environment are considered individually clusters.
 
 
-\subsubsection{Decision layer}
+    On the other hand, having a very large $\alpha$ can lead to a very large amount of clusters being output by the sampler every time. That can lead to a non-converging pipeline since every time a new landmark that does not fit the landmark database is output. This leads to many small clusters each containing small number of points each. Furthermore, having a high value in the hyperparameter leads to a slower sampling procedure since the complexity of the sampler is $O(TKLSN)$ where $K$ is the number of clusters. Fig.[\ref{pcl:kl}](b) displays the behavior of the sampler for very large values $\alpha$. The spheres represent landmarks and it can be seen that most of the points in the environment are considered individually clusters.
+
+
+    \subsubsection{Decision layer}
 
     The restrictions imposed by the decision layer are straightforward due to the constant nature of the decision process. Taking very small distances in the distance threshold operation can lead to pipeline that continuously adds new landmarks to the database. An example is shown in Fig.~\ref{pip:expo} where limiting the landmark matching operation to very small exponential distances, leads to a cloud where objects are decomposed to a lot entitites.
 
@@ -473,18 +481,15 @@ The memory requirements of the method is related to the $\alpha$ strength parame
         \label{pip:expo}
     \end{wrapfigure}
 
-    It must be noted that the object decomposition is even more intense when camera movement is involved due to the different angles. Furthermore, since the number of landmarks is also a function of noise, areas of the cloud that are near the maximum range of the sensor can lead to different landmarks added frequently. These issues can be tackled by having a less strict limit in the operation that defines what is considered a landmark the sampler has encountered before or not.
-
-
+    Object decomposition is even more intense when camera movement is involved due to the different angles. Finally, since the number of landmarks is also a function of noise, areas of the cloud that are near the maximum range of the sensor can lead to different landmarks added frequently.
     %------------------------------------------------
 
     \section{Conclusion and future work}
     \label{sec:discussion}
 
-    In this paper a novel method for cloud representation using non-parametric Bayesian tools was introduced. By reducing parts of the environment to distribution signatures, a large amount of compression is provided making the method highly suitable to target long term slam problems; the expresiveness of the representation is enough to perform slam even parts of the environment. The strengths and weaknesses of the method were presented and an application on how this method could be used to tackle the compression problem of long term slam were given.
+    In this paper a novel method for cloud representation by using non-parametric Bayesian tools was introduced. By reducing parts of the environment to distribution signatures, a large amount of compression is provided making the method highly suitable to target long term slam problems; the expresiveness of the representation is enough to perform slam even parts of the environment. The strengths and weaknesses of the method were presented and an application on how this method could be used to tackle the compression problem of long term slam were given.
 
-    Regarding future work, there is a number of directions which could be explored to improve the robustness method. Choosing more complex environment representations could increase the expresional strength of the sampler making it easier to represent with better precision more complex objects. Furthermore, since the sampler clusters parts of environment, it would be interesting to see how a hierarchical approach would change the result of the clustering. Hierarchical dependent Dirichlet processes would therefore be an interesting extensions since such tools would both have the ability to capture structures instead of parts of the environment as well as be able to handle the dynamic component that long term slam problems introduce. Furthermore, having a more complex decision layer would also increase the robustness of the method making it able to handle more complex environment structures. Finally, all those additions could help lift the dynamic environment restrictions that were defined in Walcotts PhD thesis and make the pipeline handle in a fully Bayesian way the long term mapping implications of slam.
-
+    There is a number of directions which could be explored to improve the method. Choosing more complex environment representations could increase the expresive strength of the sampler making it easier to represent with better precision more complex objects. Furthermore, a hierarchical clustering approach would be an interesting extension since it would both have the ability to capture the structure in a top-down maner and as well as handle the dynamic component that long term slam problems introduce. Furthermore, having a more complex decision layer would also increase the robustness of the method making it able to handle more complex environment structures and more expresive landmarks. Finally, those additions could help lift the dynamic environment restrictions that were defined in Walcotts PhD thesis and make the pipeline tackle in a fully Bayesian way the implications of life-long slam.
 
     %----------------------------------------------------------------------------------------
     %	REFERENCE LIST
@@ -505,8 +510,7 @@ The memory requirements of the method is related to the $\alpha$ strength parame
             \newblock Konolige, K., \& Bowman, J. (2009, October). Towards lifelong visual maps. In Intelligent Robots and Systems, 2009. IROS 2009. IEEE/RSJ International Conference on (pp. 1156-1163). IEEE.
 
         \bibitem{aishalong}
-            \newblock Walcott, A. (2011). Long-term robot mapping in dynamic environments (Doctoral dissertation, Massachusetts Institute of Technology).
-
+            \newblock Walcott, A. (2011). Long-term robot mapping in dynamic environments. 
 
         \bibitem{pcl}
             \newblock{Rusu, R. B., \& Cousins, S. (2011, May). 3d is here: Point cloud library (pcl). In Robotics and Automation (ICRA), 2011 IEEE International Conference on (pp. 1-4). IEEE.}
@@ -517,10 +521,6 @@ The memory requirements of the method is related to the $\alpha$ strength parame
 
         \bibitem{objslam}
             \newblock Selvatici, A. H., \& Costa, A. H. (2008). Object-based visual slam: How object identity informs geometry.
-
-        \bibitem{castleetal}
-            \newblock Castle, R. O., Gawley, D. J., Klein, G., \& Murray, D. W. (2007, April). Towards simultaneous recognition, localization and mapping for hand-held and wearable cameras. In Robotics and Automation, 2007 IEEE International Conference on (pp. 4102-4107). IEEE.
-
 
         \bibitem{objectpointslam}
             \newblock Choudhary, S., Trevor, A. J., Christensen, H. I., \& Dellaert, F. (2014, September). slam with object discovery, modeling and mapping. In Intelligent Robots and Systems (IROS 2014), 2014 IEEE/RSJ International Conference on (pp. 1018-1025). IEEE.
@@ -541,10 +541,9 @@ The memory requirements of the method is related to the $\alpha$ strength parame
             \newblock{A.Trevor,  J.Rogers, and  H.Christensen.  Omnimapper:  A  modular multimodal  mapping  framework.   In IEEE  International  Conference on Robotics and Automation (ICRA), 2014}
 
         \bibitem{pointSeg}
-            \newblock Trevor, A. J., Gedikli, S., Rusu, R. B., \& Christensen, H. I. (2013). Efficient organized point cloud segmentation with connected components. Semantic Perception Mapping and Exploration (SPME).
-
+            \newblock Trevor, A. J., Gedikli, S., Rusu, R. B., \& Christensen, H. I. (2013). Efficient organized point cloud segmentation with connected components. Semantic Perception Mapping and Exploration
         \bibitem{planarSeg}
-            \newblock Unnikrishnan, R., \& Hebert, M. (2003, October). Robust extraction of multiple structures from non-uniformly sampled data. In Intelligent Robots and Systems, 2003.(IROS 2003). Proceedings. 2003 IEEE/RSJ International Conference on (Vol. 2, pp. 1322-1329). IEEE. 
+            \newblock Unnikrishnan, R., \& Hebert, M. (2003, October). Robust extraction of multiple structures from non-uniformly sampled data. In Intelligent Robots and Systems, 2003. Proceedings. 2004 IEEE/RSJ International Conference on IEEE. 
 
         \bibitem{planarSeg2}
             \newblock Rabbani, T., van den Heuvel, F., \& Vosselmann, G. (2006). Segmentation of point clouds using smoothness constraint. International Archives of Photogrammetry, Remote Sensing and Spatial Information Sciences, 36(5), 248-253.
@@ -562,7 +561,7 @@ The memory requirements of the method is related to the $\alpha$ strength parame
             \newblock Lowe, D. G. (2004). Distinctive image features from scale-invariant keypoints. International journal of computer vision, 60(2), 91-110.
 
         \bibitem{corres:three}
-            \newblock Lamon, P., Tapus, A., Glauser, E., Tomatis, N., \& Siegwart, R. (2003, October). Environmental modeling with fingerprint sequences for topological global localization. In Intelligent Robots and Systems, 2003.(IROS 2003). Proceedings. 2003 IEEE/RSJ International Conference on (Vol. 4, pp. 3781-3786). IEEE.
+            \newblock Lamon, P., Tapus, A., Glauser, E., Tomatis, N., \& Siegwart, R. (2003, October). Environmental modeling with fingerprint sequences for topological global localization. In Intelligent Robots and Systems, 2003. Proceedings. 2003 IEEE/RSJ International Conference on IEEE.
 
 
         \bibitem{corres:four}
@@ -580,9 +579,6 @@ The memory requirements of the method is related to the $\alpha$ strength parame
         \bibitem{bayes:smc}
             \newblock Doucet, A., De Freitas, N., \& Gordon, N. (2001). An introduction to sequential Monte Carlo methods (pp. 3-14). Springer New York.
 
-        \bibitem{theory:ddp}
-            \newblock MacEachern, S. N. (2000). -
-
         \bibitem{antoniak}
             \newblock{Charles E Antoniak,Mixtures of dirichlet processes with applications to bayesian nonparametric problems, The annals of statistics (1974), 1152–1174}
 
@@ -595,7 +591,7 @@ The memory requirements of the method is related to the $\alpha$ strength parame
             \newblock{Fink, D. (1997). A compendium of conjugate priors.}
 
         \bibitem{smc:theory}
-            \newblock{Ülker, Y., Günsel, B., \& Cemgil, A. T. (2010). Sequential Monte Carlo samplers for Dirichlet process mixtures. In International Conference on Artificial Intelligence and Statistics (pp. 876-883).}
+            \newblock{Ülker, Y., Günsel, B., \& Cemgil, A. T. (2010). Sequential Monte Carlo samplers for Dirichlet process mixtures. In International Conference on Artificial Intelligence and Statistics}
 
         \bibitem{doucet}
             \newblock{Del Moral, P., Doucet, A., \& Jasra, A. (2006). Sequential monte carlo samplers. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 68(3), 411-436.}
@@ -603,11 +599,6 @@ The memory requirements of the method is related to the $\alpha$ strength parame
         \bibitem{RANSAC}
             \newblock{Meer, P., Mintz, D., Rosenfeld, A., \& Kim, D. Y. (1991). Robust regression methods for computer vision: A review. International journal of computer vision, 6(1), 59-70.}
 
-        \bibitem{conjugate}
-            \newblock Raiffa, H. (1974). Applied statistical decision theory.
-
-        \bibitem{sqlite}
-            \newblock{https://www.sqlite.org/datatype3.html}
     \end{thebibliography}
 
     %----------------------------------------------------------------------------------------

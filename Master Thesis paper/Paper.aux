@@ -11,16 +11,16 @@
 \citation{objectpointslam}
 \citation{omnimaper}
 \citation{objectDisc}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Literature review}{1}}
-\newlabel{sec:literature}{{2}{1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Object based slam}{1}}
 \citation{pointSeg}
 \citation{pcl}
 \citation{planarSeg}
 \citation{planarSeg2}
 \citation{segOverview}
 \citation{smartSeg}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Literature review}{1}}
+\newlabel{sec:literature}{{2}{1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Object based slam}{1}}
 \citation{bayes:neal}
 \citation{bayes:jordan}
 \citation{bayes:smc}
@@ -30,14 +30,13 @@
 \citation{corres:four}
 \citation{caron}
 \citation{antoniak}
-\citation{theory:ddp}
+\citation{caron}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Point Cloud Object clustering}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Non Parametric Bayesian methods}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Correspondence}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Theory background}{2}}
 \newlabel{sec:theory}{{3}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Generalized Polya's Urn}{2}}
-\citation{caron}
 \citation{antoniak}
 \citation{pcl}
 \citation{objectpointslam}
@@ -54,48 +53,51 @@
 \newlabel{euclid}{{2}{4}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Pipeline flow}}{4}}
 \newlabel{pipeline}{{2}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}The data distribution}{4}}
-\newlabel{data:dist}{{4.2}{4}}
-\newlabel{pcl:kl}{{4.2}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}The sampler}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}The data distribution}{4}}
+\newlabel{data:dist}{{4.2.1}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Exponential trend of distances}}{4}}
+\newlabel{pcl:kl}{{3}{4}}
 \citation{caron}
 \citation{smc:theory}
 \citation{doucet}
 \citation{compendium}
 \newlabel{eq1}{{1}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Sequential monte carlo sampler}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Gibbs updates}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Sequential monte carlo sampler}{5}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Gibbs updates}{5}}
 \newlabel{Gibbs}{{2}{5}}
 \newlabel{Q1}{{3}{5}}
-\citation{conjugate}
+\citation{compendium}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces SMC for DDPM}}{6}}
 \newlabel{SMC}{{3}{6}}
 \newlabel{Q_2}{{4}{6}}
 \newlabel{udpates}{{5}{6}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Weight updates}{6}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Weight updates}{6}}
 \citation{RANSAC}
 \citation{fpfh}
 \citation{smcddp}
-\citation{sqlite}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Decision Layer}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Complexity}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Decision Layer}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Complexity}{7}}
 \newlabel{Q_filt}{{8}{7}}
 \newlabel{Complexity}{{9}{7}}
 \citation{pcl}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Landmark size}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Landmark size}{8}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Results}{8}}
 \newlabel{sec:results}{{5}{8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Simple datasets}{8}}
 \newlabel{pcl:clust}{{5.1}{8}}
 \newlabel{dist}{{5.1}{8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Expresiveness and decision layer}{9}}
-\newlabel{pip:bounds}{{5.2}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Expresiveness \& decision bounds}}{9}}
+\newlabel{pip:bounds}{{4}{9}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}EKF-slam experiments}{9}}
-\newlabel{slam}{{5.3}{10}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.3.1}Memory requirements}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Limits of the method}{10}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.1}Clustering layer}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Pipeline diverging cases.}}{10}}
-\newlabel{pip:limits}{{3}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces SLAM session and memory requirements}}{10}}
+\newlabel{slam}{{5}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Memory requirements}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Limits of the method}{10}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.5.1}Clustering layer}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Pipeline fail cases.}}{10}}
+\newlabel{pip:limits}{{6}{10}}
 \bibcite{probRobs}{1}
 \bibcite{ekf}{2}
 \bibcite{liflonglearning}{3}
@@ -103,38 +105,34 @@
 \bibcite{aishalong}{5}
 \bibcite{pcl}{6}
 \bibcite{slam++}{7}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2}Decision layer}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Strict exponential limit}}{11}}
-\newlabel{pip:expo}{{4}{11}}
+\bibcite{objslam}{8}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.5.2}Decision layer}{11}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Strict exponential limit}}{11}}
+\newlabel{pip:expo}{{7}{11}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion and future work}{11}}
 \newlabel{sec:discussion}{{6}{11}}
-\bibcite{objslam}{8}
-\bibcite{castleetal}{9}
-\bibcite{objectpointslam}{10}
-\bibcite{objectDisc}{11}
-\bibcite{fpfh}{12}
-\bibcite{segOverview}{13}
-\bibcite{nonParam}{14}
-\bibcite{omnimaper}{15}
-\bibcite{pointSeg}{16}
-\bibcite{planarSeg}{17}
-\bibcite{planarSeg2}{18}
-\bibcite{smartSeg}{19}
-\bibcite{smcddp}{20}
-\bibcite{corresp:first}{21}
-\bibcite{corres:sec}{22}
-\bibcite{corres:three}{23}
-\bibcite{corres:four}{24}
-\bibcite{bayes:neal}{25}
-\bibcite{bayes:jordan}{26}
-\bibcite{slam}{27}
-\bibcite{bayes:smc}{28}
-\bibcite{theory:ddp}{29}
-\bibcite{antoniak}{30}
-\bibcite{caron}{31}
-\bibcite{compendium}{32}
-\bibcite{smc:theory}{33}
-\bibcite{doucet}{34}
-\bibcite{RANSAC}{35}
-\bibcite{conjugate}{36}
-\bibcite{sqlite}{37}
+\bibcite{objectpointslam}{9}
+\bibcite{objectDisc}{10}
+\bibcite{fpfh}{11}
+\bibcite{segOverview}{12}
+\bibcite{nonParam}{13}
+\bibcite{omnimaper}{14}
+\bibcite{pointSeg}{15}
+\bibcite{planarSeg}{16}
+\bibcite{planarSeg2}{17}
+\bibcite{smartSeg}{18}
+\bibcite{smcddp}{19}
+\bibcite{corresp:first}{20}
+\bibcite{corres:sec}{21}
+\bibcite{corres:three}{22}
+\bibcite{corres:four}{23}
+\bibcite{bayes:neal}{24}
+\bibcite{bayes:jordan}{25}
+\bibcite{slam}{26}
+\bibcite{bayes:smc}{27}
+\bibcite{antoniak}{28}
+\bibcite{caron}{29}
+\bibcite{compendium}{30}
+\bibcite{smc:theory}{31}
+\bibcite{doucet}{32}
+\bibcite{RANSAC}{33}
