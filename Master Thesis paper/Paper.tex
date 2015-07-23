@@ -25,6 +25,21 @@
     \setlength{\parskip}{0pt}
 \setlength{\itemsep}{0pt plus 0.3ex}
 }
+
+\usepackage[affil-it]{authblk} 
+\usepackage{etoolbox}
+\usepackage{lmodern}
+
+
+\makeatletter
+\patchcmd{\@maketitle}{\LARGE \@title}{\fontsize{16}{8}\selectfont\@title}{}{}
+\makeatother
+
+\renewcommand\Authfont{\fontsize{10}{8}\selectfont}
+\renewcommand\Affilfont{\fontsize{7}{8}\itshape}
+
+
+
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
@@ -32,8 +47,10 @@
 \title{\vspace{-2.0cm}Towards Bayesian lifelong learning in mapping}
 
 
+\author{Panagiotis Chatzichristodoulou, Rico  M\"{o}ockel, Kurt Driessens, Anne Van Rossum}
+\affil{University of Maastricht, DoBots B.V.}
 
-\author{Panagiotis Chatzichristodoulou}
+
 \date{}
 
 %----------------------------------------------------------------------------------------
@@ -161,7 +178,7 @@ The general flow of operations that occur in the EKF module is presented in Fig.
 
 \textbf{Method input:} The method takes as input a point cloud as it is currently being read by the kinect sensor.
 
-\textbf{Lines 3-4:} The preprocessing the cloud is done in these steps. Feature extraction is done through the pcl\cite{pcl} library. A voxel grid is used to reduce the dataset size. A leaf size of approximately 3cm produces a good trade-off between precision and speed. The object representation used approach is similar to\cite{objectpointslam}. Instead of using the CSHOT descriptor, fpfh\cite{fpfh} histogram is used instead. A fast point feature histogram(fpfh) represents an angular signature between a point and its neighbors. The color signature of the cloud is being encoded with an approach similar to ~\cite{smcddp}. The color spectrum is discretized and what is extracted is the count of different color signatures between a point and its k nearest neighbors. Finally the position of every point is also given as input to the algorithm. The pipeline is presented in figure Fig.~\ref{pipeline}. What the preprocessing outputs is a vector of $\textbf{x} =(x_s, x_c, x_a)$ where $s$ represents the positioninformation of the point, $c$ the color information of the point's neighbors and $a$ the angle information of the point's neighbors.
+\textbf{Lines 3-4:} The preprocessing the cloud is done in these steps. Feature extraction is done through the pcl\cite{pcl} library. A voxel grid is used to reduce the dataset size. A leaf size of approximately 3cm produces a good trade-off between precision and speed. The object representation used approach is similar to\cite{objectpointslam}. Instead of using the CSHOT descriptor, fpfh\cite{fpfh} histogram is used instead. A fast point feature histogram(fpfh) represents an angular signature between a point and its neighbors. The color signature of the cloud is being encoded with an approach similar to ~\cite{smcddp}. The color spectrum is discretized and what is extracted is the count of different color signatures between a point and its k nearest neighbors. Finally the position of every point is also given as input to the algorithm. The pipeline is presented in figure Fig.~\ref{pipeline}. The preprocessing outputs a vector of $\textbf{x} =(x_s, x_c, x_a)$ where $s$ represents the position information of the point, $c$ the color information of the point's neighbors and $a$ the angle information of the point's neighbors.
 
 \textbf{Lines 5:} The clustering takes place in this line. The input of the method is the feature vector for every data point which is calculated in the previous steps. The clustering is done using the SMC sampler presented in the model definition section. 
 
@@ -188,7 +205,7 @@ $$ x_{t,n} \sim D(\theta_t^k) = Normal(x_{t,n}^s| \mu_t, \Sigma_t) Mult(x_{t,n}^
     \label{pcl:kl}
 \end{wrapfigure}
 
-Where Normal is a three dimensional Gaussian distribution with mean $\mu$ and covariance $\Sigma$ representing the positional distribution of the data; Mult is a Categorical multinomial distribution with parameter vector $\delta$ representing the weights of the color distribution and Exp is an exponential with shape parameter $\lambda$ representing the angle distribution of the data within the cluster. The exponential distribution was chosen to model angular information after empiric evaluation showed that it would be a good fit for the angle signature distribution of the data. A typical angle signature distribution showing the exponential trend is shown in Fig.~\ref{pcl:kl}.
+Where Normal is a three dimensional Gaussian distribution with mean $\mu$ and covariance $\Sigma$ representing the positional distribution of the data; Mult is a Categorical multinomial distribution with parameter vector $\delta$ representing the weights of the color distribution and Exp is an exponential with shape parameter $\lambda$ representing the angle distribution of the data within the cluster. The exponential distribution was chosen to model angular information after empiric evaluation showed that it would be a good fit for the angle signature distribution of the data as shown in Fig.~\ref{pcl:kl}.
 
 
 Now that the distribution of the objects is defined, the progression of the sufficient statistics at time $t$ given $t-1$ given by:
@@ -487,9 +504,9 @@ The proposal distribution $Q_1$ is the probability of an assignment $c_{t,n}$ gi
     \section{Conclusion and future work}
     \label{sec:discussion}
 
-    In this paper a novel method for cloud representation by using non-parametric Bayesian tools was introduced. By reducing parts of the environment to distribution signatures, a large amount of compression is provided making the method highly suitable to target long term slam problems; the expresiveness of the representation is enough to perform slam even parts of the environment. The strengths and weaknesses of the method were presented and an application on how this method could be used to tackle the compression problem of long term slam were given.
+    In this paper a novel method for cloud representation by using non-parametric Bayesian tools was introduced. By reducing parts of the environment to distribution signatures, a large amount of compression is provided making the method highly suitable to target long term slam problems; the expresiveness of the representation is enough to perform slam and is robust even in the noisy parts of the environment. The strengths and weaknesses of the method were presented and an application on how this method could be used to tackle the compression problem of long term slam were given.
 
-    There is a number of directions which could be explored to improve the method. Choosing more complex environment representations could increase the expresive strength of the sampler making it easier to represent with better precision more complex objects. Furthermore, a hierarchical clustering approach would be an interesting extension since it would both have the ability to capture the structure in a top-down maner and as well as handle the dynamic component that long term slam problems introduce. Furthermore, having a more complex decision layer would also increase the robustness of the method making it able to handle more complex environment structures and more expresive landmarks. Finally, those additions could help lift the dynamic environment restrictions that were defined in Walcotts PhD thesis and make the pipeline tackle in a fully Bayesian way the implications of life-long slam.
+    There is a number of directions which could be explored to improve the method. Choosing more complex environment representations could increase the expresive strength of the sampler making it easier to represent with higher precision more complex structures. Also, a hierarchical clustering approach would be an interesting extension since it would both have the ability to capture the structure in a top-down maner and as well as handle the dynamic component that long term slam problems introduce. Furthermore, having a more complex decision layer would also increase the robustness of the method making it able to handle more complex environment structures and more expresive landmarks. Finally, those additions could help lift the dynamic environment restrictions that were defined in Walcotts PhD thesis and make the pipeline tackle in a fully Bayesian way the implications of life-long slam.
 
     %----------------------------------------------------------------------------------------
     %	REFERENCE LIST

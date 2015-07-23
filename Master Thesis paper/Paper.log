@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.9.7)  19 JUL 2015 15:36
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.9.7)  23 JUL 2015 11:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -214,34 +214,90 @@ Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
 \TX@delta=\dimen131
 \TX@cols=\count113
 \TX@ftn=\toks27
+)
+(/usr/share/texlive/texmf-dist/tex/latex/preprint/authblk.sty
+Package: authblk 2001/02/27 1.3 (PWD)
+\affilsep=\skip55
+\@affilsep=\skip56
+\c@Maxaffil=\count114
+\c@authors=\count115
+\c@affil=\count116
+)
+(/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2011/01/03 v2.1 e-TeX tools for LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/latex/etex-pkg/etex.sty
+Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
+\et@xins=\count117
+)
+\etb@tempcnta=\count118
+)
+(/usr/share/texmf/tex/latex/lm/lmodern.sty
+Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 ) (./Paper.aux)
 \openout1 = `Paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 58.
+LaTeX Font Info:    ... okay on input line 58.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 58.
 
+(/usr/share/texmf/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count114
+\scratchcounter=\count119
 \scratchdimen=\dimen132
 \scratchbox=\box31
-\nofMPsegments=\count115
-\nofMParguments=\count116
+\nofMPsegments=\count120
+\nofMParguments=\count121
 \everyMPshowfont=\toks28
-\MPscratchCnt=\count117
+\MPscratchCnt=\count122
 \MPscratchDim=\dimen133
-\MPnumerator=\count118
-\makeMPintoPDFobject=\count119
+\MPnumerator=\count123
+\makeMPintoPDFobject=\count124
 \everyMPtoPDFconversion=\toks29
 )
 *geometry* driver: auto-detecting
@@ -279,209 +335,228 @@ LaTeX Font Info:    ... okay on input line 41.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
-Overfull \hbox (0.40872pt too wide) in paragraph at lines 50--52
-\OT1/cmr/m/n/10 Simultaneous lo-cal-iza-tion and map-ping is one of the fun-da-
+Overfull \hbox (0.40562pt too wide) in paragraph at lines 67--69
+\OT1/lmr/m/n/10 Simultaneous lo-cal-iza-tion and map-ping is one of the fun-da-
 men-tal prob-lems of au-tonomous systems[[]].
  []
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-<pics/generalPolya.png, id=14, 806.01125pt x 826.08624pt>
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 109.
+
+
+(/usr/share/texmf/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 109
+.
+
+(/usr/share/texmf/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 109
+.
+
+(/usr/share/texmf/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 109.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 109.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 109.
+ [2]
+LaTeX Font Info:    Try loading font information for OT1+lmtt on input line 116
+.
+
+(/usr/share/texmf/tex/latex/lm/ot1lmtt.fd
+File: ot1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+<pics/generalPolya.png, id=12, 806.01125pt x 826.08624pt>
 File: pics/generalPolya.png Graphic file (type png)
 
 <use pics/generalPolya.png>
-Package pdftex.def Info: pics/generalPolya.png used on input line 118.
+Package pdftex.def Info: pics/generalPolya.png used on input line 135.
 (pdftex.def)             Requested size: 156.09975pt x 159.98322pt.
 
 
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 12
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 14
+1.
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 14
 4.
-
-
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 12
-7.
 
 
 Package wrapfig Warning: Collision between wrapping environments on input line 
-131.
+148.
 
-<pics/workflowSpec.png, id=16, 773.89125pt x 489.83pt>
+<pics/workflowSpec.png, id=14, 773.89125pt x 489.83pt>
 File: pics/workflowSpec.png Graphic file (type png)
 
 <use pics/workflowSpec.png>
-Package pdftex.def Info: pics/workflowSpec.png used on input line 133.
+Package pdftex.def Info: pics/workflowSpec.png used on input line 150.
 (pdftex.def)             Requested size: 173.44534pt x 109.78096pt.
 
 
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 16
-2.
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 17
+9.
 
 
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 16
-4.
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 18
+1.
 
 [3 <./pics/generalPolya.png>]
 <pics/Kullback-Leibler.png, id=31, 808.01875pt x 337.26pt>
 File: pics/Kullback-Leibler.png Graphic file (type png)
 
 <use pics/Kullback-Leibler.png>
-Package pdftex.def Info: pics/Kullback-Leibler.png used on input line 186.
+Package pdftex.def Info: pics/Kullback-Leibler.png used on input line 203.
 (pdftex.def)             Requested size: 108.405pt x 45.24509pt.
 
-Underfull \hbox (badness 1377) in paragraph at lines 187--187
-[]\OT1/cmr/m/n/10 Figure 3: Ex-po-nen-tial
+Underfull \hbox (badness 1377) in paragraph at lines 204--204
+[]\OT1/lmr/m/n/10 Figure 3: Ex-po-nen-tial
  []
 
 [4 <./pics/workflowSpec.png> <./pics/Kullback-Leibler.png (PNG copy)>]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 208.
+LaTeX Font Info:    Try loading font information for OMS+lmr on input line 225.
 
 
-(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+(/usr/share/texmf/tex/latex/lm/omslmr.fd
+File: omslmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 208.
+LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 225.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[5] [6] [7] <pics/clusterings/coloursSource.png, id=48, 1606.0pt x 903.375pt>
+[5] [6] [7] <pics/clusterings/coloursSource.png, id=47, 1606.0pt x 903.375pt>
 File: pics/clusterings/coloursSource.png Graphic file (type png)
 
 <use pics/clusterings/coloursSource.png>
 Package pdftex.def Info: pics/clusterings/coloursSource.png used on input line 
-381.
+398.
 (pdftex.def)             Requested size: 173.44534pt x 97.55202pt.
 
-<pics/clusterings/coloursCorrect.png, id=49, 1606.0pt x 903.375pt>
+<pics/clusterings/coloursCorrect.png, id=48, 1606.0pt x 903.375pt>
 File: pics/clusterings/coloursCorrect.png Graphic file (type png)
 
 <use pics/clusterings/coloursCorrect.png>
 Package pdftex.def Info: pics/clusterings/coloursCorrect.png used on input line
- 383.
+ 400.
 (pdftex.def)             Requested size: 173.44534pt x 97.55202pt.
 
-Overfull \hbox (8.46619pt too wide) in alignment at lines 402--402
+Overfull \hbox (8.46619pt too wide) in alignment at lines 419--419
 [][][][][][][]
  []
 
 
-Overfull \hbox (4.33382pt too wide) in paragraph at lines 402--404
+Overfull \hbox (4.33382pt too wide) in paragraph at lines 419--421
  [] 
  []
 
 [8 <./pics/clusterings/coloursSource.png> <./pics/clusterings/coloursCorrect.pn
-g>] <pics/colorBound.png, id=53, 1606.0pt x 903.375pt>
+g>] <pics/colorBound.png, id=52, 1606.0pt x 903.375pt>
 File: pics/colorBound.png Graphic file (type png)
 
 <use pics/colorBound.png>
-Package pdftex.def Info: pics/colorBound.png used on input line 414.
+Package pdftex.def Info: pics/colorBound.png used on input line 431.
 (pdftex.def)             Requested size: 130.08731pt x 73.16745pt.
- <pics/colorBound2.png, id=54, 1606.0pt x 903.375pt>
+ <pics/colorBound2.png, id=53, 1606.0pt x 903.375pt>
 File: pics/colorBound2.png Graphic file (type png)
 
 <use pics/colorBound2.png>
-Package pdftex.def Info: pics/colorBound2.png used on input line 414.
+Package pdftex.def Info: pics/colorBound2.png used on input line 431.
 (pdftex.def)             Requested size: 130.08731pt x 73.16745pt.
- <pics/posBound.png, id=55, 1606.0pt x 903.375pt>
+ <pics/posBound.png, id=54, 1606.0pt x 903.375pt>
 File: pics/posBound.png Graphic file (type png)
 
 <use pics/posBound.png>
-Package pdftex.def Info: pics/posBound.png used on input line 416.
+Package pdftex.def Info: pics/posBound.png used on input line 433.
 (pdftex.def)             Requested size: 130.08731pt x 73.16745pt.
- <pics/posBound2.png, id=56, 1606.0pt x 903.375pt>
+ <pics/posBound2.png, id=55, 1606.0pt x 903.375pt>
 File: pics/posBound2.png Graphic file (type png)
 
 <use pics/posBound2.png>
-Package pdftex.def Info: pics/posBound2.png used on input line 416.
+Package pdftex.def Info: pics/posBound2.png used on input line 433.
 (pdftex.def)             Requested size: 130.08731pt x 73.16745pt.
 
-Overfull \hbox (2.32428pt too wide) in paragraph at lines 413--419
+Overfull \hbox (2.32428pt too wide) in paragraph at lines 430--436
 [][] 
  []
 
-<pics/slam110landmarks2.png, id=57, 1051.93pt x 911.405pt>
+<pics/slam110landmarks2.png, id=56, 1051.93pt x 911.405pt>
 File: pics/slam110landmarks2.png Graphic file (type png)
 
 <use pics/slam110landmarks2.png>
-Package pdftex.def Info: pics/slam110landmarks2.png used on input line 435.
+Package pdftex.def Info: pics/slam110landmarks2.png used on input line 452.
 (pdftex.def)             Requested size: 153.06647pt x 132.61621pt.
 
-<pics/memoryRequirements.png, id=58, 1348.03625pt x 708.6475pt>
+<pics/memoryRequirements.png, id=57, 1348.03625pt x 708.6475pt>
 File: pics/memoryRequirements.png Graphic file (type png)
 
 <use pics/memoryRequirements.png>
-Package pdftex.def Info: pics/memoryRequirements.png used on input line 437.
+Package pdftex.def Info: pics/memoryRequirements.png used on input line 454.
 (pdftex.def)             Requested size: 153.06647pt x 80.4601pt.
  [9 <./pics/colorBound.png> <./pics/colorBound2.png> <./pics/posBound.png> <./p
 ics/posBound2.png>]
-<pics/singlecluster.png, id=62, 1041.8925pt x 737.75626pt>
+<pics/singlecluster.png, id=61, 1041.8925pt x 737.75626pt>
 File: pics/singlecluster.png Graphic file (type png)
 
 <use pics/singlecluster.png>
-Package pdftex.def Info: pics/singlecluster.png used on input line 460.
+Package pdftex.def Info: pics/singlecluster.png used on input line 477.
 (pdftex.def)             Requested size: 112.73882pt x 79.82507pt.
 
-<pics/onlyclusters2.png, id=63, 1045.9075pt x 743.77875pt>
+<pics/onlyclusters2.png, id=62, 1045.9075pt x 743.77875pt>
 File: pics/onlyclusters2.png Graphic file (type png)
 
 <use pics/onlyclusters2.png>
-Package pdftex.def Info: pics/onlyclusters2.png used on input line 460.
+Package pdftex.def Info: pics/onlyclusters2.png used on input line 477.
 (pdftex.def)             Requested size: 112.73882pt x 80.17029pt.
  [10 <./pics/slam110landmarks2.png> <./pics/memoryRequirements.png> <./pics/sin
 glecluster.png> <./pics/onlyclusters2.png>]
-<pics/monsterchair.png, id=70, 1053.9375pt x 909.3975pt>
+<pics/monsterchair.png, id=69, 1053.9375pt x 909.3975pt>
 File: pics/monsterchair.png Graphic file (type png)
 
 <use pics/monsterchair.png>
-Package pdftex.def Info: pics/monsterchair.png used on input line 479.
+Package pdftex.def Info: pics/monsterchair.png used on input line 496.
 (pdftex.def)             Requested size: 173.44534pt x 149.65558pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 479--480
+Underfull \hbox (badness 10000) in paragraph at lines 496--497
 
  []
 
-[11 <./pics/monsterchair.png (PNG copy)>]
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no “ in font cmr10!
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ™ in font cmr10!
-Missing character: There is no Ã in font cmr10!
-Missing character: There is no œ in font cmr10!
-Missing character: There is no Ã in font cmr10!
-Missing character: There is no ¼ in font cmr10!
- [12] (./Paper.aux) ) 
+[11 <./pics/monsterchair.png (PNG copy)>] [12] (./Paper.aux) ) 
 Here is how much of TeX's memory you used:
- 3305 strings out of 495032
- 44493 string characters out of 6181719
- 116996 words of memory out of 5000000
- 6464 multiletter control sequences out of 15000+600000
- 10111 words of font info for 37 fonts, out of 8000000 for 9000
+ 3842 strings out of 495032
+ 51736 string characters out of 6181719
+ 126511 words of memory out of 5000000
+ 6967 multiletter control sequences out of 15000+600000
+ 48445 words of font info for 36 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 27i,16n,31p,1539b,301s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-bx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
-usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex7.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on Paper.pdf (12 pages, 3787905 bytes).
+ 27i,16n,31p,1539b,316s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf
+/fonts/enc/dvips/lm/lm-rmtt.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.
+enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/
+dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr
+/share/texmf/fonts/enc/dvips/lm/lm-rmsc.enc}</usr/share/texmf/fonts/type1/publi
+c/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/
+texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm
+/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/share/texm
+f/fonts/type1/public/lm/lmmi5.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7
+.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/
+type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/public/lm/lmr5.pfb></us
+r/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/publ
+ic/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri7.pfb></usr/share/te
+xmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lm
+sy5.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texmf/fon
+ts/type1/public/lm/lmtt10.pfb>
+Output written on Paper.pdf (12 pages, 3865305 bytes).
 PDF statistics:
- 133 PDF objects out of 1000 (max. 8388607)
+ 135 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  71 words of extra memory for PDF output out of 10000 (max. 10000000)
 
